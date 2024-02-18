@@ -1,5 +1,8 @@
+<<<<<<< HEAD
 env
 __pycache__
+=======
+>>>>>>> 529033c9d779d94ee48bb0b2022bb30b75185158
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
