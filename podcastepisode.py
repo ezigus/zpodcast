@@ -2,7 +2,6 @@ from datetime import datetime, date
 from typing import Optional
 from dataclasses import dataclass
 from email.utils import parsedate_tz, mktime_tz
-#from podcastdata import PodcastData
 from podcastutils import is_valid_url
 
 """

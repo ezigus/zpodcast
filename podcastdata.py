@@ -2,6 +2,7 @@ from dataclasses import dataclass
 from typing import Optional
 from podcastepisode import PodcastEpisode
 from podcastutils import is_valid_url
+from typing import List
 
 
 @dataclass
@@ -22,14 +23,22 @@ class PodcastData:
         validate_image_url(): Validates the image URL.
         image_url(): Gets the image URL.
         image_url(value): Sets the image URL.
+        clamp_priority(): Clamps the priority value between -10 and 10.
     """
 
     title: str
     host: str
     description: str
-    episodes: PodcastEpisode
+    episodes: List[PodcastEpisode]
     priority: Optional[int] = None
     _image_url: Optional[str] = None
+
+    def clamp_priority(self):
+        """
+        Clamps the priority value between -10 and 10.
+        """
+        if self.priority is not None:
+            self.priority = max(-10, min(10, self.priority))
 
     def __post_init__(self):
         """
@@ -76,3 +85,4 @@ class PodcastData:
             self._image_url = value
         else:
             raise ValueError("Invalid image URL")
+

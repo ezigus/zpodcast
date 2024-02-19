@@ -11,6 +11,7 @@ class SortParameters:
     _podcast_author: Optional[str]
 
 
+
     @property
     def episode_title(self) -> Optional[str]:
         return self._episode_title
@@ -84,8 +85,6 @@ class SortParameters:
             self._podcast_author = value
         else:
             raise ValueError("Invalid sort option for podcast author")
-
- 
 
     @property
     def podcast_category(self) -> Optional[str]:
