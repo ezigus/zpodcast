@@ -2,8 +2,8 @@ import sys
 sys.path.append('..')
 
 import feedparser
-from opmlparser import OPMLParser
-from podcastepisode import PodcastEpisode
+from zpodcast.opmlparser import OPMLParser
+from zpodcast.podcastepisode import PodcastEpisode
 
 
 class RSSPodcastParser:

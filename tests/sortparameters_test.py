@@ -1,7 +1,7 @@
 import unittest
 from typing import Optional
 
-from sortparameters import SortParameters
+from zpodcast.sortparameters import SortParameters
 
 class TestSortParameters(unittest.TestCase):
     def test_episode_title(self):
