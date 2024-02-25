@@ -6,7 +6,7 @@ from zpodcast.rsspodcastparser import RSSPodcastParser
 
 def test_get_episodes():
     # Mock the feedparser library
-    with patch('rsspodcastparser.feedparser') as mock_feedparser:
+    with patch('RSSPodcastParser.feedparser') as mock_feedparser:
         # Create a mock RSS feed
         rss_feed = {
             'entries': [
