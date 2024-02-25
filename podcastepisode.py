@@ -2,7 +2,7 @@ from datetime import datetime, date
 from typing import Optional
 from dataclasses import dataclass
 from email.utils import parsedate_tz, mktime_tz
-from podcastutils import is_valid_url
+from zpodcast.podcastutils import is_valid_url
 
 """
 Represents a podcast episode and contains the following attributes.
