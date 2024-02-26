@@ -10,13 +10,31 @@ def test_podcastepisode_title():
     # Test the title attribute of the podcast episode
     assert episode.title == "Episode 1"
 
-def test_podcastepisode_duration():
+# validate different duration values
+def test_podcastepisode_duration_str():
     # Create a podcast episode object
-    episode = PodcastEpisode(title="Episode 1", description="Episode 1 description", audio_url="https://example.com/episode1.mp3", duration=1800)
+    episode = PodcastEpisode(title="Episode 1", description="Episode 1 description", audio_url="https://example.com/episode1.mp3", duration="1800")
 
     # Test the duration attribute of the podcast episode
     assert episode.duration == 1800
     
+def test_podcastepisode_duration_int():
+    # Create a podcast episode object
+    episode = PodcastEpisode(title="Episode 1", description="Episode 1 description", audio_url="https://example.com/episode1.mp3", duration=1800)
+
+    assert episode.duration == 1800
+    
+def test_podcastepisode_duration_none():
+    # Create a podcast episode object
+    episode = PodcastEpisode(title="Episode 1", description="Episode 1 description", audio_url="https://example.com/episode1.mp3")
+
+    assert episode.duration is None
+    
+def test_podcastepisode_duration_nonint():
+    with pytest.raises(ValueError):
+        episode = PodcastEpisode(title="Episode 1", description="Episode 1 description", audio_url="https://example.com/episode1.mp3", duration="1800s")
+    
+# validate different pub_date values
 def test_podcastepisode_pub_date_none():
     # Create a podcast episode object
     episode = PodcastEpisode(title="Episode 1", description="Episode 1 description", audio_url="https://example.com/episode1.mp3", duration=1800)
