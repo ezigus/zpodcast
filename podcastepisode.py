@@ -25,8 +25,8 @@ class PodcastEpisode:
     _audio_url: str
     _duration: Optional[str] = None
     _podcast_episode_image_url: Optional[str] = None
-    pub_date: Optional[date] = None
-    episode_number: Optional[int] = None
+    _pub_date: Optional[date] = None
+    _episode_number: Optional[int] = None
     podcast_url: Optional[str] = None
     #podcast : Optional[PodcastData] = None
     
@@ -144,6 +144,17 @@ class PodcastEpisode:
                 raise ValueError("Invalid audio URL")
         else:
             raise ValueError("Invalid audio URL")
+        
+        
+    @property
+    def episode_number(self) -> Optional[int]:
+        return self._episode_number
+
+    @episode_number.setter
+    def episode_number(self, value: Optional[int]) -> None:
+        if value is not None and not isinstance(value, int):
+            raise ValueError("Episode number must be an integer")
+        self._episode_number = value
 
 
 

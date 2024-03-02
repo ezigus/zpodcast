@@ -114,3 +114,26 @@ def test_podcastepisode_audo_url_none():
     # Create a podcast episode object with no audio URL
     with pytest.raises(ValueError):
         episode = PodcastEpisode(title="Episode 1", description="Episode 1 description", audio_url=None)
+        
+""" 
+Tests to verify the episode_number values in this data class
+"""
+def test_podcastepisode_episode_number_none():
+    # Create a podcast episode object with no episode number
+    episode = PodcastEpisode(title="Episode 1", description="Episode 1 description", audio_url="https://example.com/episode1.mp3")
+
+    # Test the episode_number attribute of the podcast episode
+    assert episode.episode_number == None
+
+def test_podcastepisode_episode_number():
+    # Create a podcast episode object with an episode number
+    episode = PodcastEpisode(title="Episode 1", description="Episode 1 description", audio_url="https://example.com/episode1.mp3", episode_number=1)
+
+    # Test the episode_number attribute of the podcast episode
+    assert episode.episode_number == 1
+
+def test_podcastepisode_episode_number_invalid():
+    # Create a podcast episode object with an invalid episode number
+    with pytest.raises(ValueError):
+        episode = PodcastEpisode(title="Episode 1", description="Episode 1 description", audio_url="https://example.com/episode1.mp3", episode_number="one")
+
