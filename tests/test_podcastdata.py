@@ -8,9 +8,9 @@ testing the clamp_priority method
 """
 def test_clamp_priority_valid():
     episodes = [
-        PodcastEpisode("Episode 1", "2022-01-01"),
-        PodcastEpisode("Episode 2", "2022-01-08"),
-        PodcastEpisode("Episode 3", "2022-01-15")
+        PodcastEpisode("Episode 1", "2022-01-01","http://example.com/audio.mp3"),
+        PodcastEpisode("Episode 2", "2022-01-08","http://example.com/audio.mp3"),
+        PodcastEpisode("Episode 3", "2022-01-15","http://example.com/audio.mp3")
     ]
     podcast_data = PodcastData(
         "My Podcast",
@@ -26,9 +26,9 @@ def test_clamp_priority_valid():
 
 def test_clamp_priority_invalid_high():
     episodes = [
-        PodcastEpisode("Episode 1", "2022-01-01"),
-        PodcastEpisode("Episode 2", "2022-01-08"),
-        PodcastEpisode("Episode 3", "2022-01-15")
+        PodcastEpisode("Episode 1", "2022-01-01","http://example.com/audio.mp3"),
+        PodcastEpisode("Episode 2", "2022-01-08","http://example.com/audio.mp3"),
+        PodcastEpisode("Episode 3", "2022-01-15","http://example.com/audio.mp3")
     ]
     podcast_data = PodcastData(
         "My Podcast",
@@ -45,9 +45,9 @@ def test_clamp_priority_invalid_high():
 
 def test_clamp_priority_invalid_low():
     episodes = [
-        PodcastEpisode("Episode 1", "2022-01-01"),
-        PodcastEpisode("Episode 2", "2022-01-08"),
-        PodcastEpisode("Episode 3", "2022-01-15")
+        PodcastEpisode("Episode 1", "2022-01-01","http://example.com/audio.mp3"),
+        PodcastEpisode("Episode 2", "2022-01-08","http://example.com/audio.mp3"),
+        PodcastEpisode("Episode 3", "2022-01-15","http://example.com/audio.mp3")
     ]
     podcast_data = PodcastData(
         "My Podcast",
@@ -67,9 +67,9 @@ def test_clamp_priority_invalid_low():
 
 def test_validate_image_url():
     episodes = [
-        PodcastEpisode("Episode 1", "2022-01-01"),
-        PodcastEpisode("Episode 2", "2022-01-08"),
-        PodcastEpisode("Episode 3", "2022-01-15")
+        PodcastEpisode("Episode 1", "2022-01-01","http://example.com/audio.mp3"),
+        PodcastEpisode("Episode 2", "2022-01-08","http://example.com/audio.mp3"),
+        PodcastEpisode("Episode 3", "2022-01-15","http://example.com/audio.mp3")
     ]
     podcast_data = PodcastData(
         "My Podcast",
@@ -87,9 +87,9 @@ def test_validate_image_url():
 
 def test_image_url():
     episodes = [
-        PodcastEpisode("Episode 1", "2022-01-01"),
-        PodcastEpisode("Episode 2", "2022-01-08"),
-        PodcastEpisode("Episode 3", "2022-01-15")
+        PodcastEpisode("Episode 1", "2022-01-01","http://example.com/audio.mp3"),
+        PodcastEpisode("Episode 2", "2022-01-08","http://example.com/audio.mp3"),
+        PodcastEpisode("Episode 3", "2022-01-15","http://example.com/audio.mp3")
     ]
     podcast_data = PodcastData(
         "My Podcast",
@@ -107,9 +107,9 @@ def test_image_url():
 
 def test_podcast_data_attributes():
     episodes = [
-        PodcastEpisode("Episode 1", "2022-01-01"),
-        PodcastEpisode("Episode 2", "2022-01-08"),
-        PodcastEpisode("Episode 3", "2022-01-15")
+        PodcastEpisode("Episode 1", "2022-01-01","http://example.com/audio.mp3"),
+        PodcastEpisode("Episode 2", "2022-01-08","http://example.com/audio.mp3"),
+        PodcastEpisode("Episode 3", "2022-01-15","http://example.com/audio.mp3")
     ]
     podcast_data = PodcastData(
         "My Podcast",
