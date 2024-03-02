@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from typing import Optional
-from podcastepisode import PodcastEpisode
-from podcastutils import is_valid_url
+from zpodcast.podcastepisode import PodcastEpisode
+from zpodcast.podcastutils import is_valid_url
 from typing import List
 
 
