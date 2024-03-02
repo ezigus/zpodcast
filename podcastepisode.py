@@ -97,8 +97,7 @@ class PodcastEpisode:
                 self._duration = int(value)
             except ValueError:
                 raise ValueError("Invalid duration")
-    
-        
+            
     """
     Get the publication date of the episode.
 
