@@ -1,5 +1,5 @@
 import pytest
-from email.utils import parsedate_tz, mktime_tz
+from email.utils import parsedate_tz
 from zpodcast.podcastepisode import PodcastEpisode
 
 """
@@ -89,5 +89,28 @@ def test_podcastepisode_pub_date_invalid_str():
     # Test the publication date attribute of the podcast episode
     assert episode.pub_date == None
 
+"""
+testing that the audio URL is properly set and formatted
+"""
 
+def test_podcastepisode_audio_url():
+    # Create a podcast episode object with a valid audio URL
+    episode = PodcastEpisode(title="Episode 1", description="Episode 1 description", audio_url="https://example.com/episode1.mp3")
 
+    # Test the audio_url attribute of the podcast episode
+    assert episode.audio_url == "https://example.com/episode1.mp3"
+
+def test_podcastepisode_invalid_audio_url():
+    # Create a podcast episode object with an invalid audio URL
+    with pytest.raises(ValueError):
+        episode = PodcastEpisode(title="Episode 1", description="Episode 1 description", audio_url="invalid_url")
+        
+def test_podcastepisode_no_audio_url():
+    # Create a podcast episode object with no audio URL
+    with pytest.raises(TypeError):
+        episode = PodcastEpisode(title="Episode 1", description="Episode 1 description")
+
+def test_podcastepisode_audo_url_none():
+    # Create a podcast episode object with no audio URL
+    with pytest.raises(TypeError):
+        episode = PodcastEpisode(title="Episode 1", description="Episode 1 description", audio_url=None)

@@ -3,6 +3,7 @@ from typing import Optional, Union
 from dataclasses import dataclass
 from email.utils import parsedate_tz, mktime_tz
 from zpodcast.podcastutils import is_valid_url
+from urllib.parse import urlparse
 
 """
 Represents a podcast episode and contains the following attributes.
@@ -128,4 +129,21 @@ class PodcastEpisode:
             self._pub_date = value
         else:
             self._pub_date = None
+            
+    @property
+    def audio_url(self) -> Optional[str]:
+        return self._audio_url
+
+    @audio_url.setter
+    def audio_url(self, value: Optional[str]) -> None:
+        if value is not None:
+            parsed_url = urlparse(value)
+            if parsed_url.scheme and parsed_url.netloc:
+                self._audio_url = value
+            else:
+                raise ValueError("Invalid audio URL")
+        else:
+            raise ValueError("Invalid audio URL")
+
+
 
