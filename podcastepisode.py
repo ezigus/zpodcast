@@ -22,7 +22,7 @@ Attributes:
 class PodcastEpisode:
     title: str
     description: str
-    audio_url: str
+    _audio_url: str
     _duration: Optional[str] = None
     _podcast_episode_image_url: Optional[str] = None
     pub_date: Optional[date] = None

@@ -112,5 +112,5 @@ def test_podcastepisode_no_audio_url():
 
 def test_podcastepisode_audo_url_none():
     # Create a podcast episode object with no audio URL
-    with pytest.raises(TypeError):
+    with pytest.raises(ValueError):
         episode = PodcastEpisode(title="Episode 1", description="Episode 1 description", audio_url=None)
