@@ -12,7 +12,7 @@ Attributes:
     title (str): The title of the episode.
     description (str): The description of the episode.
     audio_url (str): The URL of the audio file.
-    duration (Optional[str], optional): a string repreesentation of the duration of the episode in minutes. Defaults to None.
+    duration (Optional[str], optional): a string representation of the duration of the episode in minutes. Defaults to None.
     duration_in_seconds (Optional[int], optional): The duration of the episode in seconds. Defaults to None.
     pub_date (Optional[date], optional): The publication date of the episode. Defaults to None.
     episode_number (Optional[int], optional): The episode number. Defaults to None.
