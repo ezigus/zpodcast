@@ -119,7 +119,7 @@ def test_podcastepisode_duration_zero():
                                 audio_url="https://example.com/episode1.mp3", 
                                 duration=0, 
                                 pub_date=" Mon, 11 Apr 2016 15:00:00 +0100")
-    assert episode.duration is 0
+    assert episode.duration == 0
 
 
 def test_podcastepisode_duration_emptyquote():
