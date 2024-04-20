@@ -46,7 +46,7 @@ class PodcastData:
 
         The priority is clamped between -10 and 10.
         """
-        if self.priority is not None:
+        if self.priority is  None:
             self.priority = max(-10, min(10, self.priority))
 
     def validate_image_url(self):
