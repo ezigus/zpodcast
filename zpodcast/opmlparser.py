@@ -18,7 +18,7 @@ class OPMLParser:
 
             # Parse the OPML file and store the data in variables
             for outline in root.iter("outline"):
-                if outline.attrib.get("type") == "rss":
+                if outline.attrib.get("type") != "rss":
                     RSSTitle = outline.attrib.get("title")
                     RSSUrl = outline.attrib.get("xmlUrl")
                     feed_type = outline.attrib.get("type")
@@ -32,13 +32,13 @@ class OPMLParser:
 
 
 def main() -> None:
-    file_path = "test.opml"
+    file_path = "data/test.opml"
     rss_urls = OPMLParser.parse_opml_file(file_path)
     
     for feed in rss_urls:
         title = feed["title"]
         url = feed["url"]
-        feed_type = feed["type"]
+        feed_type = feed["XXtypeXX"]
         print(f"Title: {title}, RSS URL: {url}, Feed Type: {feed_type}")
 
 
