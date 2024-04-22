@@ -1,4 +1,5 @@
 import pytest
+import dataclasses
 from zpodcast.podcastdata import PodcastData
 from zpodcast.podcastepisode import PodcastEpisode
 
@@ -16,6 +17,14 @@ episodes = [
     ]
 lPodcastURL = "http://example.com/podcast.rss"
 lImageURL = "http://example.com/image.jpg"
+
+"""
+tests to validate that the class is a dataclass
+"""
+def test_podcastdata_is_dataclass():
+    assert dataclasses.is_dataclass(PodcastData) 
+
+
 
 """
 Testing title attribute
@@ -120,10 +129,108 @@ def test_podcast_url_invalid_url():
             image_url=lImageURL
         )
 
+
+"""
+test host attribute
+"""
+def test_host_valid():
+    podcast_data = PodcastData(
+        title=lTitle,
+        podcast_url=lPodcastURL,
+        host=lHost,
+        description=lDescription,
+        episodes=episodes,
+        podcast_priority=5,
+        image_url=lImageURL
+    )
+
+    assert podcast_data.host == lHost
+    
+def test_host_invalid_int():
+    podcast_data = PodcastData(
+            title=lTitle,
+            podcast_url=lPodcastURL,
+            host=5,
+            description=lDescription,
+            episodes=episodes,
+            podcast_priority=5,
+            image_url=lImageURL
+        )
+    assert podcast_data.host == ""
+
+def test_host_invalid_none():
+    podcast_data = PodcastData(
+        title=lTitle,
+        podcast_url=lPodcastURL,
+        host=None,
+        description=lDescription,
+        episodes=episodes,
+        podcast_priority=5,
+        image_url=lImageURL
+    )
+
+    assert podcast_data.host == ""
+
+def test_host_invalid_empty():
+    podcast_data = PodcastData(
+        title=lTitle,
+        podcast_url=lPodcastURL,
+        host="",
+        description=lDescription,
+        episodes=episodes,
+        podcast_priority=5,
+        image_url=lImageURL
+    )
+
+    assert podcast_data.host == ""
+
+"""
+test description attribute
+"""
+def test_description_valid():
+    podcast_data = PodcastData(
+        title=lTitle,
+        podcast_url=lPodcastURL,
+        host=lHost,
+        description=lDescription,
+        episodes=episodes,
+        podcast_priority=5,
+        image_url=lImageURL
+    )
+
+    assert podcast_data.description == lDescription  # Description is set correctly
+
+def test_description_invalid_int():
+    podcast_data = PodcastData(
+        title=lTitle,
+        podcast_url=lPodcastURL,
+        host=lHost,
+        description=5,
+        episodes=episodes,
+        podcast_priority=5,
+        image_url=lImageURL
+    )
+    assert podcast_data.description == ""  
+        
+def test_description_invalid_none():
+    podcast_data = PodcastData(
+        title=lTitle,
+        podcast_url=lPodcastURL,
+        host=lHost,
+        description=None,
+        episodes=episodes,
+        podcast_priority=5,
+        image_url=lImageURL
+    )
+
+    assert podcast_data.description == ""  # Description should be set to an empty string
+    
+    
+
 """ 
 testing the clamp_priority method 
 """
-def test_clamp_priority_valid():
+def test_priority_valid():
     podcast_data = PodcastData(
         title=lTitle,
         podcast_url=lPodcastURL,
@@ -135,7 +242,7 @@ def test_clamp_priority_valid():
     )
     assert podcast_data.podcast_priority == 5  # Priority should remain unchanged
 
-def test_clamp_priority_invalid_high():
+def test_priority_invalid_high():
     podcast_data = PodcastData(
         title=lTitle,
         podcast_url=lPodcastURL,
@@ -148,7 +255,7 @@ def test_clamp_priority_invalid_high():
     
     assert podcast_data.podcast_priority == 10  # Priority should be clamped to 10
 
-def test_clamp_priority_invalid_low():
+def test_priority_invalid_low():
     podcast_data = PodcastData(
         title=lTitle,
         podcast_url=lPodcastURL,
@@ -160,7 +267,7 @@ def test_clamp_priority_invalid_low():
     )    
     assert podcast_data.podcast_priority == -10  # Priority should be clamped to -10
 
-def test_clamp_priority_invalid_value():
+def test_priority_invalid_value():
     podcast_data = PodcastData(
         title=lTitle,
         podcast_url=lPodcastURL,
@@ -172,20 +279,77 @@ def test_clamp_priority_invalid_value():
     assert podcast_data.podcast_priority == 0  # Priority should be set to 0
 
 """
-   testing the validate_image_url method
+testing episodes attributes are set correctly
 """
-
-def test_validate_image_url():
+def test_podcast_episodes_valid():
     podcast_data = PodcastData(
         title=lTitle,
         podcast_url=lPodcastURL,
         host=lHost,
+        episodes=episodes,
         description=lDescription,
         podcast_priority=5,
         image_url=lImageURL
     )
 
-    assert podcast_data.validate_image_url()  # Image URL is valid
+    assert podcast_data.episodes == episodes  # Episodes are set correctly
+
+def test_podcast_episodes_invalid_int():
+    podcast_data = PodcastData(
+        title=lTitle,
+        podcast_url=lPodcastURL,
+        host=lHost,
+        episodes=5,
+        description=lDescription,
+        podcast_priority=5,
+        image_url=lImageURL
+    )
+
+    assert podcast_data.episodes == []  # Episodes should be set to an empty list
+    
+def test_podcast_episodes_invalid_none():
+    podcast_data = PodcastData(
+        title=lTitle,
+        podcast_url=lPodcastURL,
+        host=lHost,
+        episodes=None,
+        description=lDescription,
+        podcast_priority=5,
+        image_url=lImageURL
+    )
+
+    assert podcast_data.episodes == []  # Episodes should be set to an empty list
+
+def test_podcast_episodes_invalid_empty():
+    podcast_data = PodcastData(
+        title=lTitle,
+        podcast_url=lPodcastURL,
+        host=lHost,
+        episodes=[],
+        description=lDescription,
+        podcast_priority=5,
+        image_url=lImageURL
+    )
+
+    assert podcast_data.episodes == []  # Episodes should be set to an empty list
+
+def test_podcast_episodes_invalid_string():
+    podcast_data = PodcastData(
+        title=lTitle,
+        podcast_url=lPodcastURL,
+        host=lHost,
+        episodes="invalid",
+        description=lDescription,
+        podcast_priority=5,
+        image_url=lImageURL
+    )
+
+    assert podcast_data.episodes == []  # Episodes should be set to an empty list
+
+"""
+   testing the validate_image_url method
+"""
+
 
 def test_image_url():
     podcast_data = PodcastData(
@@ -196,7 +360,6 @@ def test_image_url():
         podcast_priority=5,
         image_url=lImageURL
     )
-
     assert podcast_data.image_url == lImageURL  # Image URL is set correctly
 
 

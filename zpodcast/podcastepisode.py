@@ -12,9 +12,9 @@ class PodcastEpisode:
     _audio_url: str
     _pub_date: datetime
     _description: str
-    _duration: Optional[str] = None
-    _image_url: Optional[str] = None
-    _episode_number: Optional[int] = None
+    _duration: Optional[str]
+    _image_url: Optional[str]
+    _episode_number: Optional[int]
     #podcast_url: Optional[str] = None
     
     """

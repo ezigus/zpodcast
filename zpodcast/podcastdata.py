@@ -2,7 +2,7 @@ from dataclasses import dataclass
 import validators
 from typing import Optional
 from zpodcast.podcastepisode import PodcastEpisode
-from zpodcast.podcastutils import is_valid_url
+#from zpodcast.podcastutils import is_valid_url
 from typing import List
 
 
@@ -14,11 +14,11 @@ class PodcastData:
 
     _title: str
     _podcast_url: str
-    _host: Optional[str] = None
-    _description: Optional[str] = None
-    _episodes: Optional[List[PodcastEpisode]] = None
-    _podcast_priority: Optional[int] = None
-    _image_url: Optional[str] = None
+    _host: Optional[str]
+    _description: Optional[str]
+    _episodes: Optional[List[PodcastEpisode]]
+    _podcast_priority: Optional[int]
+    _image_url: Optional[str]
 
     def __init__(self, title:str, podcast_url: str, host:str = None, description:str = None, episodes:[List[PodcastEpisode]]=None, podcast_priority:int=None, image_url:str=None):
         """
@@ -95,7 +95,6 @@ class PodcastData:
         """
         if value is not None:
             if not validators.url(value):
-                print(value)
                 raise ValueError("Invalid podcast URL")
         else:
             raise ValueError("Invalid podcast URL")
@@ -118,17 +117,22 @@ class PodcastData:
         return self._host   
     
     @host.setter
-    def host(self, value):
+    def host(self, value:str):
         """
         Sets the host of the podcast.
 
         Args:
             value (str): The host to set for the podcast.
         """
-        if value is None or not isinstance(value, str):
-            value = ""
+        if value is not None:
+            if isinstance(value, str):
+                self._host = value
+            
+            if not isinstance(value, str):
+                self._host = ""
         
-        self._host = value
+        if value is None:
+            self._host = ""
 
     """
     getter setter for description
@@ -151,9 +155,12 @@ class PodcastData:
         Args:
             value (str): The description to set for the podcast.
         """
-        if value is None or not isinstance(value, str):
+        if value is not None:
+            if not isinstance(value, str):
+                value = ""
+        else:
             value = ""
-        
+                
         self._description = value
 
 
@@ -178,9 +185,12 @@ class PodcastData:
         Args:
             value (List[PodcastEpisode]): The episodes to set for the podcast.
         """
-        if value is None or not isinstance(value, list):
-            value = []
-        
+        if value is not None:
+            if not isinstance(value, list):
+                value = []
+        else:
+            value = [] 
+            
         self._episodes = value
     
     
@@ -225,19 +235,19 @@ class PodcastData:
 
 
 
-    """
-    getter setter for image_url with a validation method for the URL
-    """
-    def validate_image_url(self):
-        """
-        Validates the image URL.
+    # """
+    # getter setter for image_url with a validation method for the URL
+    # """
+    # def validate_image_url(self):
+    #     """
+    #     Validates the image URL.
 
-        Returns:
-            bool: True if the image URL is valid, False otherwise.
-        """
-        if self._image_url is not None:
-            return is_valid_url(self._image_url)
-        return False
+    #     Returns:
+    #         bool: True if the image URL is valid, False otherwise.
+    #     """
+    #     if self._image_url is not None:
+    #         return is_valid_url(self._image_url)
+    #     return False
     
     @property
     def image_url(self):

@@ -23,7 +23,7 @@ class OPMLParser:
                     RSSUrl = outline.attrib.get("xmlUrl")
                     feed_type = outline.attrib.get("type")
                     if RSSTitle and RSSUrl and feed_type:
-                        variables.append({"title": RSSTitle, "url": RSSUrl, "type": feed_type})
+                        variables.append({"title": RSSTitle, "XXurlXX": RSSUrl, "type": feed_type})
 
         except ET.ParseError as e:
             print(f"Error parsing OPML file: {e}")
