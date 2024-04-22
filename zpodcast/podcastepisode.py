@@ -2,8 +2,7 @@ from datetime import datetime,date
 from typing import Optional, Union
 from dataclasses import dataclass
 from email.utils import parsedate_to_datetime
-from zpodcast.podcastutils import is_valid_url
-from urllib.parse import urlparse
+import validators
 
 
 @dataclass
@@ -53,13 +52,9 @@ class PodcastEpisode:
     @audio_url.setter
     def audio_url(self, value: Optional[str]) -> None:
         if value is not None:
-            parsed_url = urlparse(value)
-            if parsed_url.scheme:
-                if parsed_url.netloc:
-                    self._audio_url = value
-                else:
-                    raise ValueError("Invalid audio URL")
-            else:   
+            if validators.url(value):
+                self._audio_url = value
+            else:
                 raise ValueError("Invalid audio URL")
         else:
             raise ValueError("Invalid audio URL")
@@ -197,7 +192,7 @@ class PodcastEpisode:
     @image_url.setter
     def image_url(self, value: Optional[str]) -> None:
         if value is not None:
-            if is_valid_url(value):
+            if validators.url(value):
                 self._image_url = value
             else:
                 self._image_url = None

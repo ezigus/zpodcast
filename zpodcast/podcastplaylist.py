@@ -36,7 +36,7 @@ class PodcastPlaylist:
     def calculate_duration(self) -> float:
         total_duration_seconds = 0.0
         for episode in self.episodes:
-            total_duration_seconds = episode.duration_in_seconds
+            total_duration_seconds += episode.duration_in_seconds
         return total_duration_seconds
 
     def _format_duration(self, duration_seconds: float) -> str:
