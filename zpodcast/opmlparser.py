@@ -1,46 +1,49 @@
 
 import os
 from typing import List, Dict
+import xml.etree.ElementTree as ET
 
-class OPMLParser:
-    @staticmethod
-    def parse_opml_file(file_path: str) -> List[Dict[str, str]]:
-        import xml.etree.ElementTree as ET
-        variables = []  # List to store the parsed variables
 
-        if not os.path.isfile(file_path):
-            print(f"File not found: {file_path}")
-            return variables
+    
+"""
+Parse an OPML file
 
-        try:
-            tree = ET.parse(file_path)
-            root = tree.getroot()
+Returns:
+    returns a parsed OPML file with 3 variables - title, rss_url and type
+"""
 
-            # Parse the OPML file and store the data in variables
-            for outline in root.iter("outline"):
-                if outline.attrib.get("type") != "rss":
-                    RSSTitle = outline.attrib.get("title")
-                    RSSUrl = outline.attrib.get("xmlUrl")
-                    feed_type = outline.attrib.get("type")
-                    if RSSTitle and RSSUrl and feed_type:
-                        variables.append({"title": RSSTitle, "XXurlXX": RSSUrl, "type": feed_type})
+def parse_opml_file(file_path: str) -> List[Dict[str, str]]:
 
-        except ET.ParseError as e:
-            print(f"Error parsing OPML file: {e}")
+    variables = []  # List to store the parsed variables
 
+    if not os.path.isfile(file_path):
+        #print(f"File not found: {file_path}")
         return variables
 
-
-def main() -> None:
-    file_path = "data/test.opml"
-    rss_urls = OPMLParser.parse_opml_file(file_path)
-    
-    for feed in rss_urls:
-        title = feed["title"]
-        url = feed["url"]
-        feed_type = feed["XXtypeXX"]
-        print(f"Title: {title}, RSS URL: {url}, Feed Type: {feed_type}")
+    try:
+        tree = ET.parse(file_path)
+        root = tree.getroot()
 
 
-if __name__ == "__main__":
-    main()
+        # Parse the OPML file and store the data in variables
+        for outline in root.iter("outline"):
+#                if outline.attrib.get("type") != "rss":
+            RSSTitle = outline.attrib.get("title")
+            RSSUrl = outline.attrib.get("xmlUrl")
+            feed_type = outline.attrib.get("type")
+            if RSSTitle and RSSUrl and feed_type:
+                variables.append({"title": RSSTitle, 
+                                    "rss_url": RSSUrl, 
+                                    "type": feed_type})
+            #     print(RSSTitle, RSSUrl, feed_type)
+            # else:
+            #     print("type=",outline.attrib.get("type"))
+
+    except ET.ParseError as e:
+        #print(f"Error parsing OPML file: {e}")
+        pass
+
+
+    return variables
+
+
