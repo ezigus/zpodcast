@@ -4,7 +4,7 @@ from typing import Optional
 from zpodcast.podcastepisode import PodcastEpisode
 #from zpodcast.podcastutils import is_valid_url
 from typing import List
-
+import json
 
 @dataclass
 class PodcastData:
@@ -271,4 +271,9 @@ class PodcastData:
             ValueError: If the image URL is invalid.
         """
         self._image_url = value
+ 
+ 
+    def toJson(self):
+        return (json.dumps(self, default=PodcastData))
+ 
  
