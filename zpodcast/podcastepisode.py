@@ -3,6 +3,7 @@ from typing import Optional, Union
 from dataclasses import dataclass
 from email.utils import parsedate_to_datetime
 import validators
+import json
 
 
 @dataclass
@@ -198,3 +199,9 @@ class PodcastEpisode:
                 self._image_url = None
         else:
             self._image_url = None
+
+    def toJson(self) -> str:
+        """
+        Returns the podcast episode as a JSON string.
+        """
+        return json.dumps(self, default=PodcastEpisode)
