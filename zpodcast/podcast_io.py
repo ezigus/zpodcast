@@ -23,10 +23,25 @@ class Podcast_IO:
 
         # write the dictionary to a file
         with open(self.filename, 'w') as f:
-            f.write(json_podcast
+            f.write(json_podcast)
+                    
+        return True
 
-    def load(self) -> [PodcastData]:
+    def load(self,) -> [PodcastData]:
+        """ 
+        read from the file and populate podcast data objects with the data found in the json file
+        """
         
-        
+        #read the json file
+        with open(self.filename, 'r') as f:
+            data = json.load(f)
+            
+        # create a list of podcast data objects with the data loaded from the json file, converting the json into podcast data objects
+        podcast_data = []
+        for podcast in data:
+            podcast_data.append(PodcastData(**podcast))
+            
+
+            
 
         

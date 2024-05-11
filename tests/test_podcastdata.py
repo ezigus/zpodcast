@@ -380,3 +380,17 @@ def test_podcast_data_attributes():
     assert podcast_data.episodes == episodes
     assert podcast_data.podcast_priority == 5
     assert podcast_data._image_url == lImageURL
+
+def test_podcast_data_toJson():
+    podcast_data = PodcastData(
+        title=lTitle,
+        podcast_url=lPodcastURL,
+        host=lHost,
+        episodes=episodes,
+        description=lDescription,
+        podcast_priority=5,
+        image_url=lImageURL
+    )
+
+    json_data = podcast_data.toJson()
+    assert json_data == '{"title": "My Podcast", "podcast_url": "http://example.com/podcast.rss", "host": "John Doe", "description": "This is a podcast", "episodes": [{"title": "Episode 1", "description": "Episode 1 description", "audio_url": "http://example.com/audio.mp3", "pub_date": "Mon, 11 Apr 2016 15:00:00 +0100"}, {"title": "Episode 1", "description": "Episode 1 description", "audio_url": "http://example.com/audio.mp3", "pub_date": "Mon, 13 Apr 2016 15:00:00 +0100"}, {"title": "Episode 1", "description": "Episode 1 description", "audio_url": "http://example.com/audio.mp3", "pub_date": "Mon, 15 Apr 2016 15:00:00 +0100"}], "podcast_priority": 5, "image_url": "http://example.com/image.jpg"}'
