@@ -1,5 +1,5 @@
 
-from podcastepisode import PodcastEpisode
+from zpodcast.podcastepisode import PodcastEpisode
 from dataclasses import dataclass
 from typing import Optional, List
 
