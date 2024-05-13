@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 import validators
 from typing import Optional, List
-from zpodcast.podcastepisode import PodcastEpisode, PodcastList
+from zpodcast.podcastlist import PodcastList
 #from zpodcast.podcastutils import is_valid_url
 import json
 
@@ -19,7 +19,7 @@ class PodcastData:
     _podcast_priority: Optional[int]
     _image_url: Optional[str]
 
-    def __init__(self, title:str, podcast_url: str, host:str = None, description:str = None, episodes:[PodcastList]=None, podcast_priority:int=None, image_url:str=None):
+    def __init__(self, title:str, podcast_url: str, host:str = None, description:str = None, episodes:PodcastList=None, podcast_priority:int=None, image_url:str=None):
         """
         Initializes a new instance of the PodcastData class.
 
