@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 import validators
 from typing import Optional
-from zpodcast.podcastepisode import PodcastEpisode
+from zpodcast.podcastepisode import PodcastEpisode, PodcastList
 #from zpodcast.podcastutils import is_valid_url
 from typing import List
 import json
@@ -16,7 +16,7 @@ class PodcastData:
     _podcast_url: str
     _host: Optional[str]
     _description: Optional[str]
-    _episodes: Optional[List[PodcastEpisode]]
+    _episodes: Optional[PodcastList]
     _podcast_priority: Optional[int]
     _image_url: Optional[str]
 
