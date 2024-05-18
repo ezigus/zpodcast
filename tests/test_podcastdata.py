@@ -1,20 +1,20 @@
 import pytest
 import dataclasses
+from unittest.mock import Mock
 from zpodcast.podcastdata import PodcastData
-from zpodcast.podcastepisode import PodcastEpisode
+from zpodcast.podcastlist import PodcastList
 
 
 lTitle="My Podcast"
 lHost="John Doe"
 lDescription="This is a podcast"
 
- 
 
-episodes = [
-        PodcastEpisode(title="Episode 1", description="Episode 1 description", audio_url="http://example.com/audio.mp3", pub_date="Mon, 11 Apr 2016 15:00:00 +0100"),
-        PodcastEpisode(title="Episode 1", description="Episode 1 description", audio_url="http://example.com/audio.mp3", pub_date="Mon, 13 Apr 2016 15:00:00 +0100"),        
-        PodcastEpisode(title="Episode 1", description="Episode 1 description", audio_url="http://example.com/audio.mp3", pub_date="Mon, 15 Apr 2016 15:00:00 +0100"),        
-    ]
+class MockPodcastList:
+    pass
+
+episodes = MockPodcastList()
+
 lPodcastURL = "http://example.com/podcast.rss"
 lImageURL = "http://example.com/image.jpg"
 
@@ -281,7 +281,8 @@ def test_priority_invalid_value():
 """
 testing episodes attributes are set correctly
 """
-def test_podcast_episodes_valid():
+def test_podcasmockt_episodes_valid(monkeypatch):
+    episodes = Mock(spec=PodcastList)
     podcast_data = PodcastData(
         title=lTitle,
         podcast_url=lPodcastURL,
@@ -292,6 +293,8 @@ def test_podcast_episodes_valid():
         image_url=lImageURL
     )
 
+    
+    print(podcast_data.episodes)
     assert podcast_data.episodes == episodes  # Episodes are set correctly
 
 def test_podcast_episodes_invalid_int():
@@ -349,8 +352,6 @@ def test_podcast_episodes_invalid_string():
 """
    testing the validate_image_url method
 """
-
-
 def test_image_url():
     podcast_data = PodcastData(
         title=lTitle,
@@ -362,8 +363,7 @@ def test_image_url():
     )
     assert podcast_data.image_url == lImageURL  # Image URL is set correctly
 
-
-def test_podcast_data_attributes():
+def test_podcast_data_toJson():
     podcast_data = PodcastData(
         title=lTitle,
         podcast_url=lPodcastURL,
@@ -374,9 +374,5 @@ def test_podcast_data_attributes():
         image_url=lImageURL
     )
 
-    assert podcast_data.title == lTitle
-    assert podcast_data.host == lHost
-    assert podcast_data.description == lDescription
-    assert podcast_data.episodes == episodes
-    assert podcast_data.podcast_priority == 5
-    assert podcast_data._image_url == lImageURL
+    json_data = podcast_data.toJson()
+    assert json_data == '{"title": "My Podcast", "podcast_url": "http://example.com/podcast.rss", "host": "John Doe", "description": "This is a podcast", "podcast_priority": 5, "image_url": "http://example.com/image.jpg"}'

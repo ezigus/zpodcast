@@ -1,11 +1,13 @@
-from dataclasses import dataclass
+from dataclasses import dataclass,asdict
+from dataclasses_json import dataclass_json
 import validators
-from typing import Optional
-from zpodcast.podcastepisode import PodcastEpisode
+from typing import Optional, List
+from zpodcast.podcastlist import PodcastList
+
 #from zpodcast.podcastutils import is_valid_url
-from typing import List
+import json
 
-
+@dataclass_json
 @dataclass
 class PodcastData:
     """
@@ -16,11 +18,11 @@ class PodcastData:
     _podcast_url: str
     _host: Optional[str]
     _description: Optional[str]
-    _episodes: Optional[List[PodcastEpisode]]
+    _episodes: Optional[PodcastList]
     _podcast_priority: Optional[int]
     _image_url: Optional[str]
 
-    def __init__(self, title:str, podcast_url: str, host:str = None, description:str = None, episodes:[List[PodcastEpisode]]=None, podcast_priority:int=None, image_url:str=None):
+    def __init__(self, title:str, podcast_url: str, host:str = None, description:str = None, episodes:PodcastList=None, podcast_priority:int=None, image_url:str=None):
         """
         Initializes a new instance of the PodcastData class.
 
@@ -28,7 +30,7 @@ class PodcastData:
             title (str): The title of the podcast.
             host (str): The host of the podcast.
             description (str): The description of the podcast.
-            episodes (List[PodcastEpisode]): The episodes of the podcast.
+            episodes (PodcastList): The episodes of the podcast.
             podcast_priority (int): The priority of the podcast.
             image_url (str): The image URL of the podcast.
         """
@@ -178,15 +180,15 @@ class PodcastData:
         return self._episodes
     
     @episodes.setter
-    def episodes(self, value):
+    def episodes(self, value: PodcastList):
         """
         Sets the episodes of the podcast.
 
         Args:
-            value (List[PodcastEpisode]): The episodes to set for the podcast.
+            value (PodcastList): The episodes to set for the podcast.
         """
         if value is not None:
-            if not isinstance(value, list):
+            if not isinstance(value, PodcastList):
                 value = []
         else:
             value = [] 
@@ -272,3 +274,6 @@ class PodcastData:
         """
         self._image_url = value
  
+ 
+    def toJson(self) -> str:
+        return (self.to_json()) 
