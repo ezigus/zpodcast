@@ -1,4 +1,4 @@
-from dataclasses import dataclass
+from dataclasses import dataclass,asdict
 import validators
 from typing import Optional, List
 from zpodcast.podcastlist import PodcastList
@@ -272,7 +272,7 @@ class PodcastData:
         self._image_url = value
  
  
-    def toJson(self):
-        return (json.dumps(self, default=PodcastData))
+    def toJson(self) -> str:
+        return (json.dumps(asdict(self), default=PodcastData))
  
  
