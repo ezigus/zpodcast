@@ -1,8 +1,9 @@
 import pytest
-import dataclasses
 from email.utils import parsedate_to_datetime
 from datetime import date,datetime
-from zpodcast.podcastepisode import PodcastEpisode    
+from zpodcast.podcastepisode import PodcastEpisode
+from pydantic import ValidationError
+  
 
 # """
 # tests to validate that the class is a dataclass
@@ -13,7 +14,6 @@ from zpodcast.podcastepisode import PodcastEpisode
 lTitle = "Episode 1"
 lDescription = "Episode 1 description"
 lAudio_URL = "https://example.com/episode1.mp3"
-#2023-08-04T12:00:00Z
 lpub_date = "2016-04-11T15:00:00Z"
 
 # """
@@ -36,9 +36,9 @@ def test_podcastepisode_title_somefields():
 
 
     
-# def test_podcastepisode_no_title():
-#     with pytest.raises(TypeError):
-#         episode = PodcastEpisode(description="Episode 1 description", audio_url="https://example.com/episode1.mp3", pub_date=" Mon, 11 Apr 2016 15:00:00 +0100")
+def test_podcastepisode_no_title():
+    with pytest.raises(ValidationError):
+        episode = PodcastEpisode(description="Episode 1 description", audio_url="https://example.com/episode1.mp3", pub_date=" Mon, 11 Apr 2016 15:00:00 +0100")
 
 # """
 # tests to validate the setting of retrieval of the description
