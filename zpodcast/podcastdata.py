@@ -1,10 +1,13 @@
 from dataclasses import dataclass,asdict
+from dataclasses_json import dataclass_json
 import validators
 from typing import Optional, List
 from zpodcast.podcastlist import PodcastList
+
 #from zpodcast.podcastutils import is_valid_url
 import json
 
+@dataclass_json
 @dataclass
 class PodcastData:
     """
@@ -273,6 +276,4 @@ class PodcastData:
  
  
     def toJson(self) -> str:
-        return (json.dumps(asdict(self), default=PodcastData))
- 
- 
+        return (self.to_json()) 
