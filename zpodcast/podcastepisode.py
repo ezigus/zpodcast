@@ -13,7 +13,7 @@ class PodcastEpisode(BaseModel):
     title: str
     audio_url: Optional[str] = None
     pub_date: datetime = None
-    description: str = None
+    description: str = ""
     duration: str = None
     image_url: str = None
     episode_number: int = None

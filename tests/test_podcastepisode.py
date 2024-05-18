@@ -40,25 +40,25 @@ def test_podcastepisode_no_title():
     with pytest.raises(ValidationError):
         episode = PodcastEpisode(description="Episode 1 description", audio_url="https://example.com/episode1.mp3", pub_date=" Mon, 11 Apr 2016 15:00:00 +0100")
 
-# """
-# tests to validate the setting of retrieval of the description
-# """
-# def test_podcastepisode_description(): 
-#     # Create a podcast episode object
-#     episode = PodcastEpisode(title="Episode 1", 
-#                              description="Episode 1 description", 
-#                              audio_url="https://example.com/episode1.mp3", 
-#                              pub_date=" Mon, 11 Apr 2016 15:00:00 +0100")
+"""
+tests to validate the setting of retrieval of the description
+"""
+def test_podcastepisode_description(): 
+    # Create a podcast episode object
+    episode = PodcastEpisode(title=lTitle, 
+                             description=lDescription,
+                             audio_url=lAudio_URL,
+                             pub_date=lpub_date)
 
-#     # Test the description attribute of the podcast episode
-#     assert episode.description == "Episode 1 description"
+    # Test the description attribute of the podcast episode
+    assert episode.description == lDescription
 
-# # negative testing, not submitting a description
-# def test_podcastepisode_no_description():
-#     episode = PodcastEpisode(title="Episode 1", 
-#                             audio_url="https://example.com/episode1.mp3", 
-#                             pub_date=" Mon, 11 Apr 2016 15:00:00 +0100")
-#     assert(episode.description == "")
+# negative testing, not submitting a description
+def test_podcastepisode_no_description():
+    episode = PodcastEpisode(title=lTitle, 
+                             audio_url=lAudio_URL,
+                             pub_date=lpub_date)
+    assert(episode.description == "")
     
 
 # def test_podcastepisode_description_invalid():
