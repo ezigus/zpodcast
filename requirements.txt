@@ -1,2 +1,3 @@
 feedparser
 validators
+pydantic
