@@ -1,7 +1,7 @@
 from datetime import datetime,date
 from typing import Optional, Union
 from dataclasses import dataclass
-from pydantic import BaseModel
+from pydantic import BaseModel, field_validator
 
 #from email.utils import parsedate_to_datetime
 #import validators
@@ -19,9 +19,14 @@ class PodcastEpisode(BaseModel):
     episode_number: int = None
 
 
+    # Custom validator for description
+    @field_validator('description', pre=True, always=True)
+    def desc_not_str(cls, v):
+        if not isinstance(v, str):
+            return ""
+        return v        
+        
 
-
-    
     # """
     # initializes a podcast episode object with the following attributes:
     # Args:
