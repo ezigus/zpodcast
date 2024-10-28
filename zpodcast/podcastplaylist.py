@@ -4,6 +4,7 @@ from opmlparser import OPMLParser
 from rsspodcastparser import RSSPodcastParser
 from podcastepisode import PodcastEpisode
 from typing import Dict
+import json
 
 @dataclass
 class PodcastPlaylist:
@@ -48,6 +49,20 @@ class PodcastPlaylist:
 
     def convert_duration_to_string(self, duration_seconds: float) -> str:
         return self._format_duration(duration_seconds)
+
+    def create_playlist(self, name: str, episodes: List[PodcastEpisode]) -> None:
+        self.name = name
+        self.episodes = episodes
+
+    def save_playlist(self, file_path: str) -> None:
+        with open(file_path, 'w') as file:
+            json.dump(self, file, default=lambda o: o.__dict__, indent=4)
+
+    def load_playlist(self, file_path: str) -> None:
+        with open(file_path, 'r') as file:
+            data = json.load(file)
+            self.name = data['name']
+            self.episodes = [PodcastEpisode(**episode) for episode in data['episodes']]
 
 def main():
     # Create an instance of RSSPlaylist with an empty list of episodes
