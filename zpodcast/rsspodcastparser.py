@@ -48,6 +48,12 @@ class RSSPodcastParser:
         total_seconds = hours * 3600 + minutes * 60 + seconds
         return total_seconds
 
+    @staticmethod
+    def parse_episode_length(entry) -> int:
+        if 'itunes_duration' in entry:
+            return RSSPodcastParser._convert_duration_to_seconds(entry.itunes_duration)
+        return 0
+
 
 def main():
     # Specify the path to the OPML file
@@ -87,5 +93,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-    
-    

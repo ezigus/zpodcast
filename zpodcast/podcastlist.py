@@ -1,4 +1,3 @@
-
 from zpodcast.podcastepisode import PodcastEpisode
 from dataclasses import dataclass
 from typing import Optional, List
@@ -42,5 +41,12 @@ class PodcastList:
     def EmptyEpisodeList(self) -> None:
         self._episodes.clear()
     
-    ## create a generic funciton that takes a method to sort the episodes 
-    
+    def sort_playlists(self, criteria: str) -> None:
+        if criteria == "date_created":
+            self._episodes.sort(key=lambda episode: episode.pub_date)
+        elif criteria == "length":
+            self._episodes.sort(key=lambda episode: episode.duration)
+        elif criteria == "priority":
+            self._episodes.sort(key=lambda episode: episode.priority)
+        else:
+            raise ValueError("Invalid sorting criteria")

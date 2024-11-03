@@ -49,6 +49,25 @@ class PodcastPlaylist:
     def convert_duration_to_string(self, duration_seconds: float) -> str:
         return self._format_duration(duration_seconds)
 
+    def play_episode(self, episode_index: int) -> None:
+        episode = self.episodes[episode_index]
+        print(f"Playing episode: {episode.title}")
+        # Add logic to play the episode
+
+    def play_playlist(self) -> None:
+        for episode in self.episodes:
+            self.play_episode(self.episodes.index(episode))
+
+    def display_remaining_time_playlist(self) -> int:
+        remaining_time = 0
+        for episode in self.episodes:
+            if episode.duration and not episode.is_listened:
+                remaining_time += episode.duration
+        return remaining_time
+
+    def remove_listened_episode(self) -> None:
+        self.episodes = [episode for episode in self.episodes if not episode.is_listened]
+
 def main():
     # Create an instance of RSSPlaylist with an empty list of episodes
     playlist: PodcastPlaylist = PodcastPlaylist(name="zPodcastTest", episodes=[])

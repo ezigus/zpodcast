@@ -376,3 +376,73 @@ def test_podcast_data_toJson():
 
     json_data = podcast_data.toJson()
     assert json_data == '{"title": "My Podcast", "podcast_url": "http://example.com/podcast.rss", "host": "John Doe", "description": "This is a podcast", "podcast_priority": 5, "image_url": "http://example.com/image.jpg"}'
+
+def test_calculate_total_duration():
+    episodes = Mock()
+    episodes.__iter__ = Mock(return_value=iter([
+        Mock(duration=30),
+        Mock(duration=60),
+        Mock(duration=None),
+        Mock(duration=90)
+    ]))
+    podcast_data = PodcastData(
+        title=lTitle,
+        podcast_url=lPodcastURL,
+        host=lHost,
+        episodes=episodes,
+        description=lDescription,
+        podcast_priority=5,
+        image_url=lImageURL
+    )
+    assert podcast_data.calculate_total_duration() == 180
+
+def test_calculate_remaining_time():
+    episodes = Mock()
+    episodes.__iter__ = Mock(return_value=iter([
+        Mock(duration=30, is_listened=False),
+        Mock(duration=60, is_listened=True),
+        Mock(duration=None, is_listened=False),
+        Mock(duration=90, is_listened=False)
+    ]))
+    podcast_data = PodcastData(
+        title=lTitle,
+        podcast_url=lPodcastURL,
+        host=lHost,
+        episodes=episodes,
+        description=lDescription,
+        podcast_priority=5,
+        image_url=lImageURL
+    )
+    assert podcast_data.calculate_remaining_time() == 120
+
+def test_calculate_remaining_time_episode():
+    episodes = Mock()
+    episodes.__getitem__ = Mock(return_value=Mock(duration=30, is_listened=False))
+    podcast_data = PodcastData(
+        title=lTitle,
+        podcast_url=lPodcastURL,
+        host=lHost,
+        episodes=episodes,
+        description=lDescription,
+        podcast_priority=5,
+        image_url=lImageURL
+    )
+    assert podcast_data.calculate_remaining_time_episode(0) == 30
+
+def test_mark_episode_listened():
+    episodes = Mock()
+    episode = Mock(is_listened=False)
+    episodes.__getitem__ = Mock(return_value=episode)
+    episodes.pop = Mock()
+    podcast_data = PodcastData(
+        title=lTitle,
+        podcast_url=lPodcastURL,
+        host=lHost,
+        episodes=episodes,
+        description=lDescription,
+        podcast_priority=5,
+        image_url=lImageURL
+    )
+    podcast_data.mark_episode_listened(0)
+    assert episode.is_listened is True
+    episodes.pop.assert_called_once_with(0)

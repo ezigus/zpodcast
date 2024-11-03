@@ -277,3 +277,28 @@ class PodcastData:
  
     def toJson(self) -> str:
         return (self.to_json()) 
+
+    def calculate_total_duration(self) -> int:
+        total_duration = 0
+        for episode in self.episodes:
+            if episode.duration:
+                total_duration += episode.duration
+        return total_duration
+
+    def calculate_remaining_time(self) -> int:
+        remaining_time = 0
+        for episode in self.episodes:
+            if episode.duration and not episode.is_listened:
+                remaining_time += episode.duration
+        return remaining_time
+
+    def calculate_remaining_time_episode(self, episode_index: int) -> int:
+        episode = self.episodes[episode_index]
+        if episode.duration and not episode.is_listened:
+            return episode.duration
+        return 0
+
+    def mark_episode_listened(self, episode_index: int) -> None:
+        episode = self.episodes[episode_index]
+        episode.is_listened = True
+        self.episodes.pop(episode_index)
