@@ -43,3 +43,35 @@ def test_move_episode_to_position():
     playlist.move_episode_to_position(0, 2)
     assert playlist.episodes[0] == episode2
     assert playlist.episodes[2] == episode1
+
+def test_set_name():
+    playlist = PodcastPlaylist(name="Test Playlist", episodes=[])
+    playlist.set_name("New Playlist Name")
+    assert playlist.name == "New Playlist Name"
+
+def test_set_name_invalid():
+    playlist = PodcastPlaylist(name="Test Playlist", episodes=[])
+    with pytest.raises(ValueError):
+        playlist.set_name("Invalid@Name")
+
+def test_get_num_items():
+    episode1 = PodcastEpisode(title="Episode 1", audio_url="https://example.com/episode1.mp3")
+    episode2 = PodcastEpisode(title="Episode 2", audio_url="https://example.com/episode2.mp3")
+    playlist = PodcastPlaylist(name="Test Playlist", episodes=[episode1, episode2])
+    assert playlist.get_num_items() == 2
+
+def test_calculate_duration():
+    episode1 = PodcastEpisode(title="Episode 1", audio_url="https://example.com/episode1.mp3", duration=1800)
+    episode2 = PodcastEpisode(title="Episode 2", audio_url="https://example.com/episode2.mp3", duration=3600)
+    playlist = PodcastPlaylist(name="Test Playlist", episodes=[episode1, episode2])
+    assert playlist.calculate_duration() == 5400
+
+def test_format_duration():
+    playlist = PodcastPlaylist(name="Test Playlist", episodes=[])
+    formatted_duration = playlist._format_duration(5400)
+    assert formatted_duration == "0 days, 01:30:00"
+
+def test_convert_duration_to_string():
+    playlist = PodcastPlaylist(name="Test Playlist", episodes=[])
+    duration_string = playlist.convert_duration_to_string(5400)
+    assert duration_string == "0 days, 01:30:00"
