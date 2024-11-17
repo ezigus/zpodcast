@@ -1,4 +1,4 @@
-from dataclasses import dataclass
+from dataclasses import asdict, dataclass
 import validators
 from typing import Optional, List
 from zpodcast.podcastlist import PodcastList

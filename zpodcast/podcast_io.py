@@ -11,7 +11,7 @@ class Podcast_IO:
     def __init__(self, filename:str):
         self.filename = filename
 
-    def save(self, podcasts: [PodcastData]) --> bool:
+    def save(self, podcasts: PodcastData) -> bool:
         """
         Saves all podcast data using a serialization in json format to a local file - this method overwrites the file each time it is called 
         it should also store all of the podcast episodes data it knows about from the podcast data object
@@ -20,7 +20,7 @@ class Podcast_IO:
         # serialize the podcastdata object
         return True
 
-    def load(self,) -> [PodcastData]:
+    def load(self) -> PodcastData:
         """ 
         read from the file and populate podcast data objects with the data found in the json file
         """
