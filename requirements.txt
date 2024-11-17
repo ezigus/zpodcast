@@ -1,2 +1,4 @@
 feedparser
 validators
+dataclasses-json
+mutmut
