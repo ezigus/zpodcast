@@ -362,17 +362,3 @@ def test_image_url():
         image_url=lImageURL
     )
     assert podcast_data.image_url == lImageURL  # Image URL is set correctly
-
-def test_podcast_data_toJson():
-    podcast_data = PodcastData(
-        title=lTitle,
-        podcast_url=lPodcastURL,
-        host=lHost,
-        episodes=episodes,
-        description=lDescription,
-        podcast_priority=5,
-        image_url=lImageURL
-    )
-
-    json_data = podcast_data.toJson()
-    assert json_data == '{"title": "My Podcast", "podcast_url": "http://example.com/podcast.rss", "host": "John Doe", "description": "This is a podcast", "podcast_priority": 5, "image_url": "http://example.com/image.jpg"}'

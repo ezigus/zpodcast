@@ -1,13 +1,12 @@
 from datetime import datetime,date
 from typing import Optional, Union
 from dataclasses import dataclass
-from dataclasses_json import dataclass_json
 from email.utils import parsedate_to_datetime
 import validators
 import json
 
 
-@dataclass_json
+
 @dataclass
 class PodcastEpisode:
     title: str
@@ -202,9 +201,5 @@ class PodcastEpisode:
         else:
             self._image_url = None
 
-    def toJson(self) -> str:
-        """
-        Returns the podcast episode as a JSON string.
-        """
-        return json.dumps(self, default=PodcastEpisode)
+
         

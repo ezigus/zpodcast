@@ -1,10 +1,7 @@
-from dataclasses import dataclass,asdict
+from dataclasses import dataclass
 import validators
 from typing import Optional, List
 from zpodcast.podcastlist import PodcastList
-
-#from zpodcast.podcastutils import is_valid_url
-import json
 
 @dataclass
 class PodcastData:
@@ -40,7 +37,10 @@ class PodcastData:
         self.episodes = episodes
         self.podcast_priority = podcast_priority
         self.image_url = image_url
+        dict()
 
+    def dict(self):
+        print({k: str(v) for k, v in asdict(self).items()})
 
     """
     getter setter for Title variable

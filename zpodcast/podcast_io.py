@@ -1,4 +1,4 @@
-from podcastdata import PodcastData
+from zpodcast.podcastdata import PodcastData
 import json
 
 class Podcast_IO:
@@ -18,13 +18,6 @@ class Podcast_IO:
         """
 
         # serialize the podcastdata object
-        json_podcast = json.dumps(podcasts, default=lambda o: o.__dict__, sort_keys=True, indent=4)
-        print (json_podcast)
-
-        # write the dictionary to a file
-        with open(self.filename, 'w') as f:
-            f.write(json_podcast)
-                    
         return True
 
     def load(self,) -> [PodcastData]:
@@ -36,10 +29,6 @@ class Podcast_IO:
         with open(self.filename, 'r') as f:
             data = json.load(f)
             
-        # create a list of podcast data objects with the data loaded from the json file, converting the json into podcast data objects
-        podcast_data = []
-        for podcast in data:
-            podcast_data.append(PodcastData(**podcast))
             
 
             

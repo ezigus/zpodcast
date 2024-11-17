@@ -374,13 +374,3 @@ def test_podcastepisode_image_url_emptyquotes():
                              pub_date=" Mon, 11 Apr 2016 15:00:00 +0100", 
                              image_url="")
     assert episode.image_url is None
-
-def test_podcastepisode_toJson():
-    # Create a podcast episode object
-    episode = PodcastEpisode(title="Episode 1", 
-                             description="Episode 1 description", 
-                             audio_url="https://example.com/episode1.mp3", 
-                             pub_date=" Mon, 11 Apr 2016 15:00:00 +0100")
-
-    # Test the toJson method of the podcast episode
-    assert episode.toJson() == '{"title": "Episode 1","audio_url": "https://example.com/episode1.mp3","pub_date": parsedate_to_datetime(" Mon, 11 Apr 2016 15:00:00 +0100"),"description": "Episode 1 description","duration": None,"image_url": None,"episode_number": None}' 
