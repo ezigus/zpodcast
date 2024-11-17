@@ -21,14 +21,11 @@ class PodcastPlaylist:
         if not name.isalnum() or len(name) > 100:
             raise ValueError("Invalid playlist name. The name must be alphanumeric and have a maximum length of 100 characters.")
         
-    def add_podcast(self, episode: PodcastEpisode) -> None:
+    def add_podcastepisode(self, episode: PodcastEpisode) -> None:
         self.episodes.append(episode)
 
-    def remove_podcast(self, index: int) -> None:
+    def remove_podcastepisode(self, index: int) -> None:
         del self.episodes[index]
-
-    def insert_podcast(self, episode: PodcastEpisode, index: int) -> None:
-        self.episodes.insert(index, episode)
 
     def get_num_items(self) -> int:
         return len(self.episodes)
@@ -65,7 +62,7 @@ def main():
         
         # Add the most recent 5 episodes to the playlist
         for episode in episodes[:5]:
-            playlist.add_podcast(episode)
+            playlist.add_podcastepisode(episode)
         
         # Get the number of items in the playlist
         num_items: int = playlist.get_num_items()
