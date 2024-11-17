@@ -20,7 +20,7 @@ class PodcastPlaylist:
     
     def _validate_name(self, name: str) -> None:
         print(f"name = {name}")
-        if not bool(re.match('([a-zA-Z0-9\s]+$)', name)):
+        if not bool(re.match('([a-zA-Z0-9\ ]+$)', name)):
             raise ValueError("Invalid playlist name. The name must be alphanumeric.")
         
         if len(name) > 100:
@@ -38,7 +38,7 @@ class PodcastPlaylist:
     def calculate_duration(self) -> float:
         total_duration_seconds = 0.0
         for episode in self.episodes:
-            total_duration_seconds = episode.duration_in_seconds
+            total_duration_seconds += episode.duration
         return total_duration_seconds
 
     def _format_duration(self, duration_seconds: float) -> str:
