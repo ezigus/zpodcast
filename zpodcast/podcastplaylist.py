@@ -51,6 +51,19 @@ class PodcastPlaylist:
     def convert_duration_to_string(self, duration_seconds: float) -> str:
         return self._format_duration(duration_seconds)
 
+    def move_episode_up(self, index: int) -> None:
+        if index > 0 and index < len(self.episodes):
+            self.episodes[index], self.episodes[index - 1] = self.episodes[index - 1], self.episodes[index]
+
+    def move_episode_down(self, index: int) -> None:
+        if index >= 0 and index < len(self.episodes) - 1:
+            self.episodes[index], self.episodes[index + 1] = self.episodes[index + 1], self.episodes[index]
+
+    def move_episode_to_position(self, current_index: int, new_index: int) -> None:
+        if current_index >= 0 and current_index < len(self.episodes) and new_index >= 0 and new_index < len(self.episodes):
+            episode = self.episodes.pop(current_index)
+            self.episodes.insert(new_index, episode)
+
 # def main():
 #     # Create an instance of RSSPlaylist with an empty list of episodes
 #     playlist: PodcastPlaylist = PodcastPlaylist(name="zPodcastTest", episodes=[])
