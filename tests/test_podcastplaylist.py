@@ -70,6 +70,22 @@ def test_format_duration():
     playlist = PodcastPlaylist(name="Test Playlist", episodes=[])
     formatted_duration = playlist._format_duration(5400)
     assert formatted_duration == "0 days, 01:30:00"
+    
+def test_format_duration_seconds():
+    playlist = PodcastPlaylist(name="Test Playlist", episodes=[])
+    formatted_duration = playlist._format_duration(5401)
+    assert formatted_duration == "0 days, 01:30:01"
+    
+def test_format_duration_minutes():
+    playlist = PodcastPlaylist(name="Test Playlist", episodes=[])
+    formatted_duration = playlist._format_duration(5461)
+    assert formatted_duration == "0 days, 01:31:01"
+    
+def test_format_duration_days():
+    playlist = PodcastPlaylist(name="Test Playlist", episodes=[])
+    formatted_duration = playlist._format_duration(90061)
+    assert formatted_duration == "1 days, 01:01:01"
+    
 
 def test_convert_duration_to_string():
     playlist = PodcastPlaylist(name="Test Playlist", episodes=[])

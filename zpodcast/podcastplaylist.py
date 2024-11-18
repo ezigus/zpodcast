@@ -46,7 +46,9 @@ class PodcastPlaylist:
         hours = int((duration_seconds % 86400) // 3600)
         minutes = int((duration_seconds % 3600) // 60)
         seconds = int(duration_seconds % 60)
-        return f"{days} days, {hours:02d}:{minutes:02d}:{seconds:02d}"
+        string = f"{days} days, {hours:02d}:{minutes:02d}:{seconds:02d}"
+        print (string)
+        return string
 
     def convert_duration_to_string(self, duration_seconds: float) -> str:
         return self._format_duration(duration_seconds)
