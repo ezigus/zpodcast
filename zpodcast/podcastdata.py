@@ -1,7 +1,7 @@
 from dataclasses import asdict, dataclass
 import validators
 from typing import Optional, List
-from zpodcast.podcastlist import PodcastList
+from zpodcast.podcastplaylist import PodcastPlaylist
 
 @dataclass
 class PodcastData:
@@ -13,11 +13,16 @@ class PodcastData:
     _podcast_url: str
     _host: Optional[str]
     _description: Optional[str]
-    _episodes: Optional[PodcastList]
     _podcast_priority: Optional[int]
     _image_url: Optional[str]
 
-    def __init__(self, title:str, podcast_url: str, host:str = None, description:str = None, episodes:PodcastList=None, podcast_priority:int=None, image_url:str=None):
+    def __init__(self, title:str, 
+                 podcast_url: str, 
+                 host:str = None, 
+                 description:str = None, 
+                 episodes:PodcastPlaylist=None, 
+                 podcast_priority:int=None, 
+                 image_url:str=None):
         """
         Initializes a new instance of the PodcastData class.
 
@@ -38,9 +43,6 @@ class PodcastData:
         self.podcast_priority = podcast_priority
         self.image_url = image_url
         dict()
-
-    def dict(self):
-        print({k: str(v) for k, v in asdict(self).items()})
 
     """
     getter setter for Title variable
@@ -161,38 +163,7 @@ class PodcastData:
         else:
             value = ""
                 
-        self._description = value
-
-
-    """
-    getter setter for episodes
-    """
-    @property
-    def episodes(self):
-        """
-        Gets the episodes of the podcast.
-
-        Returns:
-            List[PodcastEpisode]: The episodes of the podcast.
-        """
-        return self._episodes
-    
-    @episodes.setter
-    def episodes(self, value: PodcastList):
-        """
-        Sets the episodes of the podcast.
-
-        Args:
-            value (PodcastList): The episodes to set for the podcast.
-        """
-        if value is not None:
-            if not isinstance(value, PodcastList):
-                value = []
-        else:
-            value = [] 
-            
-        self._episodes = value
-    
+        self._description = value    
     
     """
     getter setter for priority with a clamping of the priority between -10 and 10

@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 import re
-from typing import List
+from typing import List, Optional
 #from zpodcast.opmlparser import OPMLParser
 #from zpodcast.rsspodcastparser import RSSPodcastParser
 from zpodcast.podcastepisode import PodcastEpisode
@@ -9,7 +9,7 @@ from typing import Dict
 @dataclass
 class PodcastPlaylist:
     name: str
-    episodes: List[PodcastEpisode]
+    episodes: Optional[List[PodcastEpisode]]
     
     def __post_init__(self):
         self._validate_name(self.name)
