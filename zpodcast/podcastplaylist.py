@@ -65,3 +65,24 @@ class PodcastPlaylist:
         if current_index >= 0 and current_index < len(self.episodes) and new_index >= 0 and new_index < len(self.episodes):
             episode = self.episodes.pop(current_index)
             self.episodes.insert(new_index, episode)
+
+    def get_all_episode_details(self) -> List[Dict[str, str]]:
+        episode_details = []
+        for episode in self.episodes:
+            details = {
+                "title": episode.title,
+                "duration": episode.duration,
+                "audio_url": episode.audio_url
+            }
+            episode_details.append(details)
+        return episode_details
+
+    def get_episode_details(self, index: int) -> Dict[str, str]:
+        if index < 0 or index >= len(self.episodes):
+            return {}
+        episode = self.episodes[index]
+        return {
+            "title": episode.title,
+            "duration": episode.duration,
+            "audio_url": episode.audio_url
+        }

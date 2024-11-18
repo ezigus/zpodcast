@@ -91,3 +91,25 @@ def test_convert_duration_to_string():
     playlist = PodcastPlaylist(name="Test Playlist", episodes=[])
     duration_string = playlist.convert_duration_to_string(5400)
     assert duration_string == "0 days, 01:30:00"
+
+def test_get_all_episode_details():
+    episode1 = PodcastEpisode(title="Episode 1", audio_url="https://example.com/episode1.mp3", duration=1800)
+    episode2 = PodcastEpisode(title="Episode 2", audio_url="https://example.com/episode2.mp3", duration=3600)
+    playlist = PodcastPlaylist(name="Test Playlist", episodes=[episode1, episode2])
+    details = playlist.get_all_episode_details()
+    assert len(details) == 2
+    assert details[0]["title"] == "Episode 1"
+    assert details[0]["duration"] == 1800
+    assert details[0]["audio_url"] == "https://example.com/episode1.mp3"
+    assert details[1]["title"] == "Episode 2"
+    assert details[1]["duration"] == 3600
+    assert details[1]["audio_url"] == "https://example.com/episode2.mp3"
+
+def test_get_episode_details():
+    episode1 = PodcastEpisode(title="Episode 1", audio_url="https://example.com/episode1.mp3", duration=1800)
+    episode2 = PodcastEpisode(title="Episode 2", audio_url="https://example.com/episode2.mp3", duration=3600)
+    playlist = PodcastPlaylist(name="Test Playlist", episodes=[episode1, episode2])
+    details = playlist.get_episode_details(1)
+    assert details["title"] == "Episode 2"
+    assert details["duration"] == 3600
+    assert details["audio_url"] == "https://example.com/episode2.mp3"
