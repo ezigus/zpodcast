@@ -113,3 +113,31 @@ def test_get_episode_details():
     assert details["title"] == "Episode 2"
     assert details["duration"] == 3600
     assert details["audio_url"] == "https://example.com/episode2.mp3"
+
+def test_get_episodes_all():
+    episode1 = PodcastEpisode(title="Episode 1", audio_url="https://example.com/episode1.mp3", duration=1800)
+    episode2 = PodcastEpisode(title="Episode 2", audio_url="https://example.com/episode2.mp3", duration=3600)
+    playlist = PodcastPlaylist(name="Test Playlist", episodes=[episode1, episode2])
+    episodes = playlist.get_episodes()
+    assert len(episodes) == 2
+    assert episodes[0] == episode1
+    assert episodes[1] == episode2
+
+def test_get_episodes_specific():
+    episode1 = PodcastEpisode(title="Episode 1", audio_url="https://example.com/episode1.mp3", duration=1800)
+    episode2 = PodcastEpisode(title="Episode 2", audio_url="https://example.com/episode2.mp3", duration=3600)
+    episode3 = PodcastEpisode(title="Episode 3", audio_url="https://example.com/episode3.mp3", duration=5400)
+    playlist = PodcastPlaylist(name="Test Playlist", episodes=[episode1, episode2, episode3])
+    episodes = playlist.get_episodes([0, 2])
+    assert len(episodes) == 2
+    assert episodes[0] == episode1
+    assert episodes[1] == episode3
+
+def test_get_episodes_edge_cases():
+    episode1 = PodcastEpisode(title="Episode 1", audio_url="https://example.com/episode1.mp3", duration=1800)
+    episode2 = PodcastEpisode(title="Episode 2", audio_url="https://example.com/episode2.mp3", duration=3600)
+    episode3 = PodcastEpisode(title="Episode 3", audio_url="https://example.com/episode3.mp3", duration=5400)
+    playlist = PodcastPlaylist(name="Test Playlist", episodes=[episode1, episode2, episode3])
+    episodes = playlist.get_episodes([-1, 3, 1])
+    assert len(episodes) == 1
+    assert episodes[0] == episode2

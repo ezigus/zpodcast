@@ -1,8 +1,6 @@
 from dataclasses import dataclass
 import re
 from typing import List
-#from zpodcast.opmlparser import OPMLParser
-#from zpodcast.rsspodcastparser import RSSPodcastParser
 from zpodcast.podcastepisode import PodcastEpisode
 from typing import Dict
 
@@ -86,3 +84,11 @@ class PodcastPlaylist:
             "duration": episode.duration,
             "audio_url": episode.audio_url
         }
+
+    def get_episodes(self, indices: List[int] = None) -> List[PodcastEpisode]:
+        if indices is None:
+            return self.episodes
+        valid_indices = [i for i in indices if isinstance(i, int) and 0 <= i < len(self.episodes)]
+        if len(valid_indices) != len(indices):
+            raise ValueError("Invalid indices provided.")
+        return [self.episodes[i] for i in valid_indices]
