@@ -51,9 +51,9 @@ def test_set_name():
 
 def test_set_name_invalid():
     playlist = PodcastPlaylist(name="Test Playlist", episodes=[])
+
     with pytest.raises(ValueError):
         playlist.set_name("Invalid@Name")
-
 def test_get_num_items():
     episode1 = PodcastEpisode(title="Episode 1", audio_url="https://example.com/episode1.mp3")
     episode2 = PodcastEpisode(title="Episode 2", audio_url="https://example.com/episode2.mp3")
@@ -113,3 +113,60 @@ def test_get_episode_details():
     assert details["title"] == "Episode 2"
     assert details["duration"] == 3600
     assert details["audio_url"] == "https://example.com/episode2.mp3"
+
+def test_get_episodes_all():
+    episode1 = PodcastEpisode(title="Episode 1", audio_url="https://example.com/episode1.mp3", duration=1800)
+    episode2 = PodcastEpisode(title="Episode 2", audio_url="https://example.com/episode2.mp3", duration=3600)
+    playlist = PodcastPlaylist(name="Test Playlist", episodes=[episode1, episode2])
+    episodes = playlist.get_episodes()
+    assert len(episodes) == 2
+    assert episodes[0] == episode1
+    assert episodes[1] == episode2
+
+def test_get_episodes_specific():
+    episode1 = PodcastEpisode(title="Episode 1", audio_url="https://example.com/episode1.mp3", duration=1800)
+    episode2 = PodcastEpisode(title="Episode 2", audio_url="https://example.com/episode2.mp3", duration=3600)
+    episode3 = PodcastEpisode(title="Episode 3", audio_url="https://example.com/episode3.mp3", duration=5400)
+    playlist = PodcastPlaylist(name="Test Playlist", episodes=[episode1, episode2, episode3])
+    episodes = playlist.get_episodes([0, 2])
+    assert len(episodes) == 2
+    assert episodes[0] == episode1
+    assert episodes[1] == episode3
+
+def test_get_episodes_invalid_indices():
+    episode1 = PodcastEpisode(title="Episode 1", audio_url="https://example.com/episode1.mp3", duration=1800)
+    episode2 = PodcastEpisode(title="Episode 2", audio_url="https://example.com/episode2.mp3", duration=3600)
+    episode3 = PodcastEpisode(title="Episode 3", audio_url="https://example.com/episode3.mp3", duration=5400)
+    playlist = PodcastPlaylist(name="Test Playlist", episodes=[episode1, episode2, episode3])
+    with pytest.raises(ValueError):
+        episodes = playlist.get_episodes(["a"])
+
+
+def test_get_episodes_any_order():
+    episode1 = PodcastEpisode(title="Episode 1", audio_url="https://example.com/episode1.mp3", duration=1800)
+    episode2 = PodcastEpisode(title="Episode 2", audio_url="https://example.com/episode2.mp3", duration=3600)
+    episode3 = PodcastEpisode(title="Episode 3", audio_url="https://example.com/episode3.mp3", duration=5400)
+    playlist = PodcastPlaylist(name="Test Playlist", episodes=[episode1, episode2, episode3])
+    episodes = playlist.get_episodes([1, 2, 1, 0])
+    assert len(episodes) == 4
+    assert episodes[0] == episode2
+    assert episodes[1] == episode3
+    assert episodes[2] == episode2
+    assert episodes[3] == episode1
+
+def test_get_episodes_too_low():
+    episode1 = PodcastEpisode(title="Episode 1", audio_url="https://example.com/episode1.mp3", duration=1800)
+    episode2 = PodcastEpisode(title="Episode 2", audio_url="https://example.com/episode2.mp3", duration=3600)
+    episode3 = PodcastEpisode(title="Episode 3", audio_url="https://example.com/episode3.mp3", duration=5400)
+    playlist = PodcastPlaylist(name="Test Playlist", episodes=[episode1, episode2, episode3])
+    with pytest.raises(ValueError):
+        episodes = playlist.get_episodes([-1, 2, 0])
+
+def test_get_episodes_too_high():
+    episode1 = PodcastEpisode(title="Episode 1", audio_url="https://example.com/episode1.mp3", duration=1800)
+    episode2 = PodcastEpisode(title="Episode 2", audio_url="https://example.com/episode2.mp3", duration=3600)
+    episode3 = PodcastEpisode(title="Episode 3", audio_url="https://example.com/episode3.mp3", duration=5400)
+    playlist = PodcastPlaylist(name="Test Playlist", episodes=[episode1, episode2, episode3])
+    with pytest.raises(ValueError):
+        episodes = playlist.get_episodes([1, 3, 0])
+    
