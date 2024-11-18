@@ -46,7 +46,9 @@ class PodcastPlaylist:
         hours = int((duration_seconds % 86400) // 3600)
         minutes = int((duration_seconds % 3600) // 60)
         seconds = int(duration_seconds % 60)
-        return f"{days} days, {hours:02d}:{minutes:02d}:{seconds:02d}"
+        string = f"{days} days, {hours:02d}:{minutes:02d}:{seconds:02d}"
+        print (string)
+        return string
 
     def convert_duration_to_string(self, duration_seconds: float) -> str:
         return self._format_duration(duration_seconds)
@@ -63,39 +65,3 @@ class PodcastPlaylist:
         if current_index >= 0 and current_index < len(self.episodes) and new_index >= 0 and new_index < len(self.episodes):
             episode = self.episodes.pop(current_index)
             self.episodes.insert(new_index, episode)
-
-# def main():
-#     # Create an instance of RSSPlaylist with an empty list of episodes
-#     playlist: PodcastPlaylist = PodcastPlaylist(name="zPodcastTest", episodes=[])
-
-#     # Parse the OPML file and retrieve the RSS feeds
-#     rss_feeds: List[Dict[str, str]] = OPMLParser.parse_opml_file('test.opml')
-    
-#     if rss_feeds:
-#         # Get the episodes from the first RSS feed
-#         episodes: List[PodcastEpisode] = RSSPodcastParser.get_episodes(rss_feeds[0]['url'])
-        
-#         # Sort episodes by publication date in descending order
-#         episodes.sort(key=lambda episode: episode.pub_date, reverse=True)
-        
-#         # Add the most recent 5 episodes to the playlist
-#         for episode in episodes[:5]:
-#             playlist.add_podcastepisode(episode)
-        
-#         # Get the number of items in the playlist
-#         num_items: int = playlist.get_num_items()
-        
-#         # Calculate the duration of the playlist in seconds
-#         playlist_duration: float = playlist.calculate_duration()
-        
-#         # Print the number of items in the playlist
-#         print(f"Number of items in the playlist: {num_items}")
-        
-#         # Print the duration of the playlist in seconds
-#         print(f"Duration of the playlist: {playlist_duration} seconds")
-        
-#         # Print the duration of the playlist in a formatted string
-#         print(f"Duration of the playlist: {playlist.convert_duration_to_string(playlist_duration)}")
-
-# if __name__ == "__main__":
-#     main()
