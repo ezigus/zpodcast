@@ -17,7 +17,6 @@ class PodcastPlaylist:
         self.name = name
     
     def _validate_name(self, name: str) -> None:
-        print(f"name = {name}")
         if not bool(re.match('([a-zA-Z0-9\ ]+$)', name)):
             raise ValueError("Invalid playlist name. The name must be alphanumeric.")
         
@@ -45,7 +44,6 @@ class PodcastPlaylist:
         minutes = int((duration_seconds % 3600) // 60)
         seconds = int(duration_seconds % 60)
         string = f"{days} days, {hours:02d}:{minutes:02d}:{seconds:02d}"
-        print (string)
         return string
 
     def convert_duration_to_string(self, duration_seconds: float) -> str:
@@ -85,9 +83,13 @@ class PodcastPlaylist:
             "audio_url": episode.audio_url
         }
 
+    """
+    if the passed indices list is not entered or is none, then get all of the episodes.
+    """
     def get_episodes(self, indices: List[int] = None) -> List[PodcastEpisode]:
         if indices is None:
             return self.episodes
+        
         valid_indices = [i for i in indices if isinstance(i, int) and 0 <= i < len(self.episodes)]
         if len(valid_indices) != len(indices):
             raise ValueError("Invalid indices provided.")
