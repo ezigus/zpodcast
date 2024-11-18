@@ -77,16 +77,6 @@ class PodcastPlaylist:
             episode_details.append(details)
         return episode_details
 
-    def get_first_episode_details(self) -> Dict[str, str]:
-        if not self.episodes:
-            return {}
-        first_episode = self.episodes[0]
-        return {
-            "title": first_episode.title,
-            "duration": first_episode.duration,
-            "audio_url": first_episode.audio_url
-        }
-
     def get_episode_details(self, index: int) -> Dict[str, str]:
         if index < 0 or index >= len(self.episodes):
             return {}
