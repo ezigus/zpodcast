@@ -1,46 +1,34 @@
-
-from zpodcast.podcastepisode import PodcastEpisode
+from zpodcast.podcastdata import PodcastData
 from dataclasses import dataclass
 from typing import Optional, List
 
-"""
-    This class manages all types of lists for this application.  
-    It stores the list of episodes associated with a podcast
-    It stores a list of episodes that make up a podcast
-    It allows you to resort the list, by passing in a function or using one of the built in ones that is built into this class
-"""
 @dataclass
 class PodcastList:
-    
-    _episodes: Optional [List[PodcastEpisode]]
-    
-    
-    def __init__(self, episodes: List[PodcastEpisode]=None) -> None:
-        self._episdoes = episodes
+    _podcasts: List[PodcastData]
+
+    def __init__(self, podcasts: List[PodcastData] = None) -> None:
+        if not isinstance(podcasts, list):
+            raise ValueError("Value must be a list")    
+        self._podcasts = podcasts if podcasts is not None else []
+
+    def add_podcast(self, podcast: PodcastData) -> None:
+        self._podcasts.append(podcast)
+            
+
+    def remove_podcast(self, podcast: PodcastData) -> None:
+        self._podcasts.remove(podcast)
+
+    def get_all_podcasts(self) -> List[PodcastData]:
+        return self._podcasts
+
+    def get_podcast(self, index: int) -> PodcastData:
+        if not isinstance(index, int):
+            raise ValueError("Non-integer index")
         
-    def GetFirst(self) -> PodcastEpisode:
-        return(self._episodes[0])
-    
-    def GetLast(self) -> PodcastEpisode:
-        return(self._episodes[self._episodes.count-1])
-    
-    def AddToEnd(self, episode: PodcastEpisode) -> None:
-        self._episodes.append(episode)
-    
-    def RemoveFromEnd(self, episode: PodcastEpisode) -> None:
-        self._episodes.pop()
-    
-    def AddAfter(self, existingEpisode: PodcastEpisode, NewEpisode: PodcastEpisode) -> None:
-        pass
-    
-    def AddBefore(self, existingEpisode: PodcastEpisode) -> None:
-        pass
-    
-    def SortByDateTime(self) -> None:
-        pass
-    
-    def EmptyEpisodeList(self) -> None:
-        self._episodes.clear()
-    
-    ## create a generic funciton that takes a method to sort the episodes 
-    
+        if index < 0:
+            raise ValueError("Index less than 0")
+        
+        if index >= len(self._podcasts):
+            raise ValueError("Index greater than size of list")
+            
+        return self._podcasts[index]

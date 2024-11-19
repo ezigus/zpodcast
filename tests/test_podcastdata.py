@@ -1,20 +1,12 @@
 import pytest
 import dataclasses
-from unittest.mock import Mock
 from zpodcast.podcastdata import PodcastData
-from zpodcast.podcastlist import PodcastList
-
+from zpodcast.podcastplaylist import PodcastPlaylist
 
 lTitle="My Podcast"
 lHost="John Doe"
 lDescription="This is a podcast"
-
-
-class MockPodcastList:
-    pass
-
-episodes = MockPodcastList()
-
+episodes = PodcastPlaylist(name="test", episodes=[])
 lPodcastURL = "http://example.com/podcast.rss"
 lImageURL = "http://example.com/image.jpg"
 
@@ -281,8 +273,7 @@ def test_priority_invalid_value():
 """
 testing episodes attributes are set correctly
 """
-def test_podcasmockt_episodes_valid(monkeypatch):
-    episodes = Mock(spec=PodcastList)
+def test_podcast_episodes_valid():
     podcast_data = PodcastData(
         title=lTitle,
         podcast_url=lPodcastURL,
@@ -293,8 +284,6 @@ def test_podcasmockt_episodes_valid(monkeypatch):
         image_url=lImageURL
     )
 
-    
-    print(podcast_data.episodes)
     assert podcast_data.episodes == episodes  # Episodes are set correctly
 
 def test_podcast_episodes_invalid_int():
@@ -308,7 +297,7 @@ def test_podcast_episodes_invalid_int():
         image_url=lImageURL
     )
 
-    assert podcast_data.episodes == []  # Episodes should be set to an empty list
+    assert podcast_data.episodes == None  # Episodes should be set to an empty list
     
 def test_podcast_episodes_invalid_none():
     podcast_data = PodcastData(
@@ -321,7 +310,7 @@ def test_podcast_episodes_invalid_none():
         image_url=lImageURL
     )
 
-    assert podcast_data.episodes == []  # Episodes should be set to an empty list
+    assert podcast_data.episodes == None  # Episodes should be set to an empty list
 
 def test_podcast_episodes_invalid_empty():
     podcast_data = PodcastData(
@@ -333,8 +322,7 @@ def test_podcast_episodes_invalid_empty():
         podcast_priority=5,
         image_url=lImageURL
     )
-
-    assert podcast_data.episodes == []  # Episodes should be set to an empty list
+    assert podcast_data.episodes == None  # Episodes should be set to an empty list
 
 def test_podcast_episodes_invalid_string():
     podcast_data = PodcastData(
@@ -347,7 +335,7 @@ def test_podcast_episodes_invalid_string():
         image_url=lImageURL
     )
 
-    assert podcast_data.episodes == []  # Episodes should be set to an empty list
+    assert podcast_data.episodes == None  # Episodes should be set to an empty list
 
 """
    testing the validate_image_url method
