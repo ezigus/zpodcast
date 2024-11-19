@@ -17,6 +17,9 @@ class PodcastEpisodeList:
         self.name = name
     
     def _validate_name(self, name: str) -> None:
+        if not isinstance(name, str):
+            raise ValueError("Invalid playlist name. Playlist name is not a string.")
+
         if not bool(re.match('([a-zA-Z0-9\ ]+$)', name)):
             raise ValueError("Invalid playlist name. The name must be alphanumeric.")
         
@@ -113,4 +116,4 @@ class PodcastEpisodeList:
             except TypeError as e:
                 raise ValueError(f"Invalid episode data: {e}")
                 
-        return cls(name=name, episodes=episodes, optional_attr=optional_attr)
+        return cls(name=name, episodes=episodes)
