@@ -12,9 +12,38 @@ def test_add_podcast():
         podcast_priority=5,
         image_url="http://example.com/image.jpg"
     )
-    podcast_list = PodcastList(podcast)
+    podcast_list = PodcastList([podcast])
     assert podcast_list.get_podcast(0) == podcast
+
+def test_add_podcast_object():
+    podcast = PodcastData(
+        title="Test Podcast",
+        podcast_url="http://example.com/podcast.rss",
+        host="John Doe",
+        description="This is a test podcast",
+        episodes=[],
+        podcast_priority=5,
+        image_url="http://example.com/image.jpg"
+    )
     
+    with pytest.raises(ValueError):
+        podcast_list = PodcastList(podcast)
+    
+def test_add_podcast_object_int():
+    podcast = PodcastData(
+        title="Test Podcast",
+        podcast_url="http://example.com/podcast.rss",
+        host="John Doe",
+        description="This is a test podcast",
+        episodes=[],
+        podcast_priority=5,
+        image_url="http://example.com/image.jpg"
+    )
+    
+    with pytest.raises(ValueError):
+        podcast_list = PodcastList(1)
+
+
 def test_remove_podcast():
     podcast1 = PodcastData(
         title="Test Podcast 1",
