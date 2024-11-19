@@ -15,6 +15,7 @@ class PodcastData:
     _description: Optional[str]
     _podcast_priority: Optional[int]
     _image_url: Optional[str]
+    _episodes : Optional[PodcastPlaylist]
 
     def __init__(self, title:str, 
                  podcast_url: str, 
@@ -103,7 +104,16 @@ class PodcastData:
         
         self._podcast_url = value
 
-
+    @property
+    def episodes(self):
+        return self._episodes
+    
+    @episodes.setter
+    def episodes(self, value):
+        if not isinstance(value, PodcastPlaylist):
+            self._episodes = None
+        else:
+            self._episodes = value
 
     """
     Getter setter for host
