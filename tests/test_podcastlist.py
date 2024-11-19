@@ -13,7 +13,7 @@ def test_add_podcast():
         image_url="http://example.com/image.jpg"
     )
     podcast_list = PodcastList(podcast)
-    assert podcast_list.test_get_podcast(0) == podcast
+    assert podcast_list.get_podcast(0) == podcast
     
 def test_remove_podcast():
     podcast1 = PodcastData(
@@ -38,7 +38,7 @@ def test_remove_podcast():
     assert len(podcast_list.get_all_podcasts()) == 2
     podcast_list.remove_podcast(podcast1)
     assert len(podcast_list.get_all_podcasts()) == 1
-    assert podcast_list.get_all_podcasts(0) == podcast2
+    assert podcast_list.get_all_podcasts()[0] == podcast2
 
 def test_get_all_podcasts():
     podcast1 = PodcastData(
