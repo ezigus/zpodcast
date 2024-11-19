@@ -94,3 +94,23 @@ class PodcastEpisodeList:
         if len(valid_indices) != len(indices):
             raise ValueError("Invalid indices provided.")
         return [self.episodes[i] for i in valid_indices]
+
+    @classmethod
+    def from_dict(cls, data: Dict[str, any]) -> 'PodcastEpisodeList':
+        mandatory_keys = ['name', 'episodes']
+        for key in mandatory_keys:
+            if key not in data:
+                raise ValueError(f"Missing mandatory key: {key}")
+        
+        name = data['name']
+        episodes_data = data['episodes']
+        
+        episodes = []
+        for episode_data in episodes_data:
+            try:
+                episode = PodcastEpisode(**episode_data)
+                episodes.append(episode)
+            except TypeError as e:
+                raise ValueError(f"Invalid episode data: {e}")
+                
+        return cls(name=name, episodes=episodes, optional_attr=optional_attr)

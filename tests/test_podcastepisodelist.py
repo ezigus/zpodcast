@@ -169,4 +169,42 @@ def test_get_episodes_too_high():
     playlist = PodcastEpisodeList(name="Test Playlist", episodes=[episode1, episode2, episode3])
     with pytest.raises(ValueError):
         episodes = playlist.get_episodes([1, 3, 0])
-    
+
+def test_from_dict_valid():
+    data = {
+        "name": "Test Playlist",
+        "episodes": [
+            {"title": "Episode 1", "audio_url": "https://example.com/episode1.mp3"},
+            {"title": "Episode 2", "audio_url": "https://example.com/episode2.mp3"}
+        ],
+        "optional_attr": "Optional Value"
+    }
+    playlist = PodcastEpisodeList.from_dict(data)
+    assert playlist.name == "Test Playlist"
+    assert len(playlist.episodes) == 2
+    assert playlist.episodes[0].title == "Episode 1"
+    assert playlist.episodes[1].title == "Episode 2"
+    assert playlist.optional_attr == "Optional Value"
+
+def test_from_dict_missing_mandatory_key():
+    data = {
+        "episodes": [
+            {"title": "Episode 1", "audio_url": "https://example.com/episode1.mp3"},
+            {"title": "Episode 2", "audio_url": "https://example.com/episode2.mp3"}
+        ],
+        "optional_attr": "Optional Value"
+    }
+    with pytest.raises(ValueError):
+        PodcastEpisodeList.from_dict(data)
+
+def test_from_dict_invalid_key():
+    data = {
+        "name": "Test Playlist",
+        "episodes": [
+            {"title": "Episode 1", "audio_url": "https://example.com/episode1.mp3"},
+            {"title": "Episode 2", "audio_url": "https://example.com/episode2.mp3"}
+        ],
+        "invalid_key": "Invalid Value"
+    }
+    with pytest.raises(ValueError):
+        PodcastEpisodeList.from_dict(data)
