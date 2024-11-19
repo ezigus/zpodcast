@@ -1,12 +1,12 @@
 import pytest
 import dataclasses
 from zpodcast.podcastdata import PodcastData
-from zpodcast.podcastplaylist import PodcastPlaylist
+from zpodcast.podcastepisodelist import PodcastEpisodeList
 
 lTitle="My Podcast"
 lHost="John Doe"
 lDescription="This is a podcast"
-episodes = PodcastPlaylist(name="test", episodes=[])
+episodes = PodcastEpisodeList(name="test", episodes=[])
 lPodcastURL = "http://example.com/podcast.rss"
 lImageURL = "http://example.com/image.jpg"
 

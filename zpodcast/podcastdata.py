@@ -1,7 +1,7 @@
 from dataclasses import asdict, dataclass
 import validators
 from typing import Optional, List
-from zpodcast.podcastplaylist import PodcastPlaylist
+from zpodcast.podcastepisodelist import PodcastEpisodeList
 
 @dataclass
 class PodcastData:
@@ -15,13 +15,13 @@ class PodcastData:
     _description: Optional[str]
     _podcast_priority: Optional[int]
     _image_url: Optional[str]
-    _episodes : Optional[PodcastPlaylist]
+    _episodes : Optional[PodcastEpisodeList]
 
     def __init__(self, title:str, 
                  podcast_url: str, 
                  host:str = None, 
                  description:str = None, 
-                 episodes:PodcastPlaylist=None, 
+                 episodes:PodcastEpisodeList=None, 
                  podcast_priority:int=None, 
                  image_url:str=None):
         """
@@ -110,7 +110,7 @@ class PodcastData:
     
     @episodes.setter
     def episodes(self, value):
-        if not isinstance(value, PodcastPlaylist):
+        if not isinstance(value, PodcastEpisodeList):
             self._episodes = None
         else:
             self._episodes = value

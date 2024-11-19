@@ -5,7 +5,7 @@ from zpodcast.podcastepisode import PodcastEpisode
 from typing import Dict
 
 @dataclass
-class PodcastPlaylist:
+class PodcastEpisodeList:
     name: str
     episodes: List[PodcastEpisode]
     
