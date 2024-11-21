@@ -117,3 +117,9 @@ class PodcastEpisodeList:
                 raise ValueError(f"Invalid episode data: {e}")
                 
         return cls(name=name, episodes=episodes)
+
+    def to_dict(self) -> Dict[str, any]:
+        return {
+            "name": self.name,
+            "episodes": [episode.to_dict() for episode in self.episodes]
+        }

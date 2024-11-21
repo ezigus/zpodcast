@@ -350,3 +350,43 @@ def test_image_url():
         image_url=lImageURL
     )
     assert podcast_data.image_url == lImageURL  # Image URL is set correctly
+
+def test_to_dict():
+    podcast_data = PodcastData(
+        title=lTitle,
+        podcast_url=lPodcastURL,
+        host=lHost,
+        description=lDescription,
+        episodes=episodes,
+        podcast_priority=5,
+        image_url=lImageURL
+    )
+    podcast_dict = podcast_data.to_dict()
+    assert podcast_dict == {
+        "title": lTitle,
+        "podcast_url": lPodcastURL,
+        "host": lHost,
+        "description": lDescription,
+        "episodes": episodes,
+        "podcast_priority": 5,
+        "image_url": lImageURL
+    }
+
+def test_from_dict():
+    podcast_dict = {
+        "title": lTitle,
+        "podcast_url": lPodcastURL,
+        "host": lHost,
+        "description": lDescription,
+        "episodes": episodes,
+        "podcast_priority": 5,
+        "image_url": lImageURL
+    }
+    podcast_data = PodcastData.from_dict(podcast_dict)
+    assert podcast_data.title == lTitle
+    assert podcast_data.podcast_url == lPodcastURL
+    assert podcast_data.host == lHost
+    assert podcast_data.description == lDescription
+    assert podcast_data.episodes == episodes
+    assert podcast_data.podcast_priority == 5
+    assert podcast_data.image_url == lImageURL

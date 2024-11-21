@@ -374,3 +374,43 @@ def test_podcastepisode_image_url_emptyquotes():
                              pub_date=" Mon, 11 Apr 2016 15:00:00 +0100", 
                              image_url="")
     assert episode.image_url is None
+
+def test_podcastepisode_to_dict():
+    episode = PodcastEpisode(
+        title="Episode 1",
+        audio_url="https://example.com/episode1.mp3",
+        description="Episode 1 description",
+        pub_date="Mon, 11 Apr 2016 15:00:00 +0100",
+        duration=1800,
+        episode_number=1,
+        image_url="https://example.com/episode1.jpg"
+    )
+    episode_dict = episode.to_dict()
+    assert episode_dict == {
+        "title": "Episode 1",
+        "audio_url": "https://example.com/episode1.mp3",
+        "description": "Episode 1 description",
+        "pub_date": "2016-04-11T14:00:00+00:00",
+        "duration": 1800,
+        "episode_number": 1,
+        "image_url": "https://example.com/episode1.jpg"
+    }
+
+def test_podcastepisode_from_dict():
+    episode_dict = {
+        "title": "Episode 1",
+        "audio_url": "https://example.com/episode1.mp3",
+        "description": "Episode 1 description",
+        "pub_date": "2016-04-11T14:00:00+00:00",
+        "duration": 1800,
+        "episode_number": 1,
+        "image_url": "https://example.com/episode1.jpg"
+    }
+    episode = PodcastEpisode.from_dict(episode_dict)
+    assert episode.title == "Episode 1"
+    assert episode.audio_url == "https://example.com/episode1.mp3"
+    assert episode.description == "Episode 1 description"
+    assert episode.pub_date == datetime.fromisoformat("2016-04-11T14:00:00+00:00")
+    assert episode.duration == 1800
+    assert episode.episode_number == 1
+    assert episode.image_url == "https://example.com/episode1.jpg"

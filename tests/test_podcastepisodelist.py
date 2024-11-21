@@ -205,3 +205,32 @@ def test_from_dict_invalid_name():
     }
     with pytest.raises(ValueError):
         PodcastEpisodeList.from_dict(data)
+
+def test_to_dict():
+    episode1 = PodcastEpisode(title="Episode 1", audio_url="https://example.com/episode1.mp3", duration=1800)
+    episode2 = PodcastEpisode(title="Episode 2", audio_url="https://example.com/episode2.mp3", duration=3600)
+    playlist = PodcastEpisodeList(name="Test Playlist", episodes=[episode1, episode2])
+    playlist_dict = playlist.to_dict()
+    assert playlist_dict == {
+        "name": "Test Playlist",
+        "episodes": [
+            {
+                "title": "Episode 1",
+                "audio_url": "https://example.com/episode1.mp3",
+                "description": "",
+                "pub_date": None,
+                "duration": 1800,
+                "episode_number": None,
+                "image_url": None
+            },
+            {
+                "title": "Episode 2",
+                "audio_url": "https://example.com/episode2.mp3",
+                "description": "",
+                "pub_date": None,
+                "duration": 3600,
+                "episode_number": None,
+                "image_url": None
+            }
+        ]
+    }
