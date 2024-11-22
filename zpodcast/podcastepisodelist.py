@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from datetime import date
 import re
 from typing import List
 from zpodcast.podcastepisode import PodcastEpisode
@@ -117,3 +118,9 @@ class PodcastEpisodeList:
                 raise ValueError(f"Invalid episode data: {e}")
                 
         return cls(name=name, episodes=episodes)
+
+    def to_dict(self) -> Dict[str, any]:
+        return {
+            "name": self.name,
+            "episodes": [episode.to_dict() for episode in self.episodes]
+        }

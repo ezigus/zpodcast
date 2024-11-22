@@ -201,5 +201,28 @@ class PodcastEpisode:
         else:
             self._image_url = None
 
+    def to_dict(self):
+        return {
+            "title": self.title,
+            "audio_url": self.audio_url,
+            "description": self.description,
+            "pub_date": self.pub_date.isoformat() if self.pub_date else None,
+            "duration": self.duration,
+            "episode_number": self.episode_number,
+            "image_url": self.image_url
+        }
 
-        
+    @classmethod
+    def from_dict(cls, data):
+        pub_date = data.get("pub_date")
+        if pub_date:
+            pub_date = datetime.fromisoformat(pub_date)
+        return cls(
+            title=data.get("title"),
+            audio_url=data.get("audio_url"),
+            description=data.get("description"),
+            pub_date=pub_date,
+            duration=data.get("duration"),
+            episode_number=data.get("episode_number"),
+            image_url=data.get("image_url")
+        )

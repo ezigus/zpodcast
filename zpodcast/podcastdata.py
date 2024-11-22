@@ -111,7 +111,7 @@ class PodcastData:
     @episodes.setter
     def episodes(self, value):
         if not isinstance(value, PodcastEpisodeList):
-            self._episodes = None
+            self._episodes = []
         else:
             self._episodes = value
 
@@ -254,5 +254,19 @@ class PodcastData:
         self._image_url = value
  
  
-    def toJson(self) -> str:
-        return (self.to_json()) 
+
+    def to_dict(self):
+        podcastdata_dict = {
+            "title" : self.title,
+            "podcast_url" : self.podcast_url,
+            "host" : self.host,
+            "description" : self.description,
+            "episodes" : self.episodes,
+            "podcast_priority" : self.podcast_priority,
+            "image_url" : self.image_url
+        }
+        return podcastdata_dict
+
+    @classmethod
+    def from_dict(cls, data):
+        return cls(**data)

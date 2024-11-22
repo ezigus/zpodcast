@@ -32,3 +32,14 @@ class PodcastList:
             raise ValueError("Index greater than size of list")
             
         return self._podcasts[index]
+
+    def to_dict(self):
+        return {
+            "podcasts": [podcast.to_dict() for podcast in self._podcasts]
+        }
+
+    @classmethod
+    def from_dict(cls, data):
+        podcasts_data = data.get("podcasts", [])
+        podcasts = [PodcastData.from_dict(podcast_data) for podcast_data in podcasts_data]
+        return cls(podcasts=podcasts)
