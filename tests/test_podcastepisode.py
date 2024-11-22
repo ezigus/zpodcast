@@ -390,7 +390,7 @@ def test_podcastepisode_to_dict():
         "title": "Episode 1",
         "audio_url": "https://example.com/episode1.mp3",
         "description": "Episode 1 description",
-        "pub_date": "2016-04-11T14:00:00+00:00",
+        "pub_date": "2016-04-11T15:00:00+01:00",
         "duration": 1800,
         "episode_number": 1,
         "image_url": "https://example.com/episode1.jpg"

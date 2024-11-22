@@ -1,4 +1,5 @@
 import pytest
+from datetime import date
 from zpodcast.podcastepisodelist import PodcastEpisodeList
 from zpodcast.podcastepisode import PodcastEpisode
 
@@ -211,6 +212,8 @@ def test_to_dict():
     episode2 = PodcastEpisode(title="Episode 2", audio_url="https://example.com/episode2.mp3", duration=3600)
     playlist = PodcastEpisodeList(name="Test Playlist", episodes=[episode1, episode2])
     playlist_dict = playlist.to_dict()
+    datetoday = date.today()
+    
     assert playlist_dict == {
         "name": "Test Playlist",
         "episodes": [
@@ -218,7 +221,7 @@ def test_to_dict():
                 "title": "Episode 1",
                 "audio_url": "https://example.com/episode1.mp3",
                 "description": "",
-                "pub_date": None,
+                "pub_date": date.today().isoformat(),
                 "duration": 1800,
                 "episode_number": None,
                 "image_url": None
@@ -227,7 +230,7 @@ def test_to_dict():
                 "title": "Episode 2",
                 "audio_url": "https://example.com/episode2.mp3",
                 "description": "",
-                "pub_date": None,
+                "pub_date": date.today().isoformat(),
                 "duration": 3600,
                 "episode_number": None,
                 "image_url": None

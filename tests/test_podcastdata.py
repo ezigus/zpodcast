@@ -297,7 +297,7 @@ def test_podcast_episodes_invalid_int():
         image_url=lImageURL
     )
 
-    assert podcast_data.episodes == None  # Episodes should be set to an empty list
+    assert podcast_data.episodes == []  # Episodes should be set to an empty list
     
 def test_podcast_episodes_invalid_none():
     podcast_data = PodcastData(
@@ -310,7 +310,7 @@ def test_podcast_episodes_invalid_none():
         image_url=lImageURL
     )
 
-    assert podcast_data.episodes == None  # Episodes should be set to an empty list
+    assert podcast_data.episodes == []  # Episodes should be set to an empty list
 
 def test_podcast_episodes_invalid_empty():
     podcast_data = PodcastData(
@@ -322,7 +322,7 @@ def test_podcast_episodes_invalid_empty():
         podcast_priority=5,
         image_url=lImageURL
     )
-    assert podcast_data.episodes == None  # Episodes should be set to an empty list
+    assert podcast_data.episodes == []  # Episodes should be set to an empty list
 
 def test_podcast_episodes_invalid_string():
     podcast_data = PodcastData(
@@ -335,7 +335,7 @@ def test_podcast_episodes_invalid_string():
         image_url=lImageURL
     )
 
-    assert podcast_data.episodes == None  # Episodes should be set to an empty list
+    assert podcast_data.episodes == []  # Episodes should be set to an empty list
 
 """
    testing the validate_image_url method
