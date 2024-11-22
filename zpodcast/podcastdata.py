@@ -260,7 +260,7 @@ class PodcastData:
             "title" : self.title,
             "podcast_url" : self.podcast_url,
             "host" : self.host,
-            "XXdescriptionXX" : self.description,
+            "description" : self.description,
             "episodes" : self.episodes,
             "podcast_priority" : self.podcast_priority,
             "image_url" : self.image_url
