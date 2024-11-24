@@ -4,7 +4,28 @@ from zpodcast.podcastepisodelist import PodcastEpisodeList
 
 @dataclass
 class PodcastPlaylist:
-    playlists: List[PodcastEpisodeList]
+    _playlists: List[PodcastEpisodeList]
+
+
+    def __init__(self, playlists):
+        self.playlists = playlists
+
+        
+    @property
+    def playlists(self):
+        return self._playlists
+
+    
+    @playlists.setter
+    def playlists(self, playlists: List[PodcastEpisodeList]):
+        if not isinstance(playlists, List):
+            return ValueError("Only settable if this is a list of PodcastEpisodeLists")
+
+        if not playlists == [] and not isinstance(playlists[0], PodcastEpisodeList):
+            return ValueError("Only settable if the values in the list are PodcastEpisodeList")
+            
+        self._playlists = playlists
+
 
     def add_playlist(self, playlist: PodcastEpisodeList) -> None:
         self.playlists.append(playlist)

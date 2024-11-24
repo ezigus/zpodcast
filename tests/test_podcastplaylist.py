@@ -2,6 +2,7 @@ import pytest
 from zpodcast.podcastplaylist import PodcastPlaylist
 from zpodcast.podcastepisodelist import PodcastEpisodeList
 from zpodcast.podcastepisode import PodcastEpisode
+from datetime import date
 
 def test_add_playlist():
     playlist = PodcastEpisodeList(name="Test Playlist", episodes=[])
