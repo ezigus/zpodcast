@@ -46,14 +46,15 @@ def test_move_episode_to_position():
 
 def test_set_name():
     playlist = PodcastEpisodeList(name="Test Playlist", episodes=[])
-    playlist.set_name("New Playlist Name")
+    playlist.name = "New Playlist Name"
     assert playlist.name == "New Playlist Name"
 
 def test_set_name_invalid():
     playlist = PodcastEpisodeList(name="Test Playlist", episodes=[])
 
     with pytest.raises(ValueError):
-        playlist.set_name("Invalid@Name")
+        playlist.name = "Invalid@Name"
+        
 def test_get_num_items():
     episode1 = PodcastEpisode(title="Episode 1", audio_url="https://example.com/episode1.mp3")
     episode2 = PodcastEpisode(title="Episode 2", audio_url="https://example.com/episode2.mp3")

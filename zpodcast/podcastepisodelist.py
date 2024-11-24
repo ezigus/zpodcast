@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+
 import re
 from typing import List
 from zpodcast.podcastepisode import PodcastEpisode
@@ -6,15 +7,27 @@ from typing import Dict
 
 @dataclass
 class PodcastEpisodeList:
-    name: str
-    episodes: List[PodcastEpisode]
+    _name: str
+    _episodes: List[PodcastEpisode]
     
-    def __post_init__(self):
-        self._validate_name(self.name)
-    
-    def set_name(self, name: str) -> None:
-        self._validate_name(name)
+    def __init__(self,
+                 name : str,
+                 episodes : List[PodcastEpisode]
+                 ):
         self.name = name
+        self.episodes = episodes
+        
+    def __post_init__(self):
+        self._validate_name(self._name)
+    
+    @property
+    def name(self):
+        return self._name
+    
+    @name.setter
+    def name(self, name: str) -> None:
+        self._validate_name(name)
+        self._name = name
     
     def _validate_name(self, name: str) -> None:
         if not isinstance(name, str):
@@ -25,19 +38,28 @@ class PodcastEpisodeList:
         
         if len(name) > 100:
             raise ValueError(f"Invalid playlist name. The name is {len(name)} and the maximum length is 100 characters.")
+    
+    @property
+    def episodes(self):
+        return self._episodes
+    
+    @episodes.setter
+    def episodes(self, episodes: List[PodcastEpisode]):
+        self._episodes = episodes
+        
         
     def add_podcastepisode(self, episode: PodcastEpisode) -> None:
-        self.episodes.append(episode)
+        self._episodes.append(episode)
 
     def remove_podcastepisode(self, index: int) -> None:
-        del self.episodes[index]
+        del self._episodes[index]
 
     def get_num_items(self) -> int:
-        return len(self.episodes)
+        return len(self._episodes)
 
     def calculate_duration(self) -> float:
         total_duration_seconds = 0.0
-        for episode in self.episodes:
+        for episode in self._episodes:
             total_duration_seconds += episode.duration
         return total_duration_seconds
 
@@ -53,21 +75,21 @@ class PodcastEpisodeList:
         return self._format_duration(duration_seconds)
 
     def move_episode_up(self, index: int) -> None:
-        if index > 0 and index < len(self.episodes):
-            self.episodes[index], self.episodes[index - 1] = self.episodes[index - 1], self.episodes[index]
+        if index > 0 and index < len(self._episodes):
+            self._episodes[index], self._episodes[index - 1] = self._episodes[index - 1], self._episodes[index]
 
     def move_episode_down(self, index: int) -> None:
-        if index >= 0 and index < len(self.episodes) - 1:
-            self.episodes[index], self.episodes[index + 1] = self.episodes[index + 1], self.episodes[index]
+        if index >= 0 and index < len(self._episodes) - 1:
+            self._episodes[index], self._episodes[index + 1] = self._episodes[index + 1], self._episodes[index]
 
     def move_episode_to_position(self, current_index: int, new_index: int) -> None:
-        if current_index >= 0 and current_index < len(self.episodes) and new_index >= 0 and new_index < len(self.episodes):
-            episode = self.episodes.pop(current_index)
-            self.episodes.insert(new_index, episode)
+        if current_index >= 0 and current_index < len(self._episodes) and new_index >= 0 and new_index < len(self._episodes):
+            episode = self._episodes.pop(current_index)
+            self._episodes.insert(new_index, episode)
 
     def get_all_episode_details(self) -> List[Dict[str, str]]:
         episode_details = []
-        for episode in self.episodes:
+        for episode in self._episodes:
             details = {
                 "title": episode.title,
                 "duration": episode.duration,
@@ -77,9 +99,9 @@ class PodcastEpisodeList:
         return episode_details
 
     def get_episode_details(self, index: int) -> Dict[str, str]:
-        if index < 0 or index >= len(self.episodes):
+        if index < 0 or index >= len(self._episodes):
             return {}
-        episode = self.episodes[index]
+        episode = self._episodes[index]
         return {
             "title": episode.title,
             "duration": episode.duration,
@@ -91,12 +113,12 @@ class PodcastEpisodeList:
     """
     def get_episodes(self, indices: List[int] = None) -> List[PodcastEpisode]:
         if indices is None:
-            return self.episodes
+            return self._episodes
         
-        valid_indices = [i for i in indices if isinstance(i, int) and 0 <= i < len(self.episodes)]
+        valid_indices = [i for i in indices if isinstance(i, int) and 0 <= i < len(self._episodes)]
         if len(valid_indices) != len(indices):
             raise ValueError("Invalid indices provided.")
-        return [self.episodes[i] for i in valid_indices]
+        return [self._episodes[i] for i in valid_indices]
 
     @classmethod
     def from_dict(cls, data: Dict[str, any]) -> 'PodcastEpisodeList':
@@ -117,3 +139,9 @@ class PodcastEpisodeList:
                 raise ValueError(f"Invalid episode data: {e}")
                 
         return cls(name=name, episodes=episodes)
+
+    def to_dict(self) -> Dict[str, any]:
+        return {
+            "name": self._name,
+            "episodes": [episode.to_dict() for episode in self._episodes]
+        }
