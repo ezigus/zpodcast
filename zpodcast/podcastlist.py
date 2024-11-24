@@ -6,10 +6,23 @@ from typing import Optional, List
 class PodcastList:
     _podcasts: List[PodcastData]
 
-    def __init__(self, podcasts: List[PodcastData] = None) -> None:
+    def __init__(self, podcasts: List[PodcastData] = []) -> None:
         if not isinstance(podcasts, list):
             raise ValueError("Value must be a list")    
-        self._podcasts = podcasts if podcasts is not None else []
+
+        self._podcasts = podcasts 
+
+    @property
+    def podcasts(self):
+        return self._podcasts
+    
+    @podcasts.setter
+    def podcasts(self,
+                 podcasts: List[PodcastData]):
+        if not isinstance(podcasts, list):
+            raise ValueError("Value must be a list")    
+        self._podcasts = podcasts
+
 
     def add_podcast(self, podcast: PodcastData) -> None:
         self._podcasts.append(podcast)
@@ -17,9 +30,6 @@ class PodcastList:
 
     def remove_podcast(self, podcast: PodcastData) -> None:
         self._podcasts.remove(podcast)
-
-    def get_all_podcasts(self) -> List[PodcastData]:
-        return self._podcasts
 
     def get_podcast(self, index: int) -> PodcastData:
         if not isinstance(index, int):

@@ -64,10 +64,10 @@ def test_remove_podcast():
         image_url="http://example.com/image2.jpg"
     )
     podcast_list = PodcastList([podcast1, podcast2])
-    assert len(podcast_list.get_all_podcasts()) == 2
+    assert len(podcast_list.podcasts) == 2
     podcast_list.remove_podcast(podcast1)
-    assert len(podcast_list.get_all_podcasts()) == 1
-    assert podcast_list.get_all_podcasts()[0] == podcast2
+    assert len(podcast_list.podcasts) == 1
+    assert podcast_list.podcasts[0] == podcast2
 
 def test_get_all_podcasts():
     podcast1 = PodcastData(
@@ -89,7 +89,7 @@ def test_get_all_podcasts():
         image_url="http://example.com/image2.jpg"
     )
     podcast_list = PodcastList([podcast1, podcast2])
-    all_podcasts = podcast_list.get_all_podcasts()
+    all_podcasts = podcast_list.podcasts
     assert len(all_podcasts) == 2
     assert all_podcasts[0] == podcast1
     assert all_podcasts[1] == podcast2
@@ -195,6 +195,6 @@ def test_podcastlist_from_dict():
         ]
     }
     podcast_list = PodcastList.from_dict(podcast_list_dict)
-    assert len(podcast_list.get_all_podcasts()) == 2
-    assert podcast_list.get_podcast(0).title == "Test Podcast 1"
-    assert podcast_list.get_podcast(1).title == "Test Podcast 2"
+    assert len(podcast_list.podcasts) == 2
+    assert podcast_list.podcasts[0].title == "Test Podcast 1"
+    assert podcast_list.podcasts[1].title == "Test Podcast 2"
