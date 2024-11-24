@@ -1,9 +1,4 @@
 from dataclasses import dataclass
-<<<<<<< HEAD
-
-=======
-from datetime import date
->>>>>>> d001312a7098909e2f0f5d4df9e4387f6d205976
 import re
 from typing import List
 from zpodcast.podcastepisode import PodcastEpisode
@@ -146,11 +141,6 @@ class PodcastEpisodeList:
 
     def to_dict(self) -> Dict[str, any]:
         return {
-<<<<<<< HEAD
             "name": self._name,
             "episodes": [episode.to_dict() for episode in self._episodes]
-=======
-            "name": self.name,
-            "episodes": [episode.to_dict() for episode in self.episodes]
->>>>>>> d001312a7098909e2f0f5d4df9e4387f6d205976
         }
