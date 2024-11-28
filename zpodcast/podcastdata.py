@@ -270,13 +270,15 @@ class PodcastData:
     @classmethod
     def from_dict(cls, data):
         
+        print (data)
+        episodelist = PodcastEpisodeList.from_dict(data["episode_list"])
         podcastdata = PodcastData(data["title"], 
                                   data["podcast_url"],
                                   data["host"], 
                                   data["description"],
-                                  PodcastEpisodeList(data["episode_list"]),
+                                  episodelist,
                                   data["podcast_priority"],
                                   data["image_url"]
         )
         
-        return cls(**data)
+        return podcastdata
