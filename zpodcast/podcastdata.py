@@ -261,7 +261,7 @@ class PodcastData:
             "podcast_url" : self.podcast_url,
             "host" : self.host,
             "description" : self.description,
-            "episode_list" : self.episodes.to_dict(),
+            "podcast_episodes" : self.episodes.to_dict(),
             "podcast_priority" : self.podcast_priority,
             "image_url" : self.image_url
         }
@@ -271,7 +271,7 @@ class PodcastData:
     def from_dict(cls, data):
         
         print (data)
-        episodelist = PodcastEpisodeList.from_dict(data["episode_list"])
+        episodelist = PodcastEpisodeList.from_dict(data["podcast_episodes"])
         podcastdata = PodcastData(data["title"], 
                                   data["podcast_url"],
                                   data["host"], 

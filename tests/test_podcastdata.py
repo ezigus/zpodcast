@@ -2,11 +2,21 @@ import pytest
 import dataclasses
 from zpodcast.podcastdata import PodcastData
 from zpodcast.podcastepisodelist import PodcastEpisodeList
+from zpodcast.podcastepisode import PodcastEpisode
+from datetime import date
 
 lTitle="My Podcast"
 lHost="John Doe"
 lDescription="This is a podcast"
-episodes = PodcastEpisodeList(name="test", episodes=[])
+testepisode = PodcastEpisode(title = "test episode", 
+                             audio_url="http://test.com/something.mp3", 
+                             description="a test description", 
+                             pub_date = date.today(),
+                             episode_number=0, 
+                             duration=1)
+                             
+episodes = PodcastEpisodeList(name="test", episodes=[testepisode])
+
 lPodcastURL = "http://example.com/podcast.rss"
 lImageURL = "http://example.com/image.jpg"
 
@@ -357,7 +367,7 @@ def test_to_dict():
         podcast_url=lPodcastURL,
         host=lHost,
         description=lDescription,
-        episodes=episodes,
+        episodes=episodes.to_dict(),
         podcast_priority=5,
         image_url=lImageURL
     )
@@ -367,7 +377,7 @@ def test_to_dict():
         "podcast_url": lPodcastURL,
         "host": lHost,
         "description": lDescription,
-        "episodes": episodes,
+        "episodes": episodes.todict(),
         "podcast_priority": 5,
         "image_url": lImageURL
     }
@@ -378,15 +388,17 @@ def test_from_dict():
         "podcast_url": lPodcastURL,
         "host": lHost,
         "description": lDescription,
-        "episodes": episodes,
+        "episodes": episodes.to_dict(),
         "podcast_priority": 5,
         "image_url": lImageURL
     }
+    print(f"podcast dict = ${podcast_dict}")
     podcast_data = PodcastData.from_dict(podcast_dict)
+    
     assert podcast_data.title == lTitle
     assert podcast_data.podcast_url == lPodcastURL
     assert podcast_data.host == lHost
     assert podcast_data.description == lDescription
-    assert podcast_data.episodes == episodes
+    assert podcast_data.episodes == episodes.to_dict()
     assert podcast_data.podcast_priority == 5
     assert podcast_data.image_url == lImageURL
