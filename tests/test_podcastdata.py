@@ -371,13 +371,15 @@ def test_to_dict():
         podcast_priority=5,
         image_url=lImageURL
     )
+    
     podcast_dict = podcast_data.to_dict()
+    print (f"podcast_dict = ${podcast_data}")
     assert podcast_dict == {
         "title": lTitle,
         "podcast_url": lPodcastURL,
         "host": lHost,
         "description": lDescription,
-        "episodelists": episodelists.todict(),
+        "episodelists": episodelists.to_dict(),
         "podcast_priority": 5,
         "image_url": lImageURL
     }

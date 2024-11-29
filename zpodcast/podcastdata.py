@@ -15,13 +15,13 @@ class PodcastData:
     _description: Optional[str]
     _podcast_priority: Optional[int]
     _image_url: Optional[str]
-    _episodelists : Optional[PodcastEpisodeList]
+    _episodelists : Optional[List[PodcastEpisodeList]]
 
     def __init__(self, title:str, 
                  podcast_url: str, 
                  host:str = None, 
                  description:str = None, 
-                 episodelists:PodcastEpisodeList=None, 
+                 episodelists:PodcastEpisodeList=[], 
                  podcast_priority:int=None, 
                  image_url:str=None):
         """
@@ -40,7 +40,7 @@ class PodcastData:
         self.podcast_url = podcast_url
         self.host = host
         self.description = description
-        self._episodelists = episodelists
+        self.episodelists = episodelists
         self.podcast_priority = podcast_priority
         self.image_url = image_url
 
@@ -106,14 +106,17 @@ class PodcastData:
 
     @property
     def episodelists(self):
-        return self._episodeslists
+
+        return self._episodelists
     
     @episodelists.setter
     def episodelists(self, value):
+        
+
         if not isinstance(value, PodcastEpisodeList):
-            self._episodeslists = []
+            self._episodelists = []
         else:
-            self._episodeslists = value
+            self._episodelists = value
 
     """
     Getter setter for host
