@@ -1,6 +1,6 @@
 from dataclasses import asdict, dataclass
 import validators
-from typing import Optional, List
+from typing import Optional, List, Dict
 from zpodcast.podcastepisodelist import PodcastEpisodeList
 
 @dataclass
@@ -15,13 +15,13 @@ class PodcastData:
     _description: Optional[str]
     _podcast_priority: Optional[int]
     _image_url: Optional[str]
-    _episodes : Optional[PodcastEpisodeList]
+    _episodelists : Optional[PodcastEpisodeList]
 
     def __init__(self, title:str, 
                  podcast_url: str, 
                  host:str = None, 
                  description:str = None, 
-                 episodes:PodcastEpisodeList=None, 
+                 episodelists:PodcastEpisodeList=None, 
                  podcast_priority:int=None, 
                  image_url:str=None):
         """
@@ -40,10 +40,10 @@ class PodcastData:
         self.podcast_url = podcast_url
         self.host = host
         self.description = description
-        self.episodes = episodes
+        self._episodelists = episodelists
         self.podcast_priority = podcast_priority
         self.image_url = image_url
-        dict()
+
 
     """
     getter setter for Title variable
@@ -105,15 +105,15 @@ class PodcastData:
         self._podcast_url = value
 
     @property
-    def episodes(self):
-        return self._episodes
+    def episodelists(self):
+        return self._episodeslists
     
-    @episodes.setter
-    def episodes(self, value):
+    @episodelists.setter
+    def episodelists(self, value):
         if not isinstance(value, PodcastEpisodeList):
-            self._episodes = []
+            self._episodeslists = []
         else:
-            self._episodes = value
+            self._episodeslists = value
 
     """
     Getter setter for host
@@ -254,31 +254,13 @@ class PodcastData:
         self._image_url = value
  
  
-
-    def to_dict(self):
-        podcastdata_dict = {
-            "title" : self.title,
-            "podcast_url" : self.podcast_url,
-            "host" : self.host,
-            "description" : self.description,
-            "podcast_episodes" : self.episodes.to_dict(),
-            "podcast_priority" : self.podcast_priority,
-            "image_url" : self.image_url
+    def to_dict(self) -> Dict[str, List[Dict]]:
+        return {
+            "episodelists": [value.to_dict() for value in self.episodelists]
         }
-        return podcastdata_dict
 
     @classmethod
-    def from_dict(cls, data):
-        
-        print (data)
-        episodelist = PodcastEpisodeList.from_dict(data["podcast_episodes"])
-        podcastdata = PodcastData(data["title"], 
-                                  data["podcast_url"],
-                                  data["host"], 
-                                  data["description"],
-                                  episodelist,
-                                  data["podcast_priority"],
-                                  data["image_url"]
-        )
-        
-        return podcastdata
+    def from_dict(cls, data: Dict[str, List[Dict]]) -> 'PodcastPlaylist':
+        episodeslists_data = data.get("episodelists", [])
+        episodeslists = [PodcastEpisodeList.from_dict(episodeslist) for episodeslist in episodeslists_data]
+        return cls(episodelists=episodeslists)
