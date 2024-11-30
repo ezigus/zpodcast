@@ -8,14 +8,9 @@ from datetime import date
 lTitle="My Podcast"
 lHost="John Doe"
 lDescription="This is a podcast"
-testepisode = PodcastEpisode(title = "test episode", 
-                             audio_url="http://test.com/something.mp3", 
-                             description="a test description", 
-                             pub_date = date.today(),
-                             episode_number=0, 
-                             duration=1)
-                             
-episodelists = PodcastEpisodeList(name="test", episodes=[testepisode])
+episode1 = PodcastEpisode(title="Episode 1", audio_url="https://example.com/episode1.mp3")
+episode2 = PodcastEpisode(title="Episode 2", audio_url="https://example.com/episode2.mp3")
+episodelists = PodcastEpisodeList(name="Podcast Episode List", episodes=[episode1,episode2])
 
 lPodcastURL = "http://example.com/podcast.rss"
 lImageURL = "http://example.com/image.jpg"
@@ -373,7 +368,7 @@ def test_to_dict():
     )
     
     podcast_dict = podcast_data.to_dict()
-    print (f"podcast_dict = ${podcast_data}")
+    
     assert podcast_dict == {
         "title": lTitle,
         "podcast_url": lPodcastURL,
@@ -385,6 +380,7 @@ def test_to_dict():
     }
 
 def test_from_dict():
+    print(f"episodes_lists_dict = {episodelists.to_dict()}")
     podcast_dict = {
         "title": lTitle,
         "podcast_url": lPodcastURL,
@@ -400,6 +396,6 @@ def test_from_dict():
     assert podcast_data.podcast_url == lPodcastURL
     assert podcast_data.host == lHost
     assert podcast_data.description == lDescription
-    assert podcast_data.episodelists == episodelists.to_dict()
+    assert podcast_data.episodelists == episodelists.from_dict()
     assert podcast_data.podcast_priority == 5
     assert podcast_data.image_url == lImageURL

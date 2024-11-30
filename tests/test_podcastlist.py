@@ -8,7 +8,7 @@ def test_add_podcast():
         podcast_url="http://example.com/podcast.rss",
         host="John Doe",
         description="This is a test podcast",
-        episodes=[],
+        episodelists=[],
         podcast_priority=5,
         image_url="http://example.com/image.jpg"
     )
@@ -21,7 +21,7 @@ def test_add_podcast_object():
         podcast_url="http://example.com/podcast.rss",
         host="John Doe",
         description="This is a test podcast",
-        episodes=[],
+        episodelists=[],
         podcast_priority=5,
         image_url="http://example.com/image.jpg"
     )
@@ -35,7 +35,7 @@ def test_add_podcast_object_int():
         podcast_url="http://example.com/podcast.rss",
         host="John Doe",
         description="This is a test podcast",
-        episodes=[],
+        episodelists=[],
         podcast_priority=5,
         image_url="http://example.com/image.jpg"
     )
@@ -50,7 +50,7 @@ def test_remove_podcast():
         podcast_url="http://example.com/podcast1.rss",
         host="John Doe",
         description="This is a test podcast 1",
-        episodes=[],
+        episodelists=[],
         podcast_priority=5,
         image_url="http://example.com/image1.jpg"
     )
@@ -59,7 +59,7 @@ def test_remove_podcast():
         podcast_url="http://example.com/podcast2.rss",
         host="Jane Doe",
         description="This is a test podcast 2",
-        episodes=[],
+        episodelists=[],
         podcast_priority=5,
         image_url="http://example.com/image2.jpg"
     )
@@ -75,7 +75,7 @@ def test_get_all_podcasts():
         podcast_url="http://example.com/podcast1.rss",
         host="John Doe",
         description="This is a test podcast 1",
-        episodes=[],
+        episodelists=[],
         podcast_priority=5,
         image_url="http://example.com/image1.jpg"
     )
@@ -84,7 +84,7 @@ def test_get_all_podcasts():
         podcast_url="http://example.com/podcast2.rss",
         host="Jane Doe",
         description="This is a test podcast 2",
-        episodes=[],
+        episodelists=[],
         podcast_priority=5,
         image_url="http://example.com/image2.jpg"
     )
@@ -100,7 +100,7 @@ def test_get_podcast():
         podcast_url="http://example.com/podcast1.rss",
         host="John Doe",
         description="This is a test podcast 1",
-        episodes=[],
+        episodelists=[],
         podcast_priority=5,
         image_url="http://example.com/image1.jpg"
     )
@@ -109,7 +109,7 @@ def test_get_podcast():
         podcast_url="http://example.com/podcast2.rss",
         host="Jane Doe",
         description="This is a test podcast 2",
-        episodes=[],
+        episodelists=[],
         podcast_priority=5,
         image_url="http://example.com/image2.jpg"
     )
@@ -133,7 +133,7 @@ def test_podcastlist_to_dict():
         podcast_url="http://example.com/podcast1.rss",
         host="John Doe",
         description="This is a test podcast 1",
-        episodes=[],
+        episodelists=[],
         podcast_priority=5,
         image_url="http://example.com/image1.jpg"
     )
@@ -142,7 +142,7 @@ def test_podcastlist_to_dict():
         podcast_url="http://example.com/podcast2.rss",
         host="Jane Doe",
         description="This is a test podcast 2",
-        episodes=[],
+        episodelists=[],
         podcast_priority=5,
         image_url="http://example.com/image2.jpg"
     )
