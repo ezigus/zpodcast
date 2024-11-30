@@ -10,7 +10,7 @@ from zpodcast.podcastepisode import PodcastEpisode
 
 @pytest.fixture
 def sample_podcast_list():
-    episodes = PodcastEpisodeList(name="Test Episode List", episodes=[
+    episodelist = PodcastEpisodeList(name="Test Episode List", episodes=[
         PodcastEpisode(title="Episode 1", audio_url="https://example.com/episode1.mp3"),
         PodcastEpisode(title="Episode 2", audio_url="https://example.com/episode2.mp3")
     ])
@@ -19,7 +19,7 @@ def sample_podcast_list():
         podcast_url="http://example.com/podcast1.rss",
         host="John Doe",
         description="This is a test podcast 1",
-        episodes=episodes,
+        episodelists=episodelist,
         podcast_priority=5,
         image_url="http://example.com/image1.jpg"
     )
@@ -28,7 +28,7 @@ def sample_podcast_list():
         podcast_url="http://example.com/podcast2.rss",
         host="Jane Doe",
         description="This is a test podcast 2",
-        episodes=episodes,
+        episodelists=episodelist,
         podcast_priority=5,
         image_url="http://example.com/image2.jpg"
     )
