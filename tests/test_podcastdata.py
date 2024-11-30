@@ -357,27 +357,30 @@ def test_image_url():
     assert podcast_data.image_url == lImageURL  # Image URL is set correctly
 
 def test_to_dict():
-    podcast_data = PodcastData(
-        title=lTitle,
-        podcast_url=lPodcastURL,
-        host=lHost,
-        description=lDescription,
-        episodelists=episodelists.to_dict(),
+    podcastepisodelist = PodcastEpisodeList(name="podcastepisode", episodes=[
+        PodcastEpisode(title="Episode 1", audio_url="https://example.com/episode1.mp3"),
+        PodcastEpisode(title="Episode 2", audio_url="https://example.com/episode2.mp3")
+    ])
+    
+    podcast1 = PodcastData(
+        title="Test Podcast 1",
+        podcast_url="http://example.com/podcast1.rss",
+        host="John Doe",
+        description="This is a test podcast 1",
+        episodelists=podcastepisodelist,
         podcast_priority=5,
-        image_url=lImageURL
+        image_url="http://example.com/image1.jpg"
     )
     
-    podcast_dict = podcast_data.to_dict()
-    
-    assert podcast_dict == {
-        "title": lTitle,
-        "podcast_url": lPodcastURL,
-        "host": lHost,
-        "description": lDescription,
-        "episodelists": episodelists.to_dict(),
-        "podcast_priority": 5,
-        "image_url": lImageURL
-    }
+    podcast_dict = podcast1.to_dict()
+  
+    assert podcast_dict.get("title") == podcast1.title
+    assert podcast_dict.get("podcast_url") == podcast1.podcast_url
+    assert podcast_dict.get("host") ==  podcast1.host
+    assert podcast_dict.get("description") == podcast1.description
+    assert podcast_dict.get("podcast_priority") == podcast1.podcast_priority
+    assert podcast_dict.get("image_url") == podcast1.image_url
+    assert podcast_dict.get("episodelists") == podcast1.episodelists.to_dict()
 
 def test_from_dict():
     print(f"episodes_lists_dict = {episodelists.to_dict()}")

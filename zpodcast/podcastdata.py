@@ -216,22 +216,6 @@ class PodcastData:
             else:
                 value = 0
         return value
-
-
-
-    # """
-    # getter setter for image_url with a validation method for the URL
-    # """
-    # def validate_image_url(self):
-    #     """
-    #     Validates the image URL.
-
-    #     Returns:
-    #         bool: True if the image URL is valid, False otherwise.
-    #     """
-    #     if self._image_url is not None:
-    #         return is_valid_url(self._image_url)
-    #     return False
     
     @property
     def image_url(self):
@@ -257,15 +241,26 @@ class PodcastData:
         self._image_url = value
  
  
-    def to_dict(self) -> Dict[str, List[Dict]]:
-        return {
-            "episodelists": [value.to_dict() for value in self.episodelists]
+    def to_dict(self) -> Dict:
+        podcastdata_dict = {"title": self.title, 
+                            "podcast_url": self.podcast_url,
+                            "host": self.host,
+                            "podcast_priority": self.podcast_priority,
+                            "image_url": self.image_url,
+                            "description": self.description,
+                            "episodelists" : {"podcastepisodes" : self.episodelists.to_dict()}
         }
+        return(podcastdata_dict)                                   
 
     @classmethod
-    def from_dict(cls, data: Dict[str, List[Dict]]) -> 'PodcastPlaylist':
-        episodeslists_data = data.get("episodelists", [])
-        print(f"episodeslists_data = {episodeslists_data}")
-        episodelist1 = PodcastEpisodeList.from_dict(episodelists_data
-        episodeslists = [PodcastEpisodeList.from_dict(episodeslist) for episodeslist in episodeslists_data.g]
-        return cls(episodelists=episodeslists)
+    def from_dict(cls, data: Dict):
+        episodelists = data.get("episodelists")
+        podcastdata = PodcastData(title=data.get("title"),
+                                  podcast_url=data.get("podcast_url"),
+                                  host = data.get("host"),
+                                  podcast_priority = data.get("podcast_priority"),
+                                  image_url = data.get("image_url"),
+                                  episodelists = episodelists            
+        )
+        return podcastdata
+        
