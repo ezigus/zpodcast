@@ -126,21 +126,29 @@ class PodcastEpisodeList:
             if key not in data:
                 raise ValueError(f"Missing mandatory key: {key}")
         
-        name = data['name']
-        episodes_data = data['episodes']
+        name = data.get("name")
+        episodes_data = data.get("episodes")
         
         episodes = []
         for episode_data in episodes_data:
             try:
-                episode = PodcastEpisode(**episode_data)
+                episode = PodcastEpisode(title = episode_data.get("title"),
+                                         audio_url=episode_data.get("audio_url"),
+                                         description = episode_data.get("description"),
+                                         pub_date = episode_data.get("pub_date"),
+                                         duration = episode_data.get("duration"),
+                                         episode_number = episode_data.get("episode_number"),
+                                         image_url = episode_data.get("image_url"),
+                                         )
                 episodes.append(episode)
             except TypeError as e:
                 raise ValueError(f"Invalid episode data: {e}")
-                
-        return cls(name=name, episodes=episodes)
+            
+        podcastepisodelist = PodcastEpisodeList(name = name, episodes = episodes)
+        return podcastepisodelist
 
-    def to_dict(self) -> Dict[str, any]:
+    def to_dict(self) -> Dict:
         return {
-            "name": self._name,
-            "episodes": [episode.to_dict() for episode in self._episodes]
+            "name": self.name,
+            "episodes": [episode.to_dict() for episode in self.episodes]
         }
