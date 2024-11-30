@@ -266,5 +266,6 @@ class PodcastData:
     def from_dict(cls, data: Dict[str, List[Dict]]) -> 'PodcastPlaylist':
         episodeslists_data = data.get("episodelists", [])
         print(f"episodeslists_data = {episodeslists_data}")
-        episodeslists = [PodcastEpisodeList.from_dict(episodeslist) for episodeslist in episodeslists_data]
+        episodelist1 = PodcastEpisodeList.from_dict(episodelists_data
+        episodeslists = [PodcastEpisodeList.from_dict(episodeslist) for episodeslist in episodeslists_data.g]
         return cls(episodelists=episodeslists)
