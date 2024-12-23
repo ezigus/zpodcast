@@ -10,7 +10,8 @@ lHost="John Doe"
 lDescription="This is a podcast"
 episode1 = PodcastEpisode(title="Episode 1", audio_url="https://example.com/episode1.mp3")
 episode2 = PodcastEpisode(title="Episode 2", audio_url="https://example.com/episode2.mp3")
-episodelists = PodcastEpisodeList(name="Podcast Episode List", episodes=[episode1,episode2])
+episodelist1 = PodcastEpisodeList(name="Podcast Episode List1", episodes=[episode1,episode2])
+episodelists = [episodelist1]
 
 lPodcastURL = "http://example.com/podcast.rss"
 lImageURL = "http://example.com/image.jpg"
@@ -302,7 +303,7 @@ def test_podcast_episodes_invalid_int():
         image_url=lImageURL
     )
 
-    assert podcast_data.episodelists  == []  # Episodes should be set to an empty list
+    assert podcast_data.episodelists == []  # Episodes should be set to an empty list
     
 def test_podcast_episodes_invalid_none():
     podcast_data = PodcastData(
@@ -357,7 +358,7 @@ def test_image_url():
     assert podcast_data.image_url == lImageURL  # Image URL is set correctly
 
 def test_to_dict():
-    podcastepisodelist = PodcastEpisodeList(name="podcastepisode", episodes=[
+    podcastepisodelist = PodcastEpisodeList(name="podcastepisodelist1", episodes=[
         PodcastEpisode(title="Episode 1", audio_url="https://example.com/episode1.mp3"),
         PodcastEpisode(title="Episode 2", audio_url="https://example.com/episode2.mp3")
     ])
@@ -367,7 +368,7 @@ def test_to_dict():
         podcast_url="http://example.com/podcast1.rss",
         host="John Doe",
         description="This is a test podcast 1",
-        episodelists=podcastepisodelist,
+        episodelists=[podcastepisodelist],
         podcast_priority=5,
         image_url="http://example.com/image1.jpg"
     )
@@ -380,6 +381,8 @@ def test_to_dict():
     assert podcast_dict.get("description") == podcast1.description
     assert podcast_dict.get("podcast_priority") == podcast1.podcast_priority
     assert podcast_dict.get("image_url") == podcast1.image_url
+    print (podcast_dict.get("episodelist"))
+    print (podcastepisodelist.to_dict())
     assert podcast_dict.get("episodelists") == podcastepisodelist.to_dict()
 
 def test_from_dict():

@@ -21,7 +21,7 @@ class PodcastData:
                  podcast_url: str, 
                  host:str = None, 
                  description:str = None, 
-                 episodelists:PodcastEpisodeList=[], 
+                 episodelists:List[PodcastEpisodeList]=[], 
                  podcast_priority:int=None, 
                  image_url:str=None):
         """
@@ -111,12 +111,14 @@ class PodcastData:
     
     @episodelists.setter
     def episodelists(self, value):
-        
 
-        if not isinstance(value, PodcastEpisodeList):
-            self._episodelists = []
-        else:
-            self._episodelists = value
+        self._episodelists = []
+        if isinstance(value, List):
+            for item in value:
+                if not isinstance(item, PodcastEpisodeList):
+                    pass
+                else:
+                    self._episodelists.append(item)
 
     """
     Getter setter for host
@@ -248,19 +250,19 @@ class PodcastData:
                             "podcast_priority": self.podcast_priority,
                             "image_url": self.image_url,
                             "description": self.description,
-                            "episodelists" : {"podcastepisodes" : self.episodelists.to_dict()}
+                            "episodelists" : [playlist.to_dict() for playlist in self.episodelists]
         }
         return(podcastdata_dict)                                   
 
     @classmethod
     def from_dict(cls, data: Dict):
-        episodelists = data.get("episodelists")
+        episodelists = data.get("playlists", [])
         podcastdata = PodcastData(title=data.get("title"),
                                   podcast_url=data.get("podcast_url"),
                                   host = data.get("host"),
                                   podcast_priority = data.get("podcast_priority"),
                                   image_url = data.get("image_url"),
-                                  episodelists = episodelists            
+                                  episodelists = [PodcastEpisodeList.from_dict(playlist_data) for playlist_data in episodelists]            
         )
         return podcastdata
         
