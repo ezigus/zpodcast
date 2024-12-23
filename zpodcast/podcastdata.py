@@ -260,6 +260,7 @@ class PodcastData:
         podcastdata = PodcastData(title=data.get("title"),
                                   podcast_url=data.get("podcast_url"),
                                   host = data.get("host"),
+                                  description=data.get("description"),
                                   podcast_priority = data.get("podcast_priority"),
                                   image_url = data.get("image_url"),
                                   episodelists = [PodcastEpisodeList.from_dict(playlist_data) for playlist_data in episodelists]            
