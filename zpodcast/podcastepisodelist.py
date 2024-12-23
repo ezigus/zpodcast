@@ -148,7 +148,9 @@ class PodcastEpisodeList:
         return podcastepisodelist
 
     def to_dict(self) -> Dict:
-        return {
+        podcastepisodelist_dict = {
             "name": self.name,
             "episodes": [episode.to_dict() for episode in self.episodes]
-        }
+            }
+        return podcastepisodelist_dict
+        

@@ -381,7 +381,7 @@ def test_to_dict():
     assert podcast_dict.get("description") == podcast1.description
     assert podcast_dict.get("podcast_priority") == podcast1.podcast_priority
     assert podcast_dict.get("image_url") == podcast1.image_url
-    assert podcast_dict.get("episodelists") == podcastepisodelist.to_dict()
+    assert podcast_dict["episodelists"] == [podcastepisodelist.to_dict()]
 
 def test_from_dict():
     podcast_dict = {
