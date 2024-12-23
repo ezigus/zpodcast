@@ -380,7 +380,7 @@ def test_to_dict():
     assert podcast_dict.get("description") == podcast1.description
     assert podcast_dict.get("podcast_priority") == podcast1.podcast_priority
     assert podcast_dict.get("image_url") == podcast1.image_url
-    assert podcast_dict.get("episodelists") == podcast1.episodelists.to_dict()
+    assert podcast_dict.get("episodelists") == podcastepisodelist.to_dict()
 
 def test_from_dict():
     print(f"episodes_lists_dict = {episodelists.to_dict()}")
@@ -399,6 +399,6 @@ def test_from_dict():
     assert podcast_data.podcast_url == lPodcastURL
     assert podcast_data.host == lHost
     assert podcast_data.description == lDescription
-    assert podcast_data.episodelists == episodelists.from_dict()
+    assert podcast_data.episodelists == episodelists.to_dict()
     assert podcast_data.podcast_priority == 5
     assert podcast_data.image_url == lImageURL
