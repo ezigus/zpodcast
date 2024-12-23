@@ -256,7 +256,7 @@ class PodcastData:
 
     @classmethod
     def from_dict(cls, data: Dict):
-        episodelists = data.get("playlists", [])
+        episodelists = data.get("episodelists", [])
         podcastdata = PodcastData(title=data.get("title"),
                                   podcast_url=data.get("podcast_url"),
                                   host = data.get("host"),
