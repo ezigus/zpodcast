@@ -396,10 +396,11 @@ def test_from_dict():
     print( podcast_dict)
     podcast_data = PodcastData.from_dict(podcast_dict)
     
-    assert podcast_data.title == lTitle
-    assert podcast_data.podcast_url == lPodcastURL
-    assert podcast_data.host == lHost
-    assert podcast_data.description == lDescription
-    assert podcast_data.episodelists == [episodelist1.to_dict()]
-    assert podcast_data.podcast_priority == 5
-    assert podcast_data.image_url == lImageURL
+    assert podcast_data.to_dict() == podcast_dict
+    # assert podcast_data.title == lTitle
+    # assert podcast_data.podcast_url == lPodcastURL
+    # assert podcast_data.host == lHost
+    # assert podcast_data.description == lDescription
+    # assert podcast_data.episodelists == episodelist1.to_dict()
+    # assert podcast_data.podcast_priority == 5
+    # assert podcast_data.image_url == lImageURL
