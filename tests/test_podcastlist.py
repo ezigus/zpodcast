@@ -137,6 +137,7 @@ def test_podcastlist_to_dict():
         podcast_priority=5,
         image_url="http://example.com/image1.jpg"
     )
+    
     podcast2 = PodcastData(
         title="Test Podcast 2",
         podcast_url="http://example.com/podcast2.rss",
@@ -149,7 +150,7 @@ def test_podcastlist_to_dict():
     podcast_list = PodcastList([podcast1, podcast2])
     podcast_list_dict = podcast_list.to_dict()
     
-    assert podcast_list_dict["episodelists"] == [podcast_list.to_dict()]
+    assert podcast_list_dict["podcasts"] == [podcast_list.to_dict()]
     
     # assert podcast_list_dict == {
     #     "podcasts": [
