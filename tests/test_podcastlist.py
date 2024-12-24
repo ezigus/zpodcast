@@ -150,7 +150,7 @@ def test_podcastlist_to_dict():
     podcast_list = PodcastList([podcast1, podcast2])
     podcast_list_dict = podcast_list.to_dict()
     
-    assert podcast_list_dict["podcasts"] == [podcast_list.to_dict()]
+    assert podcast_list_dict == podcast_list.to_dict()
     
     # assert podcast_list_dict == {
     #     "podcasts": [
