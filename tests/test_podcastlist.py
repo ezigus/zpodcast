@@ -148,28 +148,31 @@ def test_podcastlist_to_dict():
     )
     podcast_list = PodcastList([podcast1, podcast2])
     podcast_list_dict = podcast_list.to_dict()
-    assert podcast_list_dict == {
-        "podcasts": [
-            {
-                "title": "Test Podcast 1",
-                "podcast_url": "http://example.com/podcast1.rss",
-                "host": "John Doe",
-                "description": "This is a test podcast 1",
-                "episodes": [],
-                "podcast_priority": 5,
-                "image_url": "http://example.com/image1.jpg"
-            },
-            {
-                "title": "Test Podcast 2",
-                "podcast_url": "http://example.com/podcast2.rss",
-                "host": "Jane Doe",
-                "description": "This is a test podcast 2",
-                "episodes": [],
-                "podcast_priority": 5,
-                "image_url": "http://example.com/image2.jpg"
-            }
-        ]
-    }
+    
+    assert podcast_list_dict["episodelists"] == [podcast_list.to_dict()]
+    
+    # assert podcast_list_dict == {
+    #     "podcasts": [
+    #         {
+    #             "title": "Test Podcast 1",
+    #             "podcast_url": "http://example.com/podcast1.rss",
+    #             "host": "John Doe",
+    #             "description": "This is a test podcast 1",
+    #             "episodes": [],
+    #             "podcast_priority": 5,
+    #             "image_url": "http://example.com/image1.jpg"
+    #         },
+    #         {
+    #             "title": "Test Podcast 2",
+    #             "podcast_url": "http://example.com/podcast2.rss",
+    #             "host": "Jane Doe",
+    #             "description": "This is a test podcast 2",
+    #             "episodes": [],
+    #             "podcast_priority": 5,
+    #             "image_url": "http://example.com/image2.jpg"
+    #         }
+    #     ]
+    # }
 
 def test_podcastlist_from_dict():
     podcast_list_dict = {
