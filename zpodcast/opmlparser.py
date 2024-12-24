@@ -40,8 +40,8 @@ def parse_opml_file(file_path: str) -> List[Dict[str, str]]:
             #     print("type=",outline.attrib.get("type"))
 
     except ET.ParseError as e:
-        #print(f"Error parsing OPML file: {e}")
-        pass
+        print(f"Error parsing OPML file: {e}")
+        
 
 
     return variables
