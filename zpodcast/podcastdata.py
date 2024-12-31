@@ -1,6 +1,6 @@
 from dataclasses import asdict, dataclass
 import validators
-from typing import Optional, List
+from typing import Optional, List, Dict
 from zpodcast.podcastepisodelist import PodcastEpisodeList
 
 @dataclass
@@ -15,13 +15,13 @@ class PodcastData:
     _description: Optional[str]
     _podcast_priority: Optional[int]
     _image_url: Optional[str]
-    _episodes : Optional[PodcastEpisodeList]
+    _episodelists : Optional[List[PodcastEpisodeList]]
 
     def __init__(self, title:str, 
                  podcast_url: str, 
                  host:str = None, 
                  description:str = None, 
-                 episodes:PodcastEpisodeList=None, 
+                 episodelists:List[PodcastEpisodeList]=[], 
                  podcast_priority:int=None, 
                  image_url:str=None):
         """
@@ -40,10 +40,10 @@ class PodcastData:
         self.podcast_url = podcast_url
         self.host = host
         self.description = description
-        self.episodes = episodes
+        self.episodelists = episodelists
         self.podcast_priority = podcast_priority
         self.image_url = image_url
-        dict()
+
 
     """
     getter setter for Title variable
@@ -105,15 +105,20 @@ class PodcastData:
         self._podcast_url = value
 
     @property
-    def episodes(self):
-        return self._episodes
+    def episodelists(self):
+
+        return self._episodelists
     
-    @episodes.setter
-    def episodes(self, value):
-        if not isinstance(value, PodcastEpisodeList):
-            self._episodes = []
-        else:
-            self._episodes = value
+    @episodelists.setter
+    def episodelists(self, value):
+
+        self._episodelists = []
+        if isinstance(value, List):
+            for item in value:
+                if not isinstance(item, PodcastEpisodeList):
+                    pass
+                else:
+                    self._episodelists.append(item)
 
     """
     Getter setter for host
@@ -213,22 +218,6 @@ class PodcastData:
             else:
                 value = 0
         return value
-
-
-
-    # """
-    # getter setter for image_url with a validation method for the URL
-    # """
-    # def validate_image_url(self):
-    #     """
-    #     Validates the image URL.
-
-    #     Returns:
-    #         bool: True if the image URL is valid, False otherwise.
-    #     """
-    #     if self._image_url is not None:
-    #         return is_valid_url(self._image_url)
-    #     return False
     
     @property
     def image_url(self):
@@ -254,19 +243,27 @@ class PodcastData:
         self._image_url = value
  
  
-
-    def to_dict(self):
-        podcastdata_dict = {
-            "title" : self.title,
-            "podcast_url" : self.podcast_url,
-            "host" : self.host,
-            "description" : self.description,
-            "episodes" : self.episodes,
-            "podcast_priority" : self.podcast_priority,
-            "image_url" : self.image_url
+    def to_dict(self) -> Dict:
+        podcastdata_dict = {"title": self.title, 
+                            "podcast_url": self.podcast_url,
+                            "host": self.host,
+                            "podcast_priority": self.podcast_priority,
+                            "image_url": self.image_url,
+                            "description": self.description,
+                            "episodelists" : [playlist.to_dict() for playlist in self.episodelists]
         }
-        return podcastdata_dict
+        return(podcastdata_dict)                                   
 
     @classmethod
-    def from_dict(cls, data):
-        return cls(**data)
+    def from_dict(cls, data: Dict):
+        episodelists = data.get("episodelists", [])
+        podcastdata = PodcastData(title=data.get("title"),
+                                  podcast_url=data.get("podcast_url"),
+                                  host = data.get("host"),
+                                  description=data.get("description"),
+                                  podcast_priority = data.get("podcast_priority"),
+                                  image_url = data.get("image_url"),
+                                  episodelists = [PodcastEpisodeList.from_dict(playlist_data) for playlist_data in episodelists]            
+        )
+        return podcastdata
+        

@@ -2,11 +2,17 @@ import pytest
 import dataclasses
 from zpodcast.podcastdata import PodcastData
 from zpodcast.podcastepisodelist import PodcastEpisodeList
+from zpodcast.podcastepisode import PodcastEpisode
+from datetime import date
 
 lTitle="My Podcast"
 lHost="John Doe"
 lDescription="This is a podcast"
-episodes = PodcastEpisodeList(name="test", episodes=[])
+episode1 = PodcastEpisode(title="Episode 1", audio_url="https://example.com/episode1.mp3")
+episode2 = PodcastEpisode(title="Episode 2", audio_url="https://example.com/episode2.mp3")
+episodelist1 = PodcastEpisodeList(name="Podcast Episode List1", episodes=[episode1,episode2])
+episodelists = [episodelist1]
+
 lPodcastURL = "http://example.com/podcast.rss"
 lImageURL = "http://example.com/image.jpg"
 
@@ -27,7 +33,7 @@ def test_title():
         podcast_url=lPodcastURL,
         host=lHost,
         description=lDescription,
-        episodes=episodes,
+        episodelists=episodelists,
         podcast_priority=5,
         image_url=lImageURL
     )
@@ -40,7 +46,7 @@ def test_notitle():
             podcast_url="http://example.com/podcast.rss",
             host=lHost,
             description=lDescription,
-            episodes=episodes,
+            episodelists=episodelists,
             podcast_priority=5,
             image_url=lImageURL
         )
@@ -52,7 +58,7 @@ def test_title_int():
             podcast_url=lPodcastURL,
             host=lHost,
             description=lDescription,
-            episodes=episodes,
+            episodelists=episodelists,
             podcast_priority=5,
             image_url=lImageURL
         )
@@ -66,7 +72,7 @@ def test_podcast_url_valid():
         podcast_url=lPodcastURL,
         host=lHost,
         description=lDescription,
-        episodes=episodes,
+        episodelists=episodelists,
         podcast_priority=5,
         image_url=lImageURL
     )
@@ -80,7 +86,7 @@ def test_podcast_url_invalid_int():
             podcast_url=5,
             host=lHost,
             description=lDescription,
-            episodes=episodes,
+            episodelists=episodelists,
             podcast_priority=5,
             image_url=lImageURL
         )
@@ -92,7 +98,7 @@ def test_podcast_url_invalid_none():
             podcast_url=None,
             host=lHost,
             description=lDescription,
-            episodes=episodes,
+            episodelists=episodelists,
             podcast_priority=5,
             image_url=lImageURL
         )
@@ -104,7 +110,7 @@ def test_podcast_url_invalid_empty():
             podcast_url="",
             host=lHost,
             description=lDescription,
-            episodes=episodes,
+            episodelists=episodelists,
             podcast_priority=5,
             image_url=lImageURL
         )
@@ -116,7 +122,7 @@ def test_podcast_url_invalid_url():
             podcast_url="invalid",
             host=lHost,
             description=lDescription,
-            episodes=episodes,
+            episodelists=episodelists,
             podcast_priority=5,
             image_url=lImageURL
         )
@@ -131,7 +137,7 @@ def test_host_valid():
         podcast_url=lPodcastURL,
         host=lHost,
         description=lDescription,
-        episodes=episodes,
+        episodelists=episodelists,
         podcast_priority=5,
         image_url=lImageURL
     )
@@ -144,7 +150,7 @@ def test_host_invalid_int():
             podcast_url=lPodcastURL,
             host=5,
             description=lDescription,
-            episodes=episodes,
+            episodelists=episodelists,
             podcast_priority=5,
             image_url=lImageURL
         )
@@ -156,7 +162,7 @@ def test_host_invalid_none():
         podcast_url=lPodcastURL,
         host=None,
         description=lDescription,
-        episodes=episodes,
+        episodelists=episodelists,
         podcast_priority=5,
         image_url=lImageURL
     )
@@ -169,7 +175,7 @@ def test_host_invalid_empty():
         podcast_url=lPodcastURL,
         host="",
         description=lDescription,
-        episodes=episodes,
+        episodelists=episodelists,
         podcast_priority=5,
         image_url=lImageURL
     )
@@ -185,7 +191,7 @@ def test_description_valid():
         podcast_url=lPodcastURL,
         host=lHost,
         description=lDescription,
-        episodes=episodes,
+        episodelists=episodelists,
         podcast_priority=5,
         image_url=lImageURL
     )
@@ -198,7 +204,7 @@ def test_description_invalid_int():
         podcast_url=lPodcastURL,
         host=lHost,
         description=5,
-        episodes=episodes,
+        episodelists=episodelists,
         podcast_priority=5,
         image_url=lImageURL
     )
@@ -210,7 +216,7 @@ def test_description_invalid_none():
         podcast_url=lPodcastURL,
         host=lHost,
         description=None,
-        episodes=episodes,
+        episodelists=episodelists,
         podcast_priority=5,
         image_url=lImageURL
     )
@@ -228,7 +234,7 @@ def test_priority_valid():
         podcast_url=lPodcastURL,
         host=lHost,
         description=lDescription,
-        episodes=episodes,
+        episodelists=episodelists,
         podcast_priority=5,
         image_url=lImageURL
     )
@@ -240,7 +246,7 @@ def test_priority_invalid_high():
         podcast_url=lPodcastURL,
         host=lHost,
         description=lDescription,
-        episodes=episodes,
+        episodelists=episodelists,
         podcast_priority=25,
         image_url=lImageURL
     )
@@ -253,7 +259,7 @@ def test_priority_invalid_low():
         podcast_url=lPodcastURL,
         host=lHost,
         description=lDescription,
-        episodes=episodes,
+        episodelists=episodelists,
         podcast_priority=-25,
         image_url=lImageURL
     )    
@@ -278,64 +284,64 @@ def test_podcast_episodes_valid():
         title=lTitle,
         podcast_url=lPodcastURL,
         host=lHost,
-        episodes=episodes,
+        episodelists=episodelists,
         description=lDescription,
         podcast_priority=5,
         image_url=lImageURL
     )
 
-    assert podcast_data.episodes == episodes  # Episodes are set correctly
+    assert podcast_data.episodelists == episodelists  # Episodes are set correctly
 
 def test_podcast_episodes_invalid_int():
     podcast_data = PodcastData(
         title=lTitle,
         podcast_url=lPodcastURL,
         host=lHost,
-        episodes=5,
+        episodelists=5,
         description=lDescription,
         podcast_priority=5,
         image_url=lImageURL
     )
 
-    assert podcast_data.episodes == []  # Episodes should be set to an empty list
+    assert podcast_data.episodelists == []  # Episodes should be set to an empty list
     
 def test_podcast_episodes_invalid_none():
     podcast_data = PodcastData(
         title=lTitle,
         podcast_url=lPodcastURL,
         host=lHost,
-        episodes=None,
+        episodelists=None,
         description=lDescription,
         podcast_priority=5,
         image_url=lImageURL
     )
 
-    assert podcast_data.episodes == []  # Episodes should be set to an empty list
+    assert podcast_data.episodelists == []  # Episodes should be set to an empty list
 
 def test_podcast_episodes_invalid_empty():
     podcast_data = PodcastData(
         title=lTitle,
         podcast_url=lPodcastURL,
         host=lHost,
-        episodes=[],
+        episodelists=[],
         description=lDescription,
         podcast_priority=5,
         image_url=lImageURL
     )
-    assert podcast_data.episodes == []  # Episodes should be set to an empty list
+    assert podcast_data.episodelists == []  # Episodes should be set to an empty list
 
 def test_podcast_episodes_invalid_string():
     podcast_data = PodcastData(
         title=lTitle,
         podcast_url=lPodcastURL,
         host=lHost,
-        episodes="invalid",
+        episodelists="invalid",
         description=lDescription,
         podcast_priority=5,
         image_url=lImageURL
     )
 
-    assert podcast_data.episodes == []  # Episodes should be set to an empty list
+    assert podcast_data.episodelists == []  # Episodes should be set to an empty list
 
 """
    testing the validate_image_url method
@@ -352,25 +358,30 @@ def test_image_url():
     assert podcast_data.image_url == lImageURL  # Image URL is set correctly
 
 def test_to_dict():
-    podcast_data = PodcastData(
-        title=lTitle,
-        podcast_url=lPodcastURL,
-        host=lHost,
-        description=lDescription,
-        episodes=episodes,
+    podcastepisodelist = PodcastEpisodeList(name="podcastepisodelist1", episodes=[
+        PodcastEpisode(title="Episode 1", audio_url="https://example.com/episode1.mp3"),
+        PodcastEpisode(title="Episode 2", audio_url="https://example.com/episode2.mp3")
+    ])
+    
+    podcast1 = PodcastData(
+        title="Test Podcast 1",
+        podcast_url="http://example.com/podcast1.rss",
+        host="John Doe",
+        description="This is a test podcast 1",
+        episodelists=[podcastepisodelist],
         podcast_priority=5,
-        image_url=lImageURL
+        image_url="http://example.com/image1.jpg"
     )
-    podcast_dict = podcast_data.to_dict()
-    assert podcast_dict == {
-        "title": lTitle,
-        "podcast_url": lPodcastURL,
-        "host": lHost,
-        "description": lDescription,
-        "episodes": episodes,
-        "podcast_priority": 5,
-        "image_url": lImageURL
-    }
+    
+    podcast_dict = podcast1.to_dict()
+  
+    assert podcast_dict.get("title") == podcast1.title
+    assert podcast_dict.get("podcast_url") == podcast1.podcast_url
+    assert podcast_dict.get("host") ==  podcast1.host
+    assert podcast_dict.get("description") == podcast1.description
+    assert podcast_dict.get("podcast_priority") == podcast1.podcast_priority
+    assert podcast_dict.get("image_url") == podcast1.image_url
+    assert podcast_dict["episodelists"] == [podcastepisodelist.to_dict()]
 
 def test_from_dict():
     podcast_dict = {
@@ -378,15 +389,18 @@ def test_from_dict():
         "podcast_url": lPodcastURL,
         "host": lHost,
         "description": lDescription,
-        "episodes": episodes,
+        "episodelists": [episodelist1.to_dict()],
         "podcast_priority": 5,
         "image_url": lImageURL
     }
+    print( podcast_dict)
     podcast_data = PodcastData.from_dict(podcast_dict)
-    assert podcast_data.title == lTitle
-    assert podcast_data.podcast_url == lPodcastURL
-    assert podcast_data.host == lHost
-    assert podcast_data.description == lDescription
-    assert podcast_data.episodes == episodes
-    assert podcast_data.podcast_priority == 5
-    assert podcast_data.image_url == lImageURL
+    
+    assert podcast_data.to_dict() == podcast_dict
+    # assert podcast_data.title == lTitle
+    # assert podcast_data.podcast_url == lPodcastURL
+    # assert podcast_data.host == lHost
+    # assert podcast_data.description == lDescription
+    # assert podcast_data.episodelists == episodelist1.to_dict()
+    # assert podcast_data.podcast_priority == 5
+    # assert podcast_data.image_url == lImageURL

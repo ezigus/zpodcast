@@ -46,6 +46,7 @@ class PodcastPlaylist:
 
     @classmethod
     def from_dict(cls, data: Dict[str, List[Dict]]) -> 'PodcastPlaylist':
+        print(data)
         playlists_data = data.get("playlists", [])
         playlists = [PodcastEpisodeList.from_dict(playlist_data) for playlist_data in playlists_data]
         return cls(playlists=playlists)

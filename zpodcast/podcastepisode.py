@@ -217,6 +217,7 @@ class PodcastEpisode:
         pub_date = data.get("pub_date")
         if pub_date:
             pub_date = datetime.fromisoformat(pub_date)
+            
         return cls(
             title=data.get("title"),
             audio_url=data.get("audio_url"),
