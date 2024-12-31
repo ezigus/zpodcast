@@ -1,4 +1,3 @@
 feedparser
 validators
-mutmut
 json
