@@ -166,3 +166,6 @@ cython_debug/
 zpodcast.code-workspace
 zpodcast.code-workspace
 *.bak
+PodcastList*.json
+PodcastPlaylist*.json
+test_podcast_list.json
