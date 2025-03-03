@@ -180,7 +180,7 @@ def test_podcastlist_from_dict():
         "podcasts": [
             {
                 "title": "Test Podcast 1",
-                "podcast_url": "http://example.com/podcast1.rss",
+                "podcast_url="http://example.com/podcast1.rss",
                 "host": "John Doe",
                 "description": "This is a test podcast 1",
                 "episodes": [],
@@ -189,7 +189,7 @@ def test_podcastlist_from_dict():
             },
             {
                 "title": "Test Podcast 2",
-                "podcast_url": "http://example.com/podcast2.rss",
+                "podcast_url="http://example.com/podcast2.rss",
                 "host": "Jane Doe",
                 "description": "This is a test podcast 2",
                 "episodes": [],
