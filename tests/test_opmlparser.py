@@ -2,7 +2,7 @@ import pytest
 from zpodcast.opmlparser import parse_opml_file
 
 def test_parse_opml_file():
-    file_path = "data/unit.opml"
+    file_path = "tests/data/unit.opml"
     
     rss = parse_opml_file(file_path)
     
@@ -34,5 +34,3 @@ def test_parse_opml_file():
         },
         
     ]
-    
-    
