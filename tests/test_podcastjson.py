@@ -49,7 +49,7 @@ def sample_playlist():
     return PodcastPlaylist([episodes1, episodes2])
 
 def test_export_podcast_list(sample_podcast_list):
-    filename = "test_podcast_list.json"
+    filename = "tests/data/test_podcast_list.json"
     
     PodcastJSON.export_podcast_list(sample_podcast_list, filename)
     
@@ -58,14 +58,12 @@ def test_export_podcast_list(sample_podcast_list):
         data = json.load(f)
         assert data["version"] == "0.1"
         assert "podcastlist" in data
-    os.remove(filename)
 
 def test_import_podcast_list(sample_podcast_list):
-    filename = "test_podcast_list.json"
+    filename = "tests/data/test_podcast_list.json"
     PodcastJSON.export_podcast_list(sample_podcast_list, filename)
     imported_podcast_list = PodcastJSON.import_podcast_list(filename)
     assert imported_podcast_list.to_dict() == sample_podcast_list.to_dict()
-    os.remove(filename)
 
 def test_export_podcast_playlist(sample_playlist):
     filename = "test_podcast_playlist.json"
