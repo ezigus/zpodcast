@@ -36,6 +36,6 @@ class zPodcastApp:
         PodcastJSON.export_podcast_playlist(self.app.config['podcast_playlist'], f'{directory}/podcast_playlist.json')
 
 if __name__ == '__main__':
-    podcast_app = PzodcastApp()
+    podcast_app = zPodcastApp()
     app = podcast_app.create_app()
     app.run(debug=True)
