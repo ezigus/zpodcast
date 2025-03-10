@@ -12,21 +12,28 @@ class PodcastApp:
         self.podcast_list = None
         self.podcast_playlist = None
 
-    def create_app(self):
+    def create_app(self,directory : str = None):
+        if directory is None:
+            self.app.config['directory'] = 'data'
+        else:
+            self.app.config['directory'] = directory
+            
         self.load_data()
         self.app.before_first_request(self.load_data)
         self.app.teardown_appcontext(self.save_data)
         return self.app
 
     def load_data(self):
-        self.podcast_list = PodcastJSON.import_podcast_list('data/podcast_list.json')
-        self.podcast_playlist = PodcastJSON.import_podcast_playlist('data/podcast_playlist.json')
+        directory = self.app.config['directory']
+        self.podcast_list = PodcastJSON.import_podcast_list(f"{directory}/podcast_list.json")
+        self.podcast_playlist = PodcastJSON.import_podcast_playlist(f"{directory}/podcast_playlist.json")
         self.app.config['podcast_list'] = self.podcast_list
         self.app.config['podcast_playlist'] = self.podcast_playlist
 
     def save_data(self, exception):
-        PodcastJSON.export_podcast_list(self.app.config['podcast_list'], 'data/podcast_list.json')
-        PodcastJSON.export_podcast_playlist(self.app.config['podcast_playlist'], 'data/podcast_playlist.json')
+        directory = self.app.config['directory']
+        PodcastJSON.export_podcast_list(self.app.config['podcast_list'], f'{directory}/podcast_list.json')
+        PodcastJSON.export_podcast_playlist(self.app.config['podcast_playlist'], f'{directory}/podcast_playlist.json')
 
 if __name__ == '__main__':
     podcast_app = PodcastApp()
