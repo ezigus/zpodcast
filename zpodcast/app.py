@@ -19,7 +19,7 @@ class PodcastApp:
             self.app.config['directory'] = directory
             
         self.load_data()
-        self.app.before_first_request(self.load_data)
+#        self.app.before_first_request(self.load_data)
         self.app.teardown_appcontext(self.save_data)
         return self.app
 

@@ -5,7 +5,7 @@ from zpodcast.app import PodcastApp
 @pytest.fixture
 def client():
     podcast_app = PodcastApp()
-    app = podcast_app.create_app()
+    app = podcast_app.create_app('tests/data')
     with app.test_client() as client:
         yield client
 
