@@ -1,15 +1,13 @@
-from flask import jsonify
-from zpodcast.podcastjson import PodcastJSON
-from zpodcast.podcastlist import PodcastList
-from zpodcast.podcastplaylist import PodcastPlaylist
+from flask import jsonify, Flask
 
-def register_routes(app):
+def register_podcast_routes(app: Flask):
     @app.route('/podcasts', methods=['GET'])
     def get_podcasts():
-        podcast_list = PodcastJSON.import_podcast_list('test_podcast_list.json')
+        podcast_list = app.config['podcast_list']
         return jsonify(podcast_list.to_dict())
 
+def register_podcast_playlist_routes(app: Flask):
     @app.route('/playlists', methods=['GET'])
     def get_playlists():
-        podcast_playlist = PodcastJSON.import_podcast_playlist('test_podcast_list.json')
+        podcast_playlist = app.config['podcast_playlist']
         return jsonify(podcast_playlist.to_dict())
