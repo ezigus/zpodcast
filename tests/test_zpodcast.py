@@ -1,10 +1,10 @@
 import pytest
 from flask import Flask, jsonify
-from zpodcast.app import PodcastApp
+from zpodcast.zpodcast import zPodcastApp
 
 @pytest.fixture
 def client():
-    podcast_app = PodcastApp()
+    podcast_app = zPodcastApp()
     app = podcast_app.create_app('tests/data')
     with app.test_client() as client:
         yield client

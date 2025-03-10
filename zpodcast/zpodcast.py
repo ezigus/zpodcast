@@ -4,7 +4,7 @@ from zpodcast.podcastjson import PodcastJSON
 from zpodcast.podcastlist import PodcastList
 from zpodcast.podcastplaylist import PodcastPlaylist
 
-class PodcastApp:
+class zPodcastApp:
     def __init__(self):
         self.app = Flask(__name__)
         register_podcast_routes(self.app)
@@ -36,6 +36,6 @@ class PodcastApp:
         PodcastJSON.export_podcast_playlist(self.app.config['podcast_playlist'], f'{directory}/podcast_playlist.json')
 
 if __name__ == '__main__':
-    podcast_app = PodcastApp()
+    podcast_app = PzodcastApp()
     app = podcast_app.create_app()
     app.run(debug=True)
