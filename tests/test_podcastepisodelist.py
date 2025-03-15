@@ -238,3 +238,44 @@ def test_to_dict():
             }
         ]
     }
+
+def test_retrieve_episodes_from_rss(mocker):
+    mock_get_episodes = mocker.patch('zpodcast.rsspodcastparser.RSSPodcastParser.get_episodes')
+    mock_get_episodes.return_value = [
+        PodcastEpisode(
+            title='Episode 1',
+            description='Description 1',
+            pub_date='Mon, 11 Apr 2016 15:00:00 +0100',
+            duration=1800,
+            audio_url='https://example.com/episode1.mp3',
+            episode_number=1
+        ),
+        PodcastEpisode(
+            title='Episode 2',
+            description='Description 2',
+            pub_date='Tue, 12 Apr 2016 15:00:00 +0100',
+            duration=3600,
+            audio_url='https://example.com/episode2.mp3',
+            episode_number=2
+        )
+    ]
+
+    playlist = PodcastEpisodeList(name="Test Playlist", episodes=[])
+    playlist.retrieve_episodes_from_rss('https://example.com/feed.rss')
+
+    assert len(playlist.episodes) == 2
+    assert playlist.episodes[0].title == 'Episode 1'
+    assert playlist.episodes[1].title == 'Episode 2'
+
+def test_update_podcast_metadata(mocker):
+    mock_retrieve_and_add_episodes = mocker.patch('zpodcast.rsspodcastparser.RSSPodcastParser.retrieve_and_add_episodes')
+    podcast_data = PodcastData(
+        title="Test Podcast",
+        podcast_url="https://example.com/feed.rss",
+        host="John Doe",
+        description="Test Description",
+        episodelists=[]
+    )
+    playlist = PodcastEpisodeList(name="Test Playlist", episodes=[])
+    playlist.update_podcast_metadata(podcast_data)
+    mock_retrieve_and_add_episodes.assert_called_once_with(podcast_data)

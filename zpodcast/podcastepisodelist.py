@@ -3,6 +3,7 @@ import re
 from typing import List
 from zpodcast.podcastepisode import PodcastEpisode
 from typing import Dict
+from zpodcast.rsspodcastparser import RSSPodcastParser
 
 @dataclass
 class PodcastEpisodeList:
@@ -153,4 +154,10 @@ class PodcastEpisodeList:
             "episodes": [episode.to_dict() for episode in self.episodes]
             }
         return podcastepisodelist_dict
+
+    def retrieve_episodes_from_rss(self, rss_feed_url: str) -> None:
+        episodes = RSSPodcastParser.get_episodes(rss_feed_url)
+        self.episodes.extend(episodes)
         
+    def update_podcast_metadata(self, podcast_data) -> None:
+        RSSPodcastParser.retrieve_and_add_episodes(podcast_data)

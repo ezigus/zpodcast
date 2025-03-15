@@ -2,6 +2,7 @@ from dataclasses import asdict, dataclass
 import validators
 from typing import Optional, List, Dict
 from zpodcast.podcastepisodelist import PodcastEpisodeList
+from zpodcast.rsspodcastparser import RSSPodcastParser
 
 @dataclass
 class PodcastData:
@@ -16,6 +17,7 @@ class PodcastData:
     _podcast_priority: Optional[int]
     _image_url: Optional[str]
     _episodelists : Optional[List[PodcastEpisodeList]]
+    _name_set_manually: bool
 
     def __init__(self, title:str, 
                  podcast_url: str, 
@@ -23,7 +25,8 @@ class PodcastData:
                  description:str = None, 
                  episodelists:List[PodcastEpisodeList]=[], 
                  podcast_priority:int=None, 
-                 image_url:str=None):
+                 image_url:str=None,
+                 name_set_manually:bool=False):
         """
         Initializes a new instance of the PodcastData class.
 
@@ -34,6 +37,7 @@ class PodcastData:
             episodes (PodcastList): The episodes of the podcast.
             podcast_priority (int): The priority of the podcast.
             image_url (str): The image URL of the podcast.
+            name_set_manually (bool): Indicates if the name was set manually.
         """
 
         self.title = title
@@ -43,6 +47,8 @@ class PodcastData:
         self.episodelists = episodelists
         self.podcast_priority = podcast_priority
         self.image_url = image_url
+        self.name_set_manually = name_set_manually
+        self.populate_episodelists_from_rss()
 
 
     """
@@ -241,6 +247,28 @@ class PodcastData:
             ValueError: If the image URL is invalid.
         """
         self._image_url = value
+
+    @property
+    def name_set_manually(self):
+        """
+        Gets the value indicating if the name was set manually.
+
+        Returns:
+            bool: The value indicating if the name was set manually.
+        """
+        return self._name_set_manually
+
+    @name_set_manually.setter
+    def name_set_manually(self, value):
+        """
+        Sets the value indicating if the name was set manually.
+
+        Args:
+            value (bool): The value to set.
+        """
+        if not isinstance(value, bool):
+            raise ValueError("Invalid value for name_set_manually")
+        self._name_set_manually = value
  
  
     def to_dict(self) -> Dict:
@@ -250,7 +278,8 @@ class PodcastData:
                             "podcast_priority": self.podcast_priority,
                             "image_url": self.image_url,
                             "description": self.description,
-                            "episodelists" : [playlist.to_dict() for playlist in self.episodelists]
+                            "episodelists" : [playlist.to_dict() for playlist in self.episodelists],
+                            "name_set_manually": self.name_set_manually
         }
         return(podcastdata_dict)                                   
 
@@ -263,7 +292,14 @@ class PodcastData:
                                   description=data.get("description"),
                                   podcast_priority = data.get("podcast_priority"),
                                   image_url = data.get("image_url"),
-                                  episodelists = [PodcastEpisodeList.from_dict(playlist_data) for playlist_data in episodelists]            
+                                  episodelists = [PodcastEpisodeList.from_dict(playlist_data) for playlist_data in episodelists],
+                                  name_set_manually = data.get("name_set_manually", False)            
         )
         return podcastdata
-        
+
+    def populate_episodelists_from_rss(self):
+        RSSPodcastParser.retrieve_and_add_episodes(self)
+        for episodelist in self.episodelists:
+            if not episodelist.name or not self.name_set_manually:
+                episodelist.name = f"{self.title} episode list"
+                self.name_set_manually = False

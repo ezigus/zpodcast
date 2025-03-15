@@ -404,3 +404,59 @@ def test_from_dict():
     # assert podcast_data.episodelists == episodelist1.to_dict()
     # assert podcast_data.podcast_priority == 5
     # assert podcast_data.image_url == lImageURL
+
+def test_populate_episodelists_from_rss(mocker):
+    mock_retrieve_and_add_episodes = mocker.patch('zpodcast.rsspodcastparser.RSSPodcastParser.retrieve_and_add_episodes')
+    podcast_data = PodcastData(
+        title=lTitle,
+        podcast_url=lPodcastURL,
+        host=lHost,
+        description=lDescription,
+        episodelists=episodelists,
+        podcast_priority=5,
+        image_url=lImageURL
+    )
+    mock_retrieve_and_add_episodes.assert_called_once_with(podcast_data)
+
+def test_name_set_manually():
+    podcast_data = PodcastData(
+        title=lTitle,
+        podcast_url=lPodcastURL,
+        host=lHost,
+        description=lDescription,
+        episodelists=episodelists,
+        podcast_priority=5,
+        image_url=lImageURL,
+        name_set_manually=True
+    )
+    assert podcast_data.name_set_manually == True
+
+def test_update_podcast_list_name_if_empty():
+    podcast_data = PodcastData(
+        title=lTitle,
+        podcast_url=lPodcastURL,
+        host=lHost,
+        description=lDescription,
+        episodelists=[PodcastEpisodeList(name="", episodes=[])],
+        podcast_priority=5,
+        image_url=lImageURL,
+        name_set_manually=False
+    )
+    podcast_data.populate_episodelists_from_rss()
+    assert podcast_data.episodelists[0].name == "My Podcast episode list"
+    assert podcast_data.name_set_manually == False
+
+def test_update_podcast_list_name_if_set_manually():
+    podcast_data = PodcastData(
+        title=lTitle,
+        podcast_url=lPodcastURL,
+        host=lHost,
+        description=lDescription,
+        episodelists=[PodcastEpisodeList(name="Custom Name", episodes=[])],
+        podcast_priority=5,
+        image_url=lImageURL,
+        name_set_manually=True
+    )
+    podcast_data.populate_episodelists_from_rss()
+    assert podcast_data.episodelists[0].name == "My Podcast episode list"
+    assert podcast_data.name_set_manually == False

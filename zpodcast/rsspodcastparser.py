@@ -4,6 +4,8 @@ sys.path.append('..')
 import feedparser
 from zpodcast.opmlparser import OPMLParser
 from zpodcast.podcastepisode import PodcastEpisode
+from zpodcast.podcastdata import PodcastData
+from zpodcast.podcastepisodelist import PodcastEpisodeList
 
 
 class RSSPodcastParser:
@@ -48,6 +50,19 @@ class RSSPodcastParser:
         total_seconds = hours * 3600 + minutes * 60 + seconds
         return total_seconds
 
+    @staticmethod
+    def retrieve_and_add_episodes(podcast_data: PodcastData) -> None:
+        episodes = RSSPodcastParser.get_episodes(podcast_data.podcast_url)
+        episode_list_name = f"{podcast_data.title} episode list"
+        episode_list = PodcastEpisodeList(name=episode_list_name, episodes=episodes)
+        podcast_data.episodelists.append(episode_list)
+
+        # Update podcast metadata
+        feed = feedparser.parse(podcast_data.podcast_url)
+        podcast_data.host = feed.feed.get('author', podcast_data.host)
+        podcast_data.description = feed.feed.get('description', podcast_data.description)
+        podcast_data.image_url = feed.feed.get('image', {}).get('href', podcast_data.image_url)
+
 
 def main():
     # Specify the path to the OPML file
@@ -87,5 +102,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-    
-    
