@@ -48,7 +48,8 @@ class PodcastData:
         self.podcast_priority = podcast_priority
         self.image_url = image_url
         self.name_set_manually = name_set_manually
-        self.populate_episodelists_from_rss()
+        self.populate_episodes_from_feed()
+        
 
 
     """
@@ -270,6 +271,27 @@ class PodcastData:
             raise ValueError("Invalid value for name_set_manually")
         self._name_set_manually = value
  
+    def populate_episodes_from_feed(self) -> None:
+        # retrieve the list of episodes from the podcast URL
+        episodes = RSSPodcastParser.get_episodes(self.podcast_url)
+        
+        # prepare updating the episode name to match the podcast's title with the suffix "episode list"
+        episode_list_name = f"{self.title} episode list"
+        
+        # create a podcast episode list that can then be used to determine which of the episodes are new.
+        new_episode_list = PodcastEpisodeList(name=episode_list_name, episodes=episodes)
+        
+        # determine which episodes are new and append the new episodes to the existing list of episodes for this podcast.
+        self.episodelists = [new_episode_list]
+        
+        self.name_set_manually = False
+        
+        # Update podcast metadata
+        feed = RSSPodcastParser.get_rss_metadata(self.podcast_url)
+        self.host = feed.get('author')
+        self.description = feed.get('description')
+        #self.image_url = feed.get('image')
+
  
     def to_dict(self) -> Dict:
         podcastdata_dict = {"title": self.title, 
@@ -296,10 +318,3 @@ class PodcastData:
                                   name_set_manually = data.get("name_set_manually", False)            
         )
         return podcastdata
-
-    def populate_episodelists_from_rss(self):
-        RSSPodcastParser.retrieve_and_add_episodes(self)
-        for episodelist in self.episodelists:
-            if not episodelist.name or not self.name_set_manually:
-                episodelist.name = f"{self.title} episode list"
-                self.name_set_manually = False
