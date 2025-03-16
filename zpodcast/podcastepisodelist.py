@@ -16,9 +16,6 @@ class PodcastEpisodeList:
                  ):
         self.name = name
         self.episodes = episodes
-        
-    def __post_init__(self):
-        self._validate_name(self._name)
     
     @property
     def name(self):
@@ -31,10 +28,10 @@ class PodcastEpisodeList:
     
     def _validate_name(self, name: str) -> None:
         if not isinstance(name, str):
-            raise ValueError("Invalid playlist name. Playlist name is not a string.")
+            raise ValueError(f"Invalid playlist name. Playlist name is not a string. {name}")
 
         if not bool(re.match('([a-zA-Z0-9\ ]+$)', name)):
-            raise ValueError("Invalid playlist name. The name must be alphanumeric.")
+            raise ValueError(f"Invalid playlist name. The name must be alphanumeric. Name = {name}")
         
         if len(name) > 100:
             raise ValueError(f"Invalid playlist name. The name is {len(name)} and the maximum length is 100 characters.")

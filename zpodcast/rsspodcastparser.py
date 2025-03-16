@@ -2,15 +2,14 @@ import sys
 sys.path.append('..')
 
 import feedparser
-from zpodcast.opmlparser import OPMLParser
+from zpodcast.opmlparser import parse_opml_file
 from zpodcast.podcastepisode import PodcastEpisode
-from zpodcast.podcastdata import PodcastData
-from zpodcast.podcastepisodelist import PodcastEpisodeList
+
 
 
 class RSSPodcastParser:
     @staticmethod
-    def get_episodes(rss_feed_url) -> list[PodcastEpisode]:
+    def get_episodes(rss_feed_url: str) -> list[PodcastEpisode]:
         # Parse the RSS feed using feedparser library
         feed = feedparser.parse(rss_feed_url)
 
@@ -26,11 +25,25 @@ class RSSPodcastParser:
                 duration_in_seconds=RSSPodcastParser._convert_duration_to_seconds(
                     entry.itunes_duration) if 'itunes_duration' in entry else None,  # Episode duration in seconds
                 audio_url=entry.enclosures[0].href if entry.enclosures else None,  # Episode audio URL
-                episode_number=entry.itunes_episode if 'itunes_episode' in entry else None  # Episode number
+                episode_number=entry.itunes_episode if 'itunes_episode' in entry else None, # Episode number
+                guid=entry.guid if 'guid' in entry else None  # Episode GUID
             )
             episodes.append(episode)
 
         return episodes
+
+    # return the meta data for an RSS feed
+    def get_rss_metadata(rss_feed_url: str) -> dict:
+        # Parse the RSS feed using feedparser library
+        feed_str = feedparser.parse(rss_feed_url)
+        podcast_meta = {
+            'title': feed_str.feed.title if 'title' in feed_str.feed else None,
+            'description': feed_str.feed.description if 'description' in feed_str.feed else None,
+            'author': feed_str.feed.author if 'author' in feed_str.feed else None,
+            'image': feed_str.feed.image.href if 'image' in feed_str.feed else None
+        }
+        return podcast_meta
+ 
 
     @staticmethod
     def _convert_duration_to_seconds(duration):
@@ -50,26 +63,12 @@ class RSSPodcastParser:
         total_seconds = hours * 3600 + minutes * 60 + seconds
         return total_seconds
 
-    @staticmethod
-    def retrieve_and_add_episodes(podcast_data: PodcastData) -> None:
-        episodes = RSSPodcastParser.get_episodes(podcast_data.podcast_url)
-        episode_list_name = f"{podcast_data.title} episode list"
-        episode_list = PodcastEpisodeList(name=episode_list_name, episodes=episodes)
-        podcast_data.episodelists.append(episode_list)
-
-        # Update podcast metadata
-        feed = feedparser.parse(podcast_data.podcast_url)
-        podcast_data.host = feed.feed.get('author', podcast_data.host)
-        podcast_data.description = feed.feed.get('description', podcast_data.description)
-        podcast_data.image_url = feed.feed.get('image', {}).get('href', podcast_data.image_url)
-
-
 def main():
     # Specify the path to the OPML file
     opml_file_path = 'test.opml'
 
     # Retrieve the list of RSS feeds from the OPML file
-    rss_feeds = OPMLParser.parse_opml_file(opml_file_path)
+    rss_feeds = parse_opml_file(opml_file_path)
 
     # Print all RSS feeds returned
     print("RSS feeds:")

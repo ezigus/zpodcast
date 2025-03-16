@@ -36,7 +36,9 @@ class PodcastEpisode:
                 pub_date: Optional[Union[datetime,str]] = None,
                 duration: Optional[Union[int,str]] = None,
                 episode_number: Optional[int] = None,
-                image_url: Optional[str] = None):
+                image_url: Optional[str] = None,
+                guid: Optional[str] = None):
+        
     
         self.title = title
         self.description = description
@@ -45,6 +47,7 @@ class PodcastEpisode:
         self.pub_date = pub_date
         self.episode_number = episode_number
         self.image_url = image_url
+        self.guid = guid
 
 
     @property
@@ -60,6 +63,17 @@ class PodcastEpisode:
                 raise ValueError("Invalid audio URL")
         else:
             raise ValueError("Invalid audio URL")
+
+    @property
+    def guid(self) -> Optional[str]:
+        return self._guid
+    
+    @guid.setter
+    def guid(self, value: Optional[str]) -> None:
+        if value is not None:
+            self._guid = value
+        else:
+            self._guid = None
 
     """
     Get the description of the episode.
