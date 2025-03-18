@@ -2,7 +2,7 @@ import pytest
 import dataclasses
 from email.utils import parsedate_to_datetime
 from datetime import date,datetime
-from zpodcast.podcastepisode import PodcastEpisode
+from zpodcast.core.episode import PodcastEpisode
 
 
 """

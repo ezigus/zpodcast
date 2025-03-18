@@ -1,9 +1,9 @@
 import pytest
 from unittest.mock import patch
 import dataclasses
-from zpodcast.podcastdata import PodcastData
-from zpodcast.podcastepisodelist import PodcastEpisodeList
-from zpodcast.podcastepisode import PodcastEpisode
+from zpodcast.core.podcast import PodcastData
+from zpodcast.core.playlist import PodcastEpisodeList
+from zpodcast.core.episode import PodcastEpisode
 from datetime import date
 
 

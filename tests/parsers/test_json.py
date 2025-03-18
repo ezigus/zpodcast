@@ -1,12 +1,12 @@
 import os
 import json
 import pytest
-from zpodcast.podcastjson import PodcastJSON
-from zpodcast.podcastlist import PodcastList
-from zpodcast.podcastplaylist import PodcastPlaylist
-from zpodcast.podcastdata import PodcastData
-from zpodcast.podcastepisodelist import PodcastEpisodeList
-from zpodcast.podcastepisode import PodcastEpisode
+from zpodcast.parsers.json import PodcastJSON
+from zpodcast.core.podcasts import PodcastList
+from zpodcast.core.playlists import PodcastPlaylist
+from zpodcast.core.podcast import PodcastData
+from zpodcast.core.playlist import PodcastEpisodeList
+from zpodcast.core.episode import PodcastEpisode
 
 @pytest.fixture
 def sample_podcast_list():

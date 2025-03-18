@@ -1,10 +1,10 @@
 import pytest
 from unittest.mock import patch, MagicMock
 from datetime import datetime
-from zpodcast.rsspodcastparser import RSSPodcastParser
-from zpodcast.podcastdata import PodcastData
-from zpodcast.podcastepisodelist import PodcastEpisodeList
-from zpodcast.podcastepisode import PodcastEpisode
+from zpodcast.parsers.rss import RSSPodcastParser
+from zpodcast.core.podcast import PodcastData
+from zpodcast.core.playlist import PodcastEpisodeList
+from zpodcast.core.episode import PodcastEpisode
 
 podcast_data = PodcastData(
     title='Test Podcast',

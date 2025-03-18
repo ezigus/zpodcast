@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 from typing import List, Dict
-from zpodcast.podcastepisodelist import PodcastEpisodeList
+from zpodcast.core.playlist import PodcastEpisodeList
 
 @dataclass
 class PodcastPlaylist:
