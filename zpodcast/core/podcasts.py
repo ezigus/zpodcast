@@ -1,6 +1,6 @@
-from zpodcast.podcastdata import PodcastData
 from dataclasses import dataclass
-from typing import Optional, List
+from typing import List
+from zpodcast.core.podcast import PodcastData
 
 @dataclass
 class PodcastList:

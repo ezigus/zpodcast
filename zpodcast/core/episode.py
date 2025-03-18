@@ -1,9 +1,11 @@
-from datetime import datetime,date
-from typing import Optional, Union
-from dataclasses import dataclass
+from dataclasses import dataclass, field
+from datetime import datetime, date
+from typing import Optional, Union, Dict
 from email.utils import parsedate_to_datetime
 import validators
 import json
+import re
+from urllib.parse import urlparse
 
 
 
