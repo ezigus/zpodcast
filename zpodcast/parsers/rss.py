@@ -1,6 +1,3 @@
-import sys
-sys.path.append('..')
-
 import feedparser
 from zpodcast.parsers.opml import parse_opml_file
 from zpodcast.core.episode import PodcastEpisode

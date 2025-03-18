@@ -3,7 +3,6 @@ from zpodcast.api.routes import register_podcast_playlist_routes, register_podca
 from zpodcast.parsers.json import PodcastJSON
 from zpodcast.core.podcasts import PodcastList
 from zpodcast.core.playlists import PodcastPlaylist
-from zpodcast.api.app import zPodcastApp
 
 class zPodcastApp:
     def __init__(self):
