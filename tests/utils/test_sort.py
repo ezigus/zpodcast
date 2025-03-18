@@ -8,9 +8,7 @@ def test_sort_parameters_initialization():
         _episode_date=None,
         _episode_rating=None,
         _podcast_title=None,
-        _podcast_author=None,
-        _episode_tags=None,
-        _podcast_category=None
+        _podcast_author=None
     )
     assert params.episode_title is None
     assert params.episode_duration is None
@@ -18,8 +16,6 @@ def test_sort_parameters_initialization():
     assert params.episode_rating is None
     assert params.podcast_title is None
     assert params.podcast_author is None
-    assert params.episode_tags is None
-    assert params.podcast_category is None
 
 def test_episode_title_setter():
     params = SortParameters(
@@ -28,9 +24,7 @@ def test_episode_title_setter():
         _episode_date=None,
         _episode_rating=None,
         _podcast_title=None,
-        _podcast_author=None,
-        _episode_tags=None,
-        _podcast_category=None
+        _podcast_author=None
     )
     
     # Test valid values
@@ -52,9 +46,7 @@ def test_episode_duration_setter():
         _episode_date=None,
         _episode_rating=None,
         _podcast_title=None,
-        _podcast_author=None,
-        _episode_tags=None,
-        _podcast_category=None
+        _podcast_author=None
     )
     
     # Test valid values
@@ -76,9 +68,7 @@ def test_episode_date_setter():
         _episode_date=None,
         _episode_rating=None,
         _podcast_title=None,
-        _podcast_author=None,
-        _episode_tags=None,
-        _podcast_category=None
+        _podcast_author=None
     )
     
     # Test valid values
@@ -100,9 +90,7 @@ def test_episode_rating_setter():
         _episode_date=None,
         _episode_rating=None,
         _podcast_title=None,
-        _podcast_author=None,
-        _episode_tags=None,
-        _podcast_category=None
+        _podcast_author=None
     )
     
     # Test valid values
@@ -124,9 +112,7 @@ def test_podcast_title_setter():
         _episode_date=None,
         _episode_rating=None,
         _podcast_title=None,
-        _podcast_author=None,
-        _episode_tags=None,
-        _podcast_category=None
+        _podcast_author=None
     )
     
     # Test valid values
@@ -148,9 +134,7 @@ def test_podcast_author_setter():
         _episode_date=None,
         _episode_rating=None,
         _podcast_title=None,
-        _podcast_author=None,
-        _episode_tags=None,
-        _podcast_category=None
+        _podcast_author=None
     )
     
     # Test valid values

@@ -241,7 +241,7 @@ def test_to_dict():
     }
 
 def test_retrieve_episodes_from_rss(mocker):
-    mock_get_episodes = mocker.patch('zpodcast.rsspodcastparser.RSSPodcastParser.get_episodes')
+    mock_get_episodes = mocker.patch('zpodcast.parsers.rss.RSSPodcastParser.get_episodes')
     mock_get_episodes.return_value = [
         PodcastEpisode(
             title="Episode 1",
