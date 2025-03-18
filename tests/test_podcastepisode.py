@@ -65,14 +65,14 @@ Tests to verify the duration values in this data class
 """
 def test_podcastepisode_duration_string():
     # Create a podcast episode object
-    episode = PodcastEpisode(title="Episode 1", 
-                             description="Episode 1 description", 
+    episode = PodcastEpisode(title="Episode 1",
+                             description="Episode 1 description",
                              audio_url="https://example.com/episode1.mp3",
-                             duration="1800", 
+                             duration="1800",
                              pub_date=" Mon, 11 Apr 2016 15:00:00 +0100")
-
+    
     # Test the duration attribute of the podcast episode
-    assert episode.duration is None
+    assert episode.duration == 1800  # String duration should be converted to integer
 
 
 def test_podcastepisode_duration_int():

@@ -5,68 +5,32 @@
             {
                 "title": "Test Podcast 1",
                 "podcast_url": "http://example.com/podcast1.rss",
-                "host": "John Doe",
+                "host": "",
                 "podcast_priority": 5,
                 "image_url": "http://example.com/image1.jpg",
-                "description": "This is a test podcast 1",
+                "description": "",
                 "episodelists": [
                     {
-                        "name": "Test podcast Episode List",
-                        "episodes": [
-                            {
-                                "title": "Episode 1",
-                                "audio_url": "https://example.com/episode1.mp3",
-                                "description": "",
-                                "pub_date": "2025-03-10",
-                                "duration": null,
-                                "episode_number": null,
-                                "image_url": null
-                            },
-                            {
-                                "title": "Episode 2",
-                                "audio_url": "https://example.com/episode2.mp3",
-                                "description": "",
-                                "pub_date": "2025-03-10",
-                                "duration": null,
-                                "episode_number": null,
-                                "image_url": null
-                            }
-                        ]
+                        "name": "Test Podcast 1 episode list",
+                        "episodes": []
                     }
-                ]
+                ],
+                "name_set_manually": false
             },
             {
                 "title": "Test Podcast 2",
                 "podcast_url": "http://example.com/podcast2.rss",
-                "host": "Jane Doe",
+                "host": "",
                 "podcast_priority": 5,
                 "image_url": "http://example.com/image2.jpg",
-                "description": "This is a test podcast 2",
+                "description": "",
                 "episodelists": [
                     {
-                        "name": "Test podcast Episode List",
-                        "episodes": [
-                            {
-                                "title": "Episode 1",
-                                "audio_url": "https://example.com/episode1.mp3",
-                                "description": "",
-                                "pub_date": "2025-03-10",
-                                "duration": null,
-                                "episode_number": null,
-                                "image_url": null
-                            },
-                            {
-                                "title": "Episode 2",
-                                "audio_url": "https://example.com/episode2.mp3",
-                                "description": "",
-                                "pub_date": "2025-03-10",
-                                "duration": null,
-                                "episode_number": null,
-                                "image_url": null
-                            }
-                        ]
+                        "name": "Test Podcast 2 episode list",
+                        "episodes": []
                     }
-                ]
+                ],
+                "name_set_manually": false
             }
         ]
     }

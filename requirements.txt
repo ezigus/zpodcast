@@ -1,3 +1,4 @@
 feedparser
 validators
 flask
+pytest-mock
