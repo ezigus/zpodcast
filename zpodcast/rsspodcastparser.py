@@ -4,45 +4,69 @@ sys.path.append('..')
 import feedparser
 from zpodcast.opmlparser import parse_opml_file
 from zpodcast.podcastepisode import PodcastEpisode
+from typing import Optional, List
+import logging
 
 
 
 class RSSPodcastParser:
     @staticmethod
-    def get_episodes(rss_feed_url: str) -> list[PodcastEpisode]:
-        # Parse the RSS feed using feedparser library
-        feed = feedparser.parse(rss_feed_url)
+    def get_episodes(rss_feed_url: str) -> List[PodcastEpisode]:
+        try:
+            # Parse the RSS feed using feedparser library
+            feed = feedparser.parse(rss_feed_url)
+            
+            if feed.bozo:  # feedparser error
+                logging.error(f"Feed parsing error for {rss_feed_url}: {feed.bozo_exception}")
+                return []
 
-        episodes = []
-        for entry in feed.entries:
-            # Extract relevant information for each episode
+            episodes = []
+            for entry in feed.entries:
+                try:
+                    # Extract relevant information for each episode
+                    episode = PodcastEpisode(
+                        title=entry['title'],  # Episode title
+                        audio_url=entry['enclosures'][0]['href'] if entry.get('enclosures') else None,  # Episode audio URL
+                        description=entry['description'],  # Episode description
+                        pub_date=entry['published'],  # Episode published date
+                        duration=entry.get('itunes_duration'),  # Episode duration
+                        episode_number=entry.get('itunes_episode'),  # Episode number
+                        image_url=entry.get('image', {}).get('href'),  # Episode image URL
+                        guid=entry.get('guid')  # Episode GUID
+                    )
+                    episodes.append(episode)
+                except Exception as e:
+                    logging.error(f"Error creating episode from entry: {e}")
+                    continue
 
-            episode = PodcastEpisode(
-                title=entry.title,  # Episode title
-                description=entry.description,  # Episode description
-                pub_date=entry.published,  # Episode published date
-                duration=entry.itunes_duration if 'itunes_duration' in entry else None,  # Episode duration
-                duration_in_seconds=RSSPodcastParser._convert_duration_to_seconds(
-                    entry.itunes_duration) if 'itunes_duration' in entry else None,  # Episode duration in seconds
-                audio_url=entry.enclosures[0].href if entry.enclosures else None,  # Episode audio URL
-                episode_number=entry.itunes_episode if 'itunes_episode' in entry else None, # Episode number
-                guid=entry.guid if 'guid' in entry else None  # Episode GUID
-            )
-            episodes.append(episode)
-
-        return episodes
+            return episodes
+        except Exception as e:
+            logging.error(f"Error parsing RSS feed {rss_feed_url}: {e}")
+            return []
 
     # return the meta data for an RSS feed
+    @staticmethod
     def get_rss_metadata(rss_feed_url: str) -> dict:
-        # Parse the RSS feed using feedparser library
-        feed_str = feedparser.parse(rss_feed_url)
-        podcast_meta = {
-            'title': feed_str.feed.title if 'title' in feed_str.feed else None,
-            'description': feed_str.feed.description if 'description' in feed_str.feed else None,
-            'author': feed_str.feed.author if 'author' in feed_str.feed else None,
-            'image': feed_str.feed.image.href if 'image' in feed_str.feed else None
-        }
-        return podcast_meta
+        try:
+            # Parse the RSS feed using feedparser library
+            feed = feedparser.parse(rss_feed_url)
+            
+            if feed.bozo:  # feedparser error
+                logging.error(f"Feed parsing error for {rss_feed_url}: {feed.bozo_exception}")
+                return {}
+
+            # Get feed metadata
+            feed_data = feed.feed
+            podcast_meta = {
+                'title': feed_data.get('title'),
+                'description': feed_data.get('description'),
+                'author': feed_data.get('author'),
+                'image': feed_data.get('image', {}).get('href')
+            }
+            return podcast_meta
+        except Exception as e:
+            logging.error(f"Error getting RSS metadata for {rss_feed_url}: {e}")
+            return {}
  
 
     @staticmethod

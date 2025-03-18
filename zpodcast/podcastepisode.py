@@ -148,7 +148,6 @@ class PodcastEpisode:
     """
     @property
     def duration(self) -> Optional[int]:
-
         return self._duration
     
     """
@@ -158,15 +157,36 @@ class PodcastEpisode:
         value (Optional[str]): The duration of the episode in seconds.
     """
     @duration.setter
-    def duration(self, value: Optional[str]) -> None:
-    
+    def duration(self, value: Optional[Union[int, str]]) -> None:
         if value is not None:
-            if isinstance(value, int):
-                if value >= 0:
-                    self._duration = value
+            try:
+                if isinstance(value, int):
+                    if value >= 0:
+                        self._duration = value
+                    else:
+                        self._duration = None
+                elif isinstance(value, str):
+                    # Try to parse duration in HH:MM:SS format
+                    if ':' in value:
+                        parts = value.split(':')
+                        if len(parts) == 3:  # HH:MM:SS
+                            hours, minutes, seconds = map(int, parts)
+                            self._duration = hours * 3600 + minutes * 60 + seconds
+                        elif len(parts) == 2:  # MM:SS
+                            minutes, seconds = map(int, parts)
+                            self._duration = minutes * 60 + seconds
+                        else:
+                            self._duration = None
+                    else:
+                        # Try to parse as seconds
+                        duration_seconds = int(value)
+                        if duration_seconds >= 0:
+                            self._duration = duration_seconds
+                        else:
+                            self._duration = None
                 else:
                     self._duration = None
-            else: 
+            except (ValueError, TypeError):
                 self._duration = None
         else:
             self._duration = None

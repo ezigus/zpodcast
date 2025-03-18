@@ -2,6 +2,7 @@ import pytest
 from datetime import date
 from zpodcast.podcastepisodelist import PodcastEpisodeList
 from zpodcast.podcastepisode import PodcastEpisode
+from zpodcast.podcastdata import PodcastData
 
 def test_add_podcastepisode():
     playlist = PodcastEpisodeList(name="Test Playlist", episodes=[])
@@ -243,20 +244,18 @@ def test_retrieve_episodes_from_rss(mocker):
     mock_get_episodes = mocker.patch('zpodcast.rsspodcastparser.RSSPodcastParser.get_episodes')
     mock_get_episodes.return_value = [
         PodcastEpisode(
-            title='Episode 1',
-            description='Description 1',
-            pub_date='Mon, 11 Apr 2016 15:00:00 +0100',
+            title="Episode 1",
+            description="Description 1",
+            audio_url="https://example.com/episode1.mp3",
             duration=1800,
-            audio_url='https://example.com/episode1.mp3',
-            episode_number=1
+            pub_date="Mon, 11 Apr 2024 15:00:00 +0100"
         ),
         PodcastEpisode(
-            title='Episode 2',
-            description='Description 2',
-            pub_date='Tue, 12 Apr 2016 15:00:00 +0100',
+            title="Episode 2",
+            description="Description 2",
+            audio_url="https://example.com/episode2.mp3",
             duration=3600,
-            audio_url='https://example.com/episode2.mp3',
-            episode_number=2
+            pub_date="Mon, 12 Apr 2024 15:00:00 +0100"
         )
     ]
 
@@ -266,16 +265,3 @@ def test_retrieve_episodes_from_rss(mocker):
     assert len(playlist.episodes) == 2
     assert playlist.episodes[0].title == 'Episode 1'
     assert playlist.episodes[1].title == 'Episode 2'
-
-def test_update_podcast_metadata(mocker):
-    mock_retrieve_and_add_episodes = mocker.patch('zpodcast.rsspodcastparser.RSSPodcastParser.retrieve_and_add_episodes')
-    podcast_data = PodcastData(
-        title="Test Podcast",
-        podcast_url="https://example.com/feed.rss",
-        host="John Doe",
-        description="Test Description",
-        episodelists=[]
-    )
-    playlist = PodcastEpisodeList(name="Test Playlist", episodes=[])
-    playlist.update_podcast_metadata(podcast_data)
-    mock_retrieve_and_add_episodes.assert_called_once_with(podcast_data)

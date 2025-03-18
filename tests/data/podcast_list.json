@@ -8,7 +8,7 @@
                 "host": "",
                 "podcast_priority": 5,
                 "image_url": "http://example.com/image1.jpg",
-                "description": "<div>\n    <h1>Example Domain</h1>\n    <p>This domain is for use in illustrative examples in documents. You may use this\n    domain in literature without prior coordination or asking for permission.</p>\n    <p><a href=\"https://www.iana.org/domains/example\">More information...</a></p>\n</div>",
+                "description": "",
                 "episodelists": [
                     {
                         "name": "Test Podcast 1 episode list",
@@ -23,7 +23,7 @@
                 "host": "",
                 "podcast_priority": 5,
                 "image_url": "http://example.com/image2.jpg",
-                "description": "<div>\n    <h1>Example Domain</h1>\n    <p>This domain is for use in illustrative examples in documents. You may use this\n    domain in literature without prior coordination or asking for permission.</p>\n    <p><a href=\"https://www.iana.org/domains/example\">More information...</a></p>\n</div>",
+                "description": "",
                 "episodelists": [
                     {
                         "name": "Test Podcast 2 episode list",

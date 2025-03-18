@@ -30,7 +30,7 @@ class PodcastEpisodeList:
         if not isinstance(name, str):
             raise ValueError(f"Invalid playlist name. Playlist name is not a string. {name}")
 
-        if not bool(re.match('([a-zA-Z0-9\ ]+$)', name)):
+        if not bool(re.match(r'([a-zA-Z0-9 ]+$)', name)):
             raise ValueError(f"Invalid playlist name. The name must be alphanumeric. Name = {name}")
         
         if len(name) > 100:
@@ -156,5 +156,3 @@ class PodcastEpisodeList:
         episodes = RSSPodcastParser.get_episodes(rss_feed_url)
         self.episodes.extend(episodes)
         
-    def update_podcast_metadata(self, podcast_data) -> None:
-        RSSPodcastParser.retrieve_and_add_episodes(podcast_data)
