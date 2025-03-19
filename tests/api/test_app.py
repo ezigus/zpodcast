@@ -41,13 +41,13 @@ def client():
         yield client
 
 def test_get_podcasts(client):
-    response = client.get('/podcasts')
+    response = client.get('/api/podcasts')
     assert response.status_code == 200
     data = response.get_json()
     assert 'podcasts' in data
 
 def test_get_playlists(client):
-    response = client.get('/playlists')
+    response = client.get('/api/playlists')
     assert response.status_code == 200
     data = response.get_json()
     assert 'playlists' in data

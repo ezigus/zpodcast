@@ -1,6 +1,6 @@
 from flask import Blueprint, jsonify, request
 from zpodcast.core.podcasts import PodcastList
-from zpodcast.core.episode import Episode
+from zpodcast.core.episode import PodcastEpisode
 
 episodes_bp = Blueprint('episodes', __name__)
 
