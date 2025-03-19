@@ -18,23 +18,6 @@ app = Flask(__name__)
 register_podcast_routes(app)
 register_podcast_playlist_routes(app)
 
-# Load podcast list and playlist from JSON files
-data_dir = 'data/'  # Adjust the path if necessary
-podcast_list_path = f"{data_dir}podcast_list.json"
-podcast_playlist_path = f"{data_dir}podcast_playlist.json"
-
-try:
-    podcast_list = PodcastJSON.import_podcast_list(podcast_list_path)
-    podcast_playlist = PodcastJSON.import_podcast_playlist(podcast_playlist_path)
-except FileNotFoundError as e:
-    print(f"Error loading data: {e}")
-    podcast_list = PodcastList([])
-    podcast_playlist = PodcastPlaylist(name="Default Playlist", episodes=[])
-
-# Set the configurations
-app.config['podcast_list'] = podcast_list
-app.config['podcast_playlist'] = podcast_playlist
-
 @app.route('/')
 def index():
     return jsonify({"message": "Welcome to ZPodcast API"})
