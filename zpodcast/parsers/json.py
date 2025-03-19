@@ -1,6 +1,6 @@
 import json
-from zpodcast.podcastlist import PodcastList
-from zpodcast.podcastplaylist import PodcastPlaylist
+from zpodcast.core.podcasts import PodcastList
+from zpodcast.core.playlists import PodcastPlaylist
 
 class PodcastJSON:
     VERSION = "0.1"

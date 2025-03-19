@@ -1,6 +1,6 @@
 import pytest
-from zpodcast.podcastdata import PodcastData
-from zpodcast.podcastlist import PodcastList
+from zpodcast.core.podcast import PodcastData
+from zpodcast.core.podcasts import PodcastList
 
 def test_add_podcast():
     podcast = PodcastData(

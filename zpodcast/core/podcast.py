@@ -1,8 +1,8 @@
-from dataclasses import asdict, dataclass
+from dataclasses import asdict, dataclass, field
 import validators
 from typing import Optional, List, Dict
-from zpodcast.podcastepisodelist import PodcastEpisodeList
-from zpodcast.rsspodcastparser import RSSPodcastParser
+from zpodcast.core.playlist import PodcastEpisodeList
+from zpodcast.parsers.rss import RSSPodcastParser
 
 @dataclass
 class PodcastData:

@@ -1,9 +1,8 @@
 from dataclasses import dataclass
 import re
-from typing import List
-from zpodcast.podcastepisode import PodcastEpisode
-from typing import Dict
-from zpodcast.rsspodcastparser import RSSPodcastParser
+from typing import List, Dict
+from zpodcast.core.episode import PodcastEpisode
+from zpodcast.parsers.rss import RSSPodcastParser
 
 @dataclass
 class PodcastEpisodeList:

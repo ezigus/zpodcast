@@ -1,8 +1,8 @@
 import pytest
 from datetime import date
-from zpodcast.podcastepisodelist import PodcastEpisodeList
-from zpodcast.podcastepisode import PodcastEpisode
-from zpodcast.podcastdata import PodcastData
+from zpodcast.core.playlist import PodcastEpisodeList
+from zpodcast.core.episode import PodcastEpisode
+from zpodcast.core.podcast import PodcastData
 
 def test_add_podcastepisode():
     playlist = PodcastEpisodeList(name="Test Playlist", episodes=[])
@@ -241,7 +241,7 @@ def test_to_dict():
     }
 
 def test_retrieve_episodes_from_rss(mocker):
-    mock_get_episodes = mocker.patch('zpodcast.rsspodcastparser.RSSPodcastParser.get_episodes')
+    mock_get_episodes = mocker.patch('zpodcast.parsers.rss.RSSPodcastParser.get_episodes')
     mock_get_episodes.return_value = [
         PodcastEpisode(
             title="Episode 1",

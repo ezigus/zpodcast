@@ -1,5 +1,5 @@
 import pytest
-from zpodcast.opmlparser import parse_opml_file
+from zpodcast.parsers.opml import parse_opml_file
 
 def test_parse_opml_file():
     file_path = "tests/data/unit.opml"

@@ -1,9 +1,9 @@
 import pytest
 from unittest.mock import patch
 import dataclasses
-from zpodcast.podcastdata import PodcastData
-from zpodcast.podcastepisodelist import PodcastEpisodeList
-from zpodcast.podcastepisode import PodcastEpisode
+from zpodcast.core.podcast import PodcastData
+from zpodcast.core.playlist import PodcastEpisodeList
+from zpodcast.core.episode import PodcastEpisode
 from datetime import date
 
 
@@ -20,8 +20,8 @@ lImageURL = "http://example.com/image.jpg"
 
 @pytest.fixture()
 def mocked_rssepisodemethods(mocker):
-    mocker.patch('zpodcast.rsspodcastparser.RSSPodcastParser.get_episodes', return_value=[episode1, episode2])
-    mocker.patch('zpodcast.rsspodcastparser.RSSPodcastParser.get_rss_metadata', 
+    mocker.patch('zpodcast.parsers.rss.RSSPodcastParser.get_episodes', return_value=[episode1, episode2])
+    mocker.patch('zpodcast.parsers.rss.RSSPodcastParser.get_rss_metadata', 
                  return_value={"title": f"{lTitle}", 
                                "description": f"{lDescription}", 
                                "author": f"{lHost}", 
