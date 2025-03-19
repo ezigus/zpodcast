@@ -5,12 +5,19 @@ from zpodcast.core.podcast import PodcastData
 @dataclass
 class PodcastList:
     _podcasts: List[PodcastData]
+    _instance = None
 
     def __init__(self, podcasts: List[PodcastData] = []) -> None:
         if not isinstance(podcasts, list):
             raise ValueError("Value must be a list")    
 
         self._podcasts = podcasts 
+
+    @classmethod
+    def get_instance(cls) -> 'PodcastList':
+        if cls._instance is None:
+            cls._instance = cls()
+        return cls._instance
 
     @property
     def podcasts(self):
