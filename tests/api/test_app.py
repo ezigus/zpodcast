@@ -4,9 +4,14 @@ from zpodcast.api.app import zPodcastApp
 from zpodcast.core.podcasts import PodcastList, PodcastData
 from zpodcast.core.playlists import PodcastPlaylist
 from zpodcast.core.playlist import PodcastEpisodeList
+from zpodcast.parsers.json import PodcastJSON
+import os
+import tempfile
+import json
+import shutil
 
 @pytest.fixture
-def client():
+def app_with_real_data():
     podcast_app = zPodcastApp()
     app = podcast_app.create_app('tests/data')
 
@@ -40,14 +45,146 @@ def client():
     with app.test_client() as client:
         yield client
 
-def test_get_podcasts(client):
-    response = client.get('/api/podcasts/')
+@pytest.fixture
+def app_with_temp_data():
+    """Create a flask app with temporary test data"""
+    # Create a temporary directory for test data
+    temp_dir = tempfile.mkdtemp()
+    
+    # Create minimal test data files matching expected format
+    podcast_list_data = {
+        "version": PodcastJSON.VERSION,
+        "podcastlist": {
+            "podcasts": [
+                {
+                    "title": "Test Podcast",
+                    "podcast_url": "https://example.com/feed.rss",
+                    "host": "Test Host",
+                    "description": "Test Description",
+                    "image_url": "https://example.com/image.jpg"
+                }
+            ]
+        }
+    }
+    
+    playlist_data = {
+        "version": PodcastJSON.VERSION,
+        "podcastplaylist": {
+            "playlists": [
+                {
+                    "name": "Test Playlist",
+                    "episodes": []
+                }
+            ]
+        }
+    }
+    
+    # Write test data to temp directory
+    with open(os.path.join(temp_dir, 'podcast_list.json'), 'w') as f:
+        json.dump(podcast_list_data, f)
+    
+    with open(os.path.join(temp_dir, 'podcast_playlist.json'), 'w') as f:
+        json.dump(playlist_data, f)
+    
+    # Create app with temp directory
+    app_instance = zPodcastApp()
+    app = app_instance.create_app(temp_dir)
+    app.config['TESTING'] = True
+    
+    yield app
+    
+    # Clean up temp directory after test
+    shutil.rmtree(temp_dir)
+
+@pytest.fixture
+def temp_client(app_with_temp_data):
+    """Create a test client for the Flask app with temporary data"""
+    return app_with_temp_data.test_client()
+
+def test_app_initialization(app_with_temp_data):
+    """Test that the app initializes correctly with config values"""
+    assert 'DATA_DIR' in app_with_temp_data.config
+    assert 'podcast_list' in app_with_temp_data.config
+    assert 'podcast_playlist' in app_with_temp_data.config
+    
+    # Verify that blueprints are registered
+    assert app_with_temp_data.url_map.bind('example.com').match('/api/podcasts/') is not None
+    assert app_with_temp_data.url_map.bind('example.com').match('/api/playlists/') is not None
+    assert app_with_temp_data.url_map.bind('example.com').match('/api/episodes/0/') is not None
+
+def test_index_route(temp_client):
+    """Test the index route returns correct API information"""
+    response = temp_client.get('/')
+    assert response.status_code == 200
+    
+    data = response.get_json()
+    assert 'name' in data
+    assert data['name'] == 'ZPodcast API'
+    assert 'version' in data
+    assert 'endpoints' in data
+    assert 'podcasts' in data['endpoints']
+    assert 'playlists' in data['endpoints']
+    assert 'episodes' in data['endpoints']
+
+def test_not_found_error_handler(temp_client):
+    """Test the 404 error handler"""
+    response = temp_client.get('/non-existent-route')
+    assert response.status_code == 404
+    data = response.get_json()
+    assert 'error' in data
+    assert data['error'] == 'Resource not found'
+
+def test_method_not_allowed_handler(temp_client):
+    """Test handling of unsupported HTTP methods"""
+    # Try to POST to a GET-only endpoint
+    response = temp_client.post('/')
+    assert response.status_code in [405, 404]  # Either method not allowed or not found is acceptable
+
+def test_static_factory_method():
+    """Test the create_app_factory static method"""
+    # Create a temporary directory
+    temp_dir = tempfile.mkdtemp()
+    
+    try:
+        # Create minimal test data files with correct format
+        podcast_list_data = {
+            "version": PodcastJSON.VERSION,
+            "podcastlist": {
+                "podcasts": []
+            }
+        }
+        playlist_data = {
+            "version": PodcastJSON.VERSION,
+            "podcastplaylist": {
+                "playlists": []
+            }
+        }
+        
+        with open(os.path.join(temp_dir, 'podcast_list.json'), 'w') as f:
+            json.dump(podcast_list_data, f)
+        
+        with open(os.path.join(temp_dir, 'podcast_playlist.json'), 'w') as f:
+            json.dump(playlist_data, f)
+        
+        # Use the factory method
+        app = zPodcastApp.create_app_factory(temp_dir)
+        
+        # Verify app was created properly
+        assert app.config['DATA_DIR'] == temp_dir
+        assert 'podcast_list' in app.config
+        assert 'podcast_playlist' in app.config
+    finally:
+        # Clean up
+        shutil.rmtree(temp_dir)
+
+def test_get_podcasts(app_with_real_data):
+    response = app_with_real_data.get('/api/podcasts/')
     assert response.status_code == 200
     data = response.get_json()
     assert 'podcasts' in data
 
-def test_get_playlists(client):
-    response = client.get('/api/playlists/')
+def test_get_playlists(app_with_real_data):
+    response = app_with_real_data.get('/api/playlists/')
     assert response.status_code == 200
     data = response.get_json()
     assert 'playlists' in data

@@ -20,14 +20,30 @@ def get_episodes(podcast_id):
 def get_episode(podcast_id, episode_id):
     """Get a specific episode"""
     podcast_list = PodcastList.get_instance()
+    
+    # First try to parse the podcast_id
     try:
-        podcast = podcast_list.get_podcast(int(podcast_id))
-        if not podcast:
-            return jsonify({"error": "Podcast not found"}), 404
-        
-        episode = podcast.get_episode(int(episode_id))
-        if not episode:
-            return jsonify({"error": "Episode not found"}), 404
-        return jsonify(episode.to_dict())
+        podcast_id_int = int(podcast_id)
     except ValueError:
         return jsonify({"error": "Podcast not found"}), 404
+    
+    # Get the podcast, handle both ValueError (invalid index) and None (not found)
+    try:
+        podcast = podcast_list.get_podcast(podcast_id_int)
+        if not podcast:
+            return jsonify({"error": "Podcast not found"}), 404
+    except ValueError:
+        return jsonify({"error": "Podcast not found"}), 404
+    
+    # Now try to parse the episode_id
+    try:
+        episode_id_int = int(episode_id)
+    except ValueError:
+        return jsonify({"error": "Episode not found"}), 404
+    
+    # Get the episode
+    episode = podcast.get_episode(episode_id_int)
+    if not episode:
+        return jsonify({"error": "Episode not found"}), 404
+    
+    return jsonify(episode.to_dict())
