@@ -31,8 +31,9 @@ class PodcastList:
         self._podcasts = podcasts
 
 
-    def add_podcast(self, podcast: PodcastData) -> None:
+    def add_podcast(self, podcast: PodcastData) -> PodcastData:
         self._podcasts.append(podcast)
+        return podcast
             
 
     def remove_podcast(self, podcast: PodcastData) -> None:
@@ -49,6 +50,16 @@ class PodcastList:
             raise ValueError("Index greater than size of list")
             
         return self._podcasts[index]
+
+    def delete_podcast(self, index: int) -> None:
+        """Delete a podcast by its index"""
+        if not isinstance(index, int):
+            raise ValueError("Non-integer index")
+
+        if index < 0 or index >= len(self._podcasts):
+            raise ValueError("Index out of range")
+
+        del self._podcasts[index]
 
     def to_dict(self):
         return {
