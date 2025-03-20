@@ -90,6 +90,19 @@ def app_with_temp_data():
     app_instance = zPodcastApp()
     app = app_instance.create_app(temp_dir)
     app.config['TESTING'] = True
+
+    # Register the index route during app initialization
+    @app.route('/')
+    def index():
+        return jsonify({
+            "name": "ZPodcast API",
+            "version": "1.0.0",
+            "endpoints": {
+                "podcasts": "/api/podcasts",
+                "playlists": "/api/playlists",
+                "episodes": "/api/episodes"
+            }
+        })
     
     yield app
     
