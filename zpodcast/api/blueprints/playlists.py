@@ -1,6 +1,8 @@
 from flask import Blueprint, jsonify, request
 from zpodcast.core.playlists import PodcastPlaylist
 from zpodcast.parsers.json import PodcastJSON
+from zpodcast.core.playlist import PodcastEpisodeList
+from zpodcast.core.episode import PodcastEpisode
 
 playlists_bp = Blueprint('playlists', __name__)
 
@@ -10,14 +12,20 @@ def get_playlists():
     playlist = PodcastPlaylist.get_instance()
     return jsonify(playlist.to_dict())
 
-@playlists_bp.route('/<playlist_id>', methods=['GET'])
+@playlists_bp.route('/<playlist_id>/', methods=['GET'])
 def get_playlist(playlist_id):
     """Get a specific playlist by ID"""
     playlist = PodcastPlaylist.get_instance()
-    playlist_data = playlist.get_playlist(playlist_id)
-    if not playlist_data:
+    try:
+        # Convert playlist_id to integer
+        index = int(playlist_id)
+        if index < 0 or index >= len(playlist.playlists):
+            return jsonify({"error": "Playlist not found"}), 404
+            
+        playlist_data = playlist.playlists[index].to_dict()
+        return jsonify(playlist_data)
+    except (ValueError, IndexError):
         return jsonify({"error": "Playlist not found"}), 404
-    return jsonify(playlist_data)
 
 @playlists_bp.route('/', methods=['POST'])
 def create_playlist():
@@ -28,12 +36,14 @@ def create_playlist():
     
     playlist = PodcastPlaylist.get_instance()
     try:
-        new_playlist = playlist.create_playlist(data)
-        return jsonify(new_playlist), 201
+        # Create a new playlist
+        new_playlist = PodcastEpisodeList(name=data.get('name', 'New Playlist'), episodes=[])
+        playlist.add_playlist(new_playlist)
+        return jsonify(new_playlist.to_dict()), 201
     except ValueError as e:
         return jsonify({"error": str(e)}), 400
 
-@playlists_bp.route('/<playlist_id>', methods=['PUT'])
+@playlists_bp.route('/<playlist_id>/', methods=['PUT'])
 def update_playlist(playlist_id):
     """Update a playlist"""
     data = request.get_json()
@@ -42,22 +52,36 @@ def update_playlist(playlist_id):
     
     playlist = PodcastPlaylist.get_instance()
     try:
-        updated_playlist = playlist.update_playlist(playlist_id, data)
-        return jsonify(updated_playlist)
+        # Convert playlist_id to integer
+        index = int(playlist_id)
+        if index < 0 or index >= len(playlist.playlists):
+            return jsonify({"error": "Playlist not found"}), 404
+            
+        # Update the playlist's name
+        if 'name' in data:
+            playlist.playlists[index].name = data['name']
+            
+        return jsonify(playlist.playlists[index].to_dict())
     except ValueError as e:
         return jsonify({"error": str(e)}), 400
 
-@playlists_bp.route('/<playlist_id>', methods=['DELETE'])
+@playlists_bp.route('/<playlist_id>/', methods=['DELETE'])
 def delete_playlist(playlist_id):
     """Delete a playlist"""
     playlist = PodcastPlaylist.get_instance()
     try:
-        playlist.delete_playlist(playlist_id)
+        # Convert playlist_id to integer
+        index = int(playlist_id)
+        if index < 0 or index >= len(playlist.playlists):
+            return jsonify({"error": "Playlist not found"}), 404
+            
+        # Delete the playlist
+        playlist.remove_playlist(index)
         return "", 204
-    except ValueError as e:
-        return jsonify({"error": str(e)}), 404
+    except ValueError:
+        return jsonify({"error": "Playlist not found"}), 404
 
-@playlists_bp.route('/<playlist_id>/episodes', methods=['POST'])
+@playlists_bp.route('/<playlist_id>/episodes/', methods=['POST'])
 def add_episode_to_playlist(playlist_id):
     """Add an episode to a playlist"""
     data = request.get_json()
@@ -66,17 +90,34 @@ def add_episode_to_playlist(playlist_id):
     
     playlist = PodcastPlaylist.get_instance()
     try:
-        updated_playlist = playlist.add_episode(playlist_id, data)
-        return jsonify(updated_playlist)
+        # Convert playlist_id to integer
+        index = int(playlist_id)
+        if index < 0 or index >= len(playlist.playlists):
+            return jsonify({"error": "Playlist not found"}), 404
+            
+        # Add episode to the playlist
+        episode = PodcastEpisode(**data)
+        playlist.playlists[index].add_podcastepisode(episode)
+        
+        return jsonify(playlist.playlists[index].to_dict())
     except ValueError as e:
         return jsonify({"error": str(e)}), 400
 
-@playlists_bp.route('/<playlist_id>/episodes/<episode_id>', methods=['DELETE'])
+@playlists_bp.route('/<playlist_id>/episodes/<episode_id>/', methods=['DELETE'])
 def remove_episode_from_playlist(playlist_id, episode_id):
     """Remove an episode from a playlist"""
     playlist = PodcastPlaylist.get_instance()
     try:
-        updated_playlist = playlist.remove_episode(playlist_id, episode_id)
-        return jsonify(updated_playlist)
-    except ValueError as e:
-        return jsonify({"error": str(e)}), 404 
+        # Convert IDs to integers
+        playlist_index = int(playlist_id)
+        episode_index = int(episode_id)
+        
+        if playlist_index < 0 or playlist_index >= len(playlist.playlists):
+            return jsonify({"error": "Playlist not found"}), 404
+            
+        # Remove episode from the playlist
+        playlist.playlists[playlist_index].remove_podcastepisode(episode_index)
+        
+        return jsonify(playlist.playlists[playlist_index].to_dict())
+    except (ValueError, IndexError):
+        return jsonify({"error": "Episode not found"}), 404
