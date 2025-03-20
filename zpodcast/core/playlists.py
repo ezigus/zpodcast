@@ -5,12 +5,17 @@ from zpodcast.core.playlist import PodcastEpisodeList
 @dataclass
 class PodcastPlaylist:
     _playlists: List[PodcastEpisodeList]
-
+    _instance = None
 
     def __init__(self, playlists):
         self.playlists = playlists
 
-        
+    @classmethod
+    def get_instance(cls) -> 'PodcastPlaylist':
+        if cls._instance is None:
+            cls._instance = cls(playlists=[])
+        return cls._instance
+
     @property
     def playlists(self):
         return self._playlists

@@ -318,3 +318,35 @@ class PodcastData:
                                   name_set_manually = data.get("name_set_manually", False)            
         )
         return podcastdata
+
+    def get_episode(self, episode_id: int):
+        """
+        Retrieve a specific episode by its ID from the episodelists.
+
+        Args:
+            episode_id (int): The ID of the episode to retrieve.
+
+        Returns:
+            PodcastEpisode: The episode object if found, otherwise None.
+        """
+        if not self.episodelists or not isinstance(episode_id, int):
+            return None
+
+        try:
+            return self.episodelists[0].episodes[episode_id]
+        except (IndexError, ValueError):
+            return None
+
+    def get_episodes(self):
+        """
+        Get all episodes from the first episode list.
+
+        Returns:
+            dict: A dictionary with an 'episodes' key containing a list of episode dictionaries.
+        """
+        if not self.episodelists:
+            return {"episodes": []}
+        
+        return {
+            "episodes": [episode.to_dict() for episode in self.episodelists[0].episodes]
+        }

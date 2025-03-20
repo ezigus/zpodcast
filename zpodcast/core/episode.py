@@ -263,3 +263,39 @@ class PodcastEpisode:
             episode_number=data.get("episode_number"),
             image_url=data.get("image_url")
         )
+    
+    def download(self):
+        """
+        Start downloading the episode.
+        For now, this is a stub method that would be implemented with actual download logic.
+        
+        Returns:
+            bool: True if download started successfully
+        """
+        # In a real implementation, this would initiate a download
+        # For testing purposes, we just return True
+        return True
+    
+    def get_download_progress(self):
+        """
+        Get the current download progress percentage.
+        For now, this is a stub method that would be implemented with actual progress tracking.
+        
+        Returns:
+            int: Download progress percentage (0-100)
+        """
+        # In a real implementation, this would return the actual download progress
+        # For testing purposes, we return a default value
+        return 0
+    
+    def get_download_status(self):
+        """
+        Get the current download status.
+        For now, this is a stub method that would be implemented with actual status tracking.
+        
+        Returns:
+            str: Download status ('not_started', 'downloading', 'completed', 'error')
+        """
+        # In a real implementation, this would return the actual download status
+        # For testing purposes, we return a default value
+        return "not_started"
