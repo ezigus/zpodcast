@@ -1,4 +1,6 @@
 from flask import jsonify, Flask
+from zpodcast.core.podcasts import PodcastList
+from zpodcast.core.playlists import PodcastPlaylist
 
 def register_podcast_routes(app: Flask):
     @app.route('/podcasts', methods=['GET'])
