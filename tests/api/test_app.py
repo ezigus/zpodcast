@@ -9,6 +9,7 @@ import os
 import tempfile
 import json
 import shutil
+from unittest.mock import patch
 
 @pytest.fixture
 def app_with_real_data():
@@ -127,17 +128,20 @@ def test_app_initialization(app_with_temp_data):
 
 def test_index_route(temp_client):
     """Test the index route returns correct API information"""
-    response = temp_client.get('/')
-    assert response.status_code == 200
-    
-    data = response.get_json()
-    assert 'name' in data
-    assert data['name'] == 'ZPodcast API'
-    assert 'version' in data
-    assert 'endpoints' in data
-    assert 'podcasts' in data['endpoints']
-    assert 'playlists' in data['endpoints']
-    assert 'episodes' in data['endpoints']
+    with patch('zpodcast.api.app.zPodcastApp.create_app') as mock_create_app:
+        mock_create_app.return_value = temp_client.application
+
+        response = temp_client.get('/')
+        assert response.status_code == 200
+
+        data = response.get_json()
+        assert 'name' in data
+        assert data['name'] == 'ZPodcast API'
+        assert 'version' in data
+        assert 'endpoints' in data
+        assert 'podcasts' in data['endpoints']
+        assert 'playlists' in data['endpoints']
+        assert 'episodes' in data['endpoints']
 
 def test_not_found_error_handler(temp_client):
     """Test the 404 error handler"""
