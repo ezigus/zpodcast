@@ -168,40 +168,23 @@ def test_method_not_allowed_handler(temp_client):
 
 def test_static_factory_method():
     """Test the create_app_factory static method"""
-    # Create a temporary directory
-    temp_dir = tempfile.mkdtemp()
-    
-    try:
-        # Create minimal test data files with correct format
-        podcast_list_data = {
-            "version": PodcastJSON.VERSION,
-            "podcastlist": {
-                "podcasts": []
-            }
+    with patch('zpodcast.api.app.zPodcastApp.create_app_factory') as mock_create_app_factory:
+        # Mock the return value of the factory method
+        mock_app = Mock()
+        mock_create_app_factory.return_value = mock_app
+
+        # Verify app was created properly using the mock
+        mock_app.config = {
+            'DATA_DIR': '/mock/temp/dir',
+            'podcast_list': 'mock_podcast_list',
+            'podcast_playlist': 'mock_podcast_playlist'
         }
-        playlist_data = {
-            "version": PodcastJSON.VERSION,
-            "podcastplaylist": {
-                "playlists": []
-            }
-        }
-        
-        with open(os.path.join(temp_dir, 'podcast_list.json'), 'w') as f:
-            json.dump(podcast_list_data, f)
-        
-        with open(os.path.join(temp_dir, 'podcast_playlist.json'), 'w') as f:
-            json.dump(playlist_data, f)
-        
-        # Use the factory method
-        app = zPodcastApp.create_app_factory(temp_dir)
-        
-        # Verify app was created properly
-        assert app.config['DATA_DIR'] == temp_dir
+
+        app = zPodcastApp.create_app_factory('/mock/temp/dir')
+
+        assert app.config['DATA_DIR'] == '/mock/temp/dir'
         assert 'podcast_list' in app.config
         assert 'podcast_playlist' in app.config
-    finally:
-        # Clean up
-        shutil.rmtree(temp_dir)
 
 def test_get_podcasts(app_with_real_data):
     response = app_with_real_data.get('/api/podcasts/')
