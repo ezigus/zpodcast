@@ -9,7 +9,7 @@ import os
 import tempfile
 import json
 import shutil
-from unittest.mock import patch, Mock
+from unittest.mock import patch, Mock, mock_open
 
 @pytest.fixture
 def app_with_real_data():
@@ -48,48 +48,13 @@ def app_with_real_data():
 
 @pytest.fixture
 def app_with_temp_data():
-    """Create a flask app with temporary test data"""
-    # Create a temporary directory for test data
-    temp_dir = tempfile.mkdtemp()
-    
-    # Create minimal test data files matching expected format
-    podcast_list_data = {
-        "version": PodcastJSON.VERSION,
-        "podcastlist": {
-            "podcasts": [
-                {
-                    "title": "Test Podcast",
-                    "podcast_url": "https://example.com/feed.rss",
-                    "host": "Test Host",
-                    "description": "Test Description",
-                    "image_url": "https://example.com/image.jpg"
-                }
-            ]
-        }
-    }
-    
-    playlist_data = {
-        "version": PodcastJSON.VERSION,
-        "podcastplaylist": {
-            "playlists": [
-                {
-                    "name": "Test Playlist",
-                    "episodes": []
-                }
-            ]
-        }
-    }
-    
-    # Write test data to temp directory
-    with open(os.path.join(temp_dir, 'podcast_list.json'), 'w') as f:
-        json.dump(podcast_list_data, f)
-    
-    with open(os.path.join(temp_dir, 'podcast_playlist.json'), 'w') as f:
-        json.dump(playlist_data, f)
-    
-    # Create app with temp directory
+    """Create a flask app with test data from the tests/data directory."""
+    # Use the test data directory
+    test_data_dir = os.path.join(os.path.dirname(__file__), '../data')
+
+    # Create app with test data directory
     app_instance = zPodcastApp()
-    app = app_instance.create_app(temp_dir)
+    app = app_instance.create_app(test_data_dir)
     app.config['TESTING'] = True
 
     # Register the index route during app initialization
@@ -104,16 +69,53 @@ def app_with_temp_data():
                 "episodes": "/api/episodes"
             }
         })
-    
+
     yield app
-    
-    # Clean up temp directory after test
-    shutil.rmtree(temp_dir)
 
 @pytest.fixture
 def temp_client(app_with_temp_data):
     """Create a test client for the Flask app with temporary data"""
     return app_with_temp_data.test_client()
+
+@pytest.fixture
+def mock_file_retrievals():
+    """Mock file retrievals for tests."""
+    def mock_open_read(file, mode='r', *args, **kwargs):
+        if 'podcast_list.json' in file:
+            return mock_open(read_data=json.dumps({
+                "version": PodcastJSON.VERSION,
+                "podcastlist": {
+                    "podcasts": [
+                        {
+                            "title": "Test Podcast",
+                            "podcast_url": "https://example.com/feed.rss",
+                            "host": "Test Host",
+                            "description": "Test Description",
+                            "image_url": "https://example.com/image.jpg"
+                        }
+                    ]
+                }
+            })).return_value
+        elif 'podcast_playlist.json' in file:
+            return mock_open(read_data=json.dumps({
+                "version": PodcastJSON.VERSION,
+                "podcastplaylist": {
+                    "playlists": [
+                        {
+                            "name": "Test Playlist",
+                            "episodes": []
+                        }
+                    ]
+                }
+            })).return_value
+        else:
+            raise FileNotFoundError(f"Mocked file not found: {file}")
+
+    patcher_open = patch("builtins.open", new=mock_open_read)
+    patcher_exists = patch("os.path.exists", return_value=True)
+
+    with patcher_open, patcher_exists:
+        yield
 
 def test_app_initialization(app_with_temp_data):
     """Test that the app initializes correctly with config values"""

@@ -16,6 +16,7 @@ class PodcastJSON:
     def import_podcast_list(filename: str) -> PodcastList:
         with open(filename, 'r') as f:
             data = json.load(f)
+            print("Reading podcast_list.json:", data)  # Debugging
             if data.get("version") != PodcastJSON.VERSION:
                 raise ValueError("Unsupported version")
             return PodcastList.from_dict(data.get("podcastlist"))
