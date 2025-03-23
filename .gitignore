@@ -171,3 +171,7 @@ zpodcast.code-workspace
 PodcastList*.json
 PodcastPlaylist*.json
 test_podcast_list.json
+
+# Ignore the mutants folder
+.mutants/
+mutants/

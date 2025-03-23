@@ -3,46 +3,32 @@ import dataclasses
 from email.utils import parsedate_to_datetime
 from datetime import date,datetime
 from zpodcast.core.episode import PodcastEpisode
+from unittest.mock import patch
 
-
-"""
-tests to validate that the class is a dataclass
-"""
+# Validate that PodcastEpisode is a dataclass
 def test_podcastepisode_is_dataclass():
-    assert dataclasses.is_dataclass(PodcastEpisode) 
+    assert dataclasses.is_dataclass(PodcastEpisode)
 
-"""
-tests to validate the setting of retrieval of the title
-"""
-# validate the title is set correctly
+# Test the title attribute
 def test_podcastepisode_title():
-    # Create a podcast episode object
+# Create a podcast episode object
     episode = PodcastEpisode(title="Episode 1", 
                              description="Episode 1 description", 
-                             audio_url="https://example.com/episode1.mp3", 
+audio_url="https://example.com/episode1.mp3", 
                              pub_date=" Mon, 11 Apr 2016 15:00:00 +0100")
 
     # Test the title attribute of the podcast episode
-    assert episode.title == "Episode 1" 
-    
+    assert episode.title == "Episode 1"
+
 def test_podcastepisode_no_title():
     with pytest.raises(TypeError):
         episode = PodcastEpisode(description="Episode 1 description", audio_url="https://example.com/episode1.mp3", pub_date=" Mon, 11 Apr 2016 15:00:00 +0100")
 
-"""
-tests to validate the setting of retrieval of the description
-"""
-def test_podcastepisode_description(): 
-    # Create a podcast episode object
-    episode = PodcastEpisode(title="Episode 1", 
-                             description="Episode 1 description", 
-                             audio_url="https://example.com/episode1.mp3", 
-                             pub_date=" Mon, 11 Apr 2016 15:00:00 +0100")
-
-    # Test the description attribute of the podcast episode
+# Test the description attribute
+def test_podcastepisode_description():
+    episode = PodcastEpisode(title="Episode 1", audio_url="https://example.com/episode1.mp3", description="Episode 1 description")
     assert episode.description == "Episode 1 description"
 
-# negative testing, not submitting a description
 def test_podcastepisode_no_description():
     episode = PodcastEpisode(title="Episode 1", 
                             audio_url="https://example.com/episode1.mp3", 
@@ -54,7 +40,7 @@ def test_podcastepisode_description_invalid():
     # Create a podcast episode object with an empty description
     episode = PodcastEpisode(title="Episode 1", 
                              description=datetime.now(), 
-                             audio_url="https://example.com/episode1.mp3", 
+audio_url="https://example.com/episode1.mp3", 
                              pub_date=" Mon, 11 Apr 2016 15:00:00 +0100")
 
     # Test the description attribute of the podcast episode
@@ -203,7 +189,7 @@ def test_podcastepisode_pub_date_invalid_str():
 def test_podcastepisode_pub_date_incompletedatetime():
     episode = PodcastEpisode(title="Episode 1", 
                              description="Episode 1 description", 
-                             audio_url="https://example.com/episode1.mp3", 
+audio_url="https://example.com/episode1.mp3", 
                              duration=1800, 
                              pub_date="12/01/2001")
     assert episode.pub_date == date.today()
@@ -212,15 +198,17 @@ def test_podcastepisode_pub_date_incompletedatetime():
 testing that the audio URL is properly set and formatted
 """
 
-def test_podcastepisode_audio_url():
-    # Create a podcast episode object with a valid audio URL
-    episode = PodcastEpisode(title="Episode 1", 
-                             description="Episode 1 description", 
-                             audio_url="https://example.com/episode1.mp3", 
-                             pub_date=" Mon, 11 Apr 2016 15:00:00 +0100")
-
-    # Test the audio_url attribute of the podcast episode
+@patch("zpodcast.core.episode.validators.url", return_value=True)
+def test_podcastepisode_audio_url(mock_validators):
+    episode = PodcastEpisode(title="Episode 1", audio_url="https://example.com/episode1.mp3")
     assert episode.audio_url == "https://example.com/episode1.mp3"
+    mock_validators.assert_called_once_with("https://example.com/episode1.mp3")
+
+@patch("zpodcast.core.episode.validators.url", return_value=False)
+def test_podcastepisode_audio_url_invalid(mock_validators):
+    with pytest.raises(ValueError, match="^Invalid audio URL$"):
+        PodcastEpisode(title="Episode 1", audio_url="invalid_url")
+    mock_validators.assert_called_once_with("invalid_url")
 
 def test_podcastepisode_audio_url_badscheme():
     # Create a podcast episode object with an invalid scheme 
@@ -240,7 +228,7 @@ def test_podcastepisode_audio_url_badnetloc():
 
 
 def test_podcastepisode_invalid_audio_url():
-    # Create a podcast episode object with an invalid audio URL
+# Create a podcast episode object with an invalid audio URL
     with pytest.raises(ValueError,match="^Invalid audio URL$"):
         episode = PodcastEpisode(title="Episode 1", 
                                  description="Episode 1 description", 
@@ -272,7 +260,7 @@ def test_podcastepisode_episode_number_none():
                              audio_url="https://example.com/episode1.mp3", 
                              pub_date=" Mon, 11 Apr 2016 15:00:00 +0100")
 
-    # Test the episode_number attribute of the podcast episode
+# Test the episode_number attribute of the podcast episode
     assert episode.episode_number == None
 
 def test_podcastepisode_episode_number():
@@ -328,7 +316,7 @@ def test_podcastepisode_episode_number_emptyquote():
     # Create a podcast episode object with a negative episode number
     episode = PodcastEpisode(title="Episode 1", 
                              description="Episode 1 description", 
-                             audio_url="https://example.com/episode1.mp3", 
+audio_url="https://example.com/episode1.mp3", 
                              episode_number="", 
                              pub_date=" Mon, 11 Apr 2016 15:00:00 +0100")
     assert episode.episode_number is None
@@ -338,6 +326,19 @@ def test_podcastepisode_episode_number_emptyquote():
 """
 Test the podcastepisode image url is actually valid and set correctly
 """
+
+@patch("zpodcast.core.episode.validators.url", return_value=True)
+def test_podcastepisode_image_url(mock_validators):
+    episode = PodcastEpisode(title="Episode 1", audio_url="https://example.com/episode1.mp3", image_url="https://example.com/episode1.jpg")
+    assert episode.image_url == "https://example.com/episode1.jpg"
+    mock_validators.assert_called_once_with("https://example.com/episode1.jpg")
+
+@patch("zpodcast.core.episode.validators.url", return_value=False)
+def test_podcastepisode_image_url_invalid(mock_validators):
+    episode = PodcastEpisode(title="Episode 1", audio_url="https://example.com/episode1.mp3", image_url="invalid_url")
+    assert episode.image_url is None
+    mock_validators.assert_called_once_with("invalid_url")
+
 def test_podcastepisode_image_url_none():
     # Create a podcast episode object with no image URL
     episode = PodcastEpisode(title="Episode 1", description="Episode 1 description", audio_url="https://example.com/episode1.mp3", pub_date=" Mon, 11 Apr 2016 15:00:00 +0100")
@@ -396,6 +397,7 @@ def test_podcastepisode_to_dict():
         "image_url": "https://example.com/episode1.jpg"
     }
 
+# Test the from_dict method
 def test_podcastepisode_from_dict():
     episode_dict = {
         "title": "Episode 1",
