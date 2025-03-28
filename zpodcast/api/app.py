@@ -61,9 +61,9 @@ def index():
         "name": "ZPodcast API",
         "version": "1.0.0",
         "endpoints": {
-            "podcasts": "/api/podcasts",
-            "playlists": "/api/playlists",
-            "episodes": "/api/episodes"
+            "podcasts": "/api/podcasts/",
+            "playlists": "/api/playlists/",
+            "episodes": "/api/episodes/"
         }
     })
 
