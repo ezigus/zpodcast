@@ -7,6 +7,7 @@ This document outlines the coding standards and practices to follow when contrib
 ### Mocking
 
 - **Prefer pytest mocker fixture over MagicMock**: Use the `mocker` fixture provided by pytest-mock rather than creating `MagicMock` objects directly.
+
   ```python
   def test_example(mocker):
       # Good
@@ -18,6 +19,7 @@ This document outlines the coding standards and practices to follow when contrib
   ```
 
 - **Use patch decorators for function-scoped mocks**: For mocking at the function level, use the `@patch` decorator with a clear target.
+
   ```python
   @patch('zpodcast.parsers.json.open', new_callable=mock_open)
   @patch('json.dump')
@@ -26,6 +28,7 @@ This document outlines the coding standards and practices to follow when contrib
   ```
 
 - **Use side_effect for complex mock behaviors**: When a mock needs to return different values on successive calls, use `side_effect`.
+
   ```python
   mock_get_rss_metadata.side_effect = [
       {"title": "Podcast 1", "description": "Description 1"},
@@ -36,12 +39,14 @@ This document outlines the coding standards and practices to follow when contrib
 ### Test Organization
 
 - **Use descriptive test names**: Test names should clearly describe what they're testing.
+
   ```python
   def test_podcast_episodes_invalid_empty():  # Good
   def test_func3():  # Avoid
   ```
 
 - **Group related tests with clear comments**: Use comments to organize test sections.
+
   ```python
   """
   Tests for podcast title validation
@@ -51,6 +56,7 @@ This document outlines the coding standards and practices to follow when contrib
   ```
 
 - **Create reusable fixtures**: Use pytest fixtures for test data setup.
+
   ```python
   @pytest.fixture
   def test_podcast_data():
@@ -102,6 +108,7 @@ Consider using tools like `flake8` or `pylint` to verify PEP 8 compliance automa
 - **Use dataclasses appropriately**: Build upon the existing dataclass pattern for models.
 
 - **Handle errors explicitly**: Use specific exceptions with descriptive messages.
+
   ```python
   if not valid_url:
       raise ValueError("Invalid podcast URL")
@@ -173,6 +180,7 @@ Consider using tools like `flake8` or `pylint` to verify PEP 8 compliance automa
   ```
 
 - **Module-Level Docstrings**: Include a docstring at the top of each module file:
+  
   ```python
   """
   Podcast RSS Feed Parser Module
@@ -188,6 +196,7 @@ Consider using tools like `flake8` or `pylint` to verify PEP 8 compliance automa
   ```
 
 - **Type Annotations**: Use Python type hints for all function parameters and return values:
+  
   ```python
   def format_duration(seconds: int) -> str:
       """Formats a duration in seconds to a human-readable string."""
@@ -195,6 +204,7 @@ Consider using tools like `flake8` or `pylint` to verify PEP 8 compliance automa
   ```
 
 - **Constants Documentation**: Document constants and configuration values:
+  
   ```python
   # Maximum priority value for podcasts (0-10 scale)
   MAX_PRIORITY = 10
@@ -204,6 +214,7 @@ Consider using tools like `flake8` or `pylint` to verify PEP 8 compliance automa
   ```
 
 - **Inline Comments for Complex Logic**: Add detailed inline comments to explain complex or non-obvious logic:
+  
   ```python
   def parse_duration(duration_str: str) -> int:
       """Converts various duration string formats to seconds."""
@@ -305,6 +316,7 @@ Consider using tools like `flake8` or `pylint` to verify PEP 8 compliance automa
 - **Success response format**: 
   - For most success responses, return structured JSON with appropriate data.
   - For 204 No Content responses (such as after successful DELETE operations), return an empty string with no content. This is the correct HTTP standard behavior and an exception to the JSON response pattern.
+    
     ```python
     # Correct for 204 No Content response
     return "", 204
@@ -316,6 +328,7 @@ Consider using tools like `flake8` or `pylint` to verify PEP 8 compliance automa
 - **Flask URL Conventions**: Follow Flask best practices for URL design:
   
   - **End all endpoints with a trailing slash**: All API endpoints should end with a forward slash.
+
     ```python
     # Correct
     @app.route('/api/podcasts/', methods=['GET'])
@@ -327,6 +340,7 @@ Consider using tools like `flake8` or `pylint` to verify PEP 8 compliance automa
     ```
   
   - **Use lowercase for URL paths**: Keep all URL paths lowercase for consistency.
+
     ```python
     # Correct
     @app.route('/api/podcasts/', methods=['GET'])
@@ -336,6 +350,7 @@ Consider using tools like `flake8` or `pylint` to verify PEP 8 compliance automa
     ```
   
   - **Use hyphens for multi-word resources**: Use hyphens (not underscores) for multi-word resource names.
+  
     ```python
     # Correct
     @app.route('/api/popular-podcasts/', methods=['GET'])
@@ -345,6 +360,7 @@ Consider using tools like `flake8` or `pylint` to verify PEP 8 compliance automa
     ```
   
   - **Follow RESTful resource naming**: Use plural nouns for collections and appropriate HTTP methods.
+  
     ```python
     # Collection (plural noun)
     @app.route('/api/podcasts/', methods=['GET'])  # List all podcasts
@@ -357,6 +373,7 @@ Consider using tools like `flake8` or `pylint` to verify PEP 8 compliance automa
     ```
   
   - **Use query parameters for filtering, sorting, and pagination**:
+  
     ```python
     # Filtering and sorting
     @app.route('/api/podcasts/', methods=['GET'])
@@ -371,6 +388,7 @@ Consider using tools like `flake8` or `pylint` to verify PEP 8 compliance automa
     ```
 
   - **Use nested routes for resource relationships**:
+  
     ```python
     # Get episodes belonging to a specific podcast
     @app.route('/api/podcasts/<int:podcast_id>/episodes/', methods=['GET'])
@@ -384,6 +402,7 @@ Consider using tools like `flake8` or `pylint` to verify PEP 8 compliance automa
 - **Swagger/OpenAPI Documentation**: All new API endpoints must include Swagger/OpenAPI documentation.
 
   - **Use Flask-specific decorators**: Use Flask's route decorators with OpenAPI annotations:
+  
     ```python
     @app.route('/api/podcasts/', methods=['GET'])
     @swag_from({
@@ -410,6 +429,7 @@ Consider using tools like `flake8` or `pylint` to verify PEP 8 compliance automa
     ```
 
   - **Define schemas**: Create Swagger/OpenAPI schemas for all response and request objects:
+  
     ```python
     PodcastSchema = {
         'type': 'object',
@@ -432,6 +452,7 @@ Consider using tools like `flake8` or `pylint` to verify PEP 8 compliance automa
     ```
 
   - **Document all parameters**: Include documentation for path, query, and body parameters:
+  
     ```python
     @app.route('/api/podcasts/<int:podcast_id>', methods=['GET'])
     @swag_from({
@@ -461,6 +482,7 @@ Consider using tools like `flake8` or `pylint` to verify PEP 8 compliance automa
     ```
 
   - **Group endpoints logically**: Use tags to group related endpoints:
+  
     ```python
     # Tags for all podcast-related endpoints
     'tags': ['podcasts']
@@ -470,6 +492,7 @@ Consider using tools like `flake8` or `pylint` to verify PEP 8 compliance automa
     ```
 
   - **Document error responses**: Include documentation for all possible error responses:
+  
     ```python
     'responses': {
         200: {'description': 'Success'},
@@ -480,6 +503,7 @@ Consider using tools like `flake8` or `pylint` to verify PEP 8 compliance automa
     ```
 
   - **Generate Swagger UI**: Ensure the API provides a Swagger UI endpoint for interactive documentation:
+  
     ```python
     # In app initialization
     swagger = Swagger(app, template=swagger_template)
@@ -488,6 +512,7 @@ Consider using tools like `flake8` or `pylint` to verify PEP 8 compliance automa
 - **Update API documentation when changing endpoints**: When modifying existing endpoints, update the Swagger documentation to reflect the changes.
 
 - **Versioning**: Include API version information in the documentation:
+  
     ```python
     swagger_template = {
         'info': {
@@ -497,3 +522,4 @@ Consider using tools like `flake8` or `pylint` to verify PEP 8 compliance automa
         }
     }
     ```
+  
