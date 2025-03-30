@@ -371,3 +371,231 @@ def test_update_podcast_non_integer_id(client):
     # This tests that the <int:podcast_id> type converter is working correctly
     response = client.put('/api/podcasts/abc/', json={"title": "Updated Title"})
     assert response.status_code == 404  # Not Found, because the route doesn't match
+
+# Input validation tests
+def test_add_podcast_missing_title(client):
+    """
+    Test creating a podcast with missing title.
+    
+    This test verifies that the POST / endpoint correctly validates
+    the required title field and returns an appropriate error.
+    
+    Args:
+        client: The Flask test client fixture
+    """
+    # Podcast data missing the required title field
+    podcast_data = {
+        "podcast_url": "https://example.com/feed.rss",
+        "host": "Test Host",
+        "description": "Test description"
+    }
+    
+    response = client.post('/api/podcasts/', json=podcast_data)
+    assert response.status_code == 400
+    data = response.get_json()
+    assert 'error' in data
+    assert data['error'] == 'Title is required'
+
+def test_add_podcast_missing_url(client):
+    """
+    Test creating a podcast with missing URL.
+    
+    This test verifies that the POST / endpoint correctly validates
+    the required podcast_url field and returns an appropriate error.
+    
+    Args:
+        client: The Flask test client fixture
+    """
+    # Podcast data missing the required podcast_url field
+    podcast_data = {
+        "title": "Test Podcast",
+        "host": "Test Host",
+        "description": "Test description"
+    }
+    
+    response = client.post('/api/podcasts/', json=podcast_data)
+    assert response.status_code == 400
+    data = response.get_json()
+    assert 'error' in data
+    assert data['error'] == 'Podcast URL is required'
+
+def test_add_podcast_invalid_url_format(client):
+    """
+    Test creating a podcast with invalid URL format.
+    
+    This test verifies that the POST / endpoint correctly validates
+    the podcast_url field format using the validators package.
+    
+    Args:
+        client: The Flask test client fixture
+    """
+    # Podcast data with invalid URL format
+    podcast_data = {
+        "title": "Test Podcast",
+        "podcast_url": "not-a-valid-url",
+        "host": "Test Host",
+        "description": "Test description"
+    }
+    
+    response = client.post('/api/podcasts/', json=podcast_data)
+    assert response.status_code == 400
+    data = response.get_json()
+    assert 'error' in data
+    assert data['error'] == 'Invalid podcast URL format'
+
+def test_add_podcast_invalid_priority(client):
+    """
+    Test creating a podcast with invalid priority value.
+    
+    This test verifies that the POST / endpoint correctly validates
+    the podcast_priority field to ensure it's within allowed range.
+    
+    Args:
+        client: The Flask test client fixture
+    """
+    # Podcast data with priority value outside the allowed range
+    podcast_data = {
+        "title": "Test Podcast",
+        "podcast_url": "https://example.com/feed.rss",
+        "podcast_priority": 15  # Above MAX_PRIORITY of 10
+    }
+    
+    response = client.post('/api/podcasts/', json=podcast_data)
+    assert response.status_code == 400
+    data = response.get_json()
+    assert 'error' in data
+    assert 'priority must be between' in data['error']
+
+def test_add_podcast_non_integer_priority(client):
+    """
+    Test creating a podcast with non-integer priority.
+    
+    This test verifies that the POST / endpoint correctly validates
+    that podcast_priority is an integer.
+    
+    Args:
+        client: The Flask test client fixture
+    """
+    # Podcast data with non-integer priority
+    podcast_data = {
+        "title": "Test Podcast",
+        "podcast_url": "https://example.com/feed.rss",
+        "podcast_priority": "high"  # Should be an integer
+    }
+    
+    response = client.post('/api/podcasts/', json=podcast_data)
+    assert response.status_code == 400
+    data = response.get_json()
+    assert 'error' in data
+    assert data['error'] == 'Podcast priority must be an integer'
+
+def test_add_podcast_invalid_image_url(client):
+    """
+    Test creating a podcast with invalid image URL.
+    
+    This test verifies that the POST / endpoint correctly validates
+    the image_url field format using the validators package.
+    
+    Args:
+        client: The Flask test client fixture
+    """
+    # Podcast data with invalid image URL
+    podcast_data = {
+        "title": "Test Podcast",
+        "podcast_url": "https://example.com/feed.rss",
+        "image_url": "not-a-valid-url"
+    }
+    
+    response = client.post('/api/podcasts/', json=podcast_data)
+    assert response.status_code == 400
+    data = response.get_json()
+    assert 'error' in data
+    assert data['error'] == 'Invalid image URL format'
+
+def test_update_podcast_with_valid_data(client, mocker, test_podcast_data):
+    """
+    Test updating a podcast with valid data.
+    
+    This test verifies that the PUT /<podcast_id>/ endpoint correctly
+    accepts and processes valid update data.
+    
+    Args:
+        client: The Flask test client fixture
+        mocker: The pytest-mock fixture
+        test_podcast_data: The fixture providing test podcast data
+    """
+    # Create a fresh podcast list for this test
+    podcast_list = PodcastList(test_podcast_data.copy())
+    mocker.patch('zpodcast.api.blueprints.podcasts.PodcastList.get_instance', 
+                return_value=podcast_list)
+    
+    # Valid update data
+    update_data = {
+        "title": "Updated Podcast Title",
+        "description": "This is an updated description",
+        "podcast_url": "https://example.com/updated.rss"
+    }
+    
+    # Mock the update_podcast method with a simple implementation
+    def mock_update(podcast_id, data):
+        return test_podcast_data[podcast_id]
+    
+    mocker.patch('zpodcast.core.podcasts.PodcastList.update_podcast', 
+                side_effect=mock_update)
+    
+    response = client.put('/api/podcasts/0/', json=update_data)
+    assert response.status_code == 200
+    data = response.get_json()
+    assert 'title' in data
+
+def test_update_podcast_with_invalid_url(client):
+    """
+    Test updating a podcast with invalid URL.
+    
+    This test verifies that the PUT /<podcast_id>/ endpoint correctly
+    validates the podcast_url field format even for updates.
+    
+    Args:
+        client: The Flask test client fixture
+    """
+    # Update data with invalid URL
+    update_data = {
+        "podcast_url": "not-a-valid-url"
+    }
+    
+    response = client.put('/api/podcasts/0/', json=update_data)
+    assert response.status_code == 400
+    data = response.get_json()
+    assert 'error' in data
+    assert data['error'] == 'Invalid podcast URL format'
+
+def test_update_podcast_partially(client, mocker, test_podcast_data):
+    """
+    Test updating a podcast with partial data.
+    
+    This test verifies that the PUT /<podcast_id>/ endpoint correctly
+    handles partial updates without requiring all fields to be present.
+    
+    Args:
+        client: The Flask test client fixture
+        mocker: The pytest-mock fixture
+        test_podcast_data: The fixture providing test podcast data
+    """
+    # Create a fresh podcast list for this test
+    podcast_list = PodcastList(test_podcast_data.copy())
+    mocker.patch('zpodcast.api.blueprints.podcasts.PodcastList.get_instance', 
+                return_value=podcast_list)
+    
+    # Partial update data (just title)
+    update_data = {
+        "title": "Updated Podcast Title"
+    }
+    
+    # Mock the update_podcast method
+    mocker.patch('zpodcast.core.podcasts.PodcastList.update_podcast', 
+                return_value=test_podcast_data[0])
+    
+    response = client.put('/api/podcasts/0/', json=update_data)
+    assert response.status_code == 200
+    data = response.get_json()
+    assert 'title' in data
