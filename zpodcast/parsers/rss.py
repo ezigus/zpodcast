@@ -1,9 +1,8 @@
 import feedparser
 from zpodcast.parsers.opml import parse_opml_file
 from zpodcast.core.episode import PodcastEpisode
-from typing import Optional, List
+from typing import List
 import logging
-
 
 
 class RSSPodcastParser:
@@ -64,7 +63,6 @@ class RSSPodcastParser:
         except Exception as e:
             logging.error(f"Error getting RSS metadata for {rss_feed_url}: {e}")
             return {}
- 
 
     @staticmethod
     def _convert_duration_to_seconds(duration):
@@ -83,6 +81,7 @@ class RSSPodcastParser:
         # Calculate the total duration in seconds
         total_seconds = hours * 3600 + minutes * 60 + seconds
         return total_seconds
+
 
 def main():
     # Specify the path to the OPML file
