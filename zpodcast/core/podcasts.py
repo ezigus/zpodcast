@@ -2,16 +2,19 @@ from dataclasses import dataclass
 from typing import List, Dict, Any, Union
 from zpodcast.core.podcast import PodcastData
 
+
 @dataclass
 class PodcastList:
     _podcasts: List[PodcastData]
     _instance = None
 
-    def __init__(self, podcasts: List[PodcastData] = []) -> None:
+    def __init__(self, podcasts: List[PodcastData] = None) -> None:
+        if podcasts is None:
+            podcasts = []
         if not isinstance(podcasts, list):
-            raise ValueError("Value must be a list")    
+            raise ValueError("Value must be a list")
 
-        self._podcasts = podcasts 
+        self._podcasts = podcasts
 
     @classmethod
     def get_instance(cls) -> 'PodcastList':
@@ -24,17 +27,14 @@ class PodcastList:
         return self._podcasts
     
     @podcasts.setter
-    def podcasts(self,
-                 podcasts: List[PodcastData]):
+    def podcasts(self, podcasts: List[PodcastData]):
         if not isinstance(podcasts, list):
-            raise ValueError("Value must be a list")    
+            raise ValueError("Value must be a list")
         self._podcasts = podcasts
-
 
     def add_podcast(self, podcast: PodcastData) -> PodcastData:
         self._podcasts.append(podcast)
         return podcast
-            
 
     def remove_podcast(self, podcast: PodcastData) -> None:
         self._podcasts.remove(podcast)

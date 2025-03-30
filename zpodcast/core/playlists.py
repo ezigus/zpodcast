@@ -2,6 +2,7 @@ from dataclasses import dataclass
 from typing import List, Dict
 from zpodcast.core.playlist import PodcastEpisodeList
 
+
 @dataclass
 class PodcastPlaylist:
     _playlists: List[PodcastEpisodeList]
@@ -20,17 +21,15 @@ class PodcastPlaylist:
     def playlists(self):
         return self._playlists
 
-    
     @playlists.setter
     def playlists(self, playlists: List[PodcastEpisodeList]):
-        if not isinstance(playlists, List):
+        if not isinstance(playlists, list):
             return ValueError("Only settable if this is a list of PodcastEpisodeLists")
 
         if not playlists == [] and not isinstance(playlists[0], PodcastEpisodeList):
             return ValueError("Only settable if the values in the list are PodcastEpisodeList")
             
         self._playlists = playlists
-
 
     def add_playlist(self, playlist: PodcastEpisodeList) -> None:
         self.playlists.append(playlist)
@@ -51,7 +50,6 @@ class PodcastPlaylist:
 
     @classmethod
     def from_dict(cls, data: Dict[str, List[Dict]]) -> 'PodcastPlaylist':
-        print(data)
         playlists_data = data.get("playlists", [])
         playlists = [PodcastEpisodeList.from_dict(playlist_data) for playlist_data in playlists_data]
         return cls(playlists=playlists)
