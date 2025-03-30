@@ -1,8 +1,9 @@
-from flask import Blueprint, jsonify, request
+from flask import Blueprint, jsonify
 from zpodcast.core.podcasts import PodcastList
-from zpodcast.core.episode import PodcastEpisode
+
 
 episodes_bp = Blueprint('episodes', __name__)
+
 
 @episodes_bp.route('/<podcast_id>/', methods=['GET'])
 def get_episodes(podcast_id):
@@ -15,6 +16,7 @@ def get_episodes(podcast_id):
         return jsonify(podcast.get_episodes())
     except ValueError:
         return jsonify({"error": "Podcast not found"}), 404
+
 
 @episodes_bp.route('/<podcast_id>/<episode_id>/', methods=['GET'])
 def get_episode(podcast_id, episode_id):

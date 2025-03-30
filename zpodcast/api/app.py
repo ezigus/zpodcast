@@ -2,9 +2,8 @@ from flask import Flask, jsonify
 from flasgger import Swagger
 from zpodcast.api.blueprints import podcasts_bp, playlists_bp, episodes_bp
 from zpodcast.parsers.json import PodcastJSON
-from zpodcast.core.podcasts import PodcastList
-from zpodcast.core.playlists import PodcastPlaylist
 import os
+
 
 # Define Swagger template
 swagger_template = {
@@ -32,6 +31,7 @@ swagger_template = {
         }
     ]
 }
+
 
 class zPodcastApp:
     def __init__(self):
@@ -82,8 +82,10 @@ class zPodcastApp:
         app = zPodcastApp()
         return app.create_app(data_dir)
 
+
 # Create the application instance
 app = zPodcastApp().create_app(os.getenv('ZPODCAST_DATA_DIR', 'data'))
+
 
 @app.route('/')
 def index():
@@ -98,6 +100,7 @@ def index():
         },
         "documentation": "/apidocs/"  # Swagger UI endpoint
     })
+
 
 if __name__ == '__main__':
     app.run(debug=True)
