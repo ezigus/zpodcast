@@ -15,12 +15,13 @@ from zpodcast.api.blueprints.podcasts import podcasts_bp
 from zpodcast.core.podcasts import PodcastList
 from zpodcast.core.podcast import PodcastData
 
+
 @pytest.fixture
 def test_podcast_data(mocker):
     """
     Create test podcast data for testing with proper mocking.
     
-    This fixture sets up mock podcast data and patches RSS-related 
+    This fixture sets up mock podcast data and patches RSS-related
     functionality to ensure consistent test behavior. It creates
     two test podcasts with predefined metadata that can be used
     across multiple tests.
@@ -35,24 +36,26 @@ def test_podcast_data(mocker):
     mocker.patch('zpodcast.parsers.rss.RSSPodcastParser.get_episodes', return_value=[])
     
     # Mock different metadata for each podcast to match our test expectations
-    mock_get_rss_metadata = mocker.patch('zpodcast.parsers.rss.RSSPodcastParser.get_rss_metadata')
+    mock_get_rss_metadata = mocker.patch(
+        'zpodcast.parsers.rss.RSSPodcastParser.get_rss_metadata'
+    )
     mock_get_rss_metadata.side_effect = [
         {
-            "title": "Test Podcast 1", 
-            "description": "This is a test podcast 1", 
-            "author": "John Doe", 
+            "title": "Test Podcast 1",
+            "description": "This is a test podcast 1",
+            "author": "John Doe",
             "image": "http://example.com/image1.jpg"
         },
         {
-            "title": "Test Podcast 2", 
-            "description": "This is a test podcast 2", 
-            "author": "Jane Doe", 
+            "title": "Test Podcast 2",
+            "description": "This is a test podcast 2",
+            "author": "Jane Doe",
             "image": "http://example.com/image2.jpg"
         },
         {
-            "title": "New Podcast", 
-            "description": "This is a new podcast", 
-            "author": "New Host", 
+            "title": "New Podcast",
+            "description": "This is a new podcast",
+            "author": "New Host",
             "image": "http://example.com/new.jpg"
         }
     ]
@@ -78,12 +81,13 @@ def test_podcast_data(mocker):
         )
     ]
 
+
 @pytest.fixture
 def app(mocker, test_podcast_data):
     """
     Set up a Flask app with the podcast blueprint registered.
     
-    This fixture creates a Flask test application, registers the 
+    This fixture creates a Flask test application, registers the
     podcasts blueprint, and sets up mocks to ensure the application
     uses the test podcast data for all operations.
     
@@ -100,15 +104,20 @@ def app(mocker, test_podcast_data):
     podcast_list = PodcastList(test_podcast_data)
     
     # Patch the get_instance method in both places it's used
-    mocker.patch('zpodcast.core.podcasts.PodcastList.get_instance', 
-                return_value=podcast_list)
-    mocker.patch('zpodcast.api.blueprints.podcasts.PodcastList.get_instance', 
-                return_value=podcast_list)
+    mocker.patch(
+        'zpodcast.core.podcasts.PodcastList.get_instance',
+        return_value=podcast_list
+    )
+    mocker.patch(
+        'zpodcast.api.blueprints.podcasts.PodcastList.get_instance',
+        return_value=podcast_list
+    )
     
     # Register blueprint
     app.register_blueprint(podcasts_bp, url_prefix='/api/podcasts')
     
     return app
+
 
 @pytest.fixture
 def client(app):
@@ -125,6 +134,7 @@ def client(app):
         FlaskClient: A test client for the Flask application
     """
     return app.test_client()
+
 
 def test_get_podcasts(client):
     """
@@ -144,6 +154,7 @@ def test_get_podcasts(client):
     assert data['podcasts'][0]['title'] == "Test Podcast 1"
     assert data['podcasts'][1]['title'] == "Test Podcast 2"
 
+
 def test_get_podcast_by_id(client):
     """
     Test retrieving a specific podcast by ID.
@@ -159,6 +170,7 @@ def test_get_podcast_by_id(client):
     data = response.get_json()
     assert data['title'] == "Test Podcast 1"
     assert data['host'] == "John Doe"
+
 
 def test_get_podcast_by_id_not_found(client):
     """
@@ -176,6 +188,7 @@ def test_get_podcast_by_id_not_found(client):
     assert 'error' in data
     assert data['error'] == 'Podcast not found'
 
+
 def test_add_podcast(client, mocker, test_podcast_data):
     """
     Test creating a new podcast.
@@ -191,8 +204,10 @@ def test_add_podcast(client, mocker, test_podcast_data):
     """
     # Set up the test PodcastList as a mutable fixture that will be modified
     podcast_list = PodcastList(test_podcast_data.copy())
-    mocker.patch('zpodcast.api.blueprints.podcasts.PodcastList.get_instance', 
-                return_value=podcast_list)
+    mocker.patch(
+        'zpodcast.api.blueprints.podcasts.PodcastList.get_instance',
+        return_value=podcast_list
+    )
     
     new_podcast = {
         "title": "New Podcast",
@@ -207,6 +222,7 @@ def test_add_podcast(client, mocker, test_podcast_data):
     data = response.get_json()
     assert data['title'] == "New Podcast"
     assert data['host'] == "New Host"
+
 
 def test_add_podcast_no_data(client):
     """
@@ -224,6 +240,7 @@ def test_add_podcast_no_data(client):
     assert 'error' in data
     assert data['error'] == 'No data provided'
 
+
 def test_delete_podcast(client, mocker, test_podcast_data):
     """
     Test deleting a podcast.
@@ -240,12 +257,14 @@ def test_delete_podcast(client, mocker, test_podcast_data):
     # Create a fresh podcast list for this test
     podcast_list = PodcastList(test_podcast_data.copy())
     
-    # Store information about the podcast we're going to delete
-    to_delete = podcast_list.get_podcast(0)
+    # Store information about the podcast we're going to delete - for debugging
+    _ = podcast_list.get_podcast(0)
     
     # Create a consistent mock that will be used throughout the test
-    mock_get_instance = mocker.patch('zpodcast.api.blueprints.podcasts.PodcastList.get_instance',
-                return_value=podcast_list)
+    mocker.patch(
+        'zpodcast.api.blueprints.podcasts.PodcastList.get_instance',
+        return_value=podcast_list
+    )
     
     # First verify the podcast exists
     response = client.get('/api/podcasts/0/')
@@ -270,6 +289,7 @@ def test_delete_podcast(client, mocker, test_podcast_data):
     data = response.get_json()
     assert len(data['podcasts']) == 1
 
+
 def test_delete_podcast_not_found(client):
     """
     Test deleting a non-existent podcast.
@@ -286,6 +306,7 @@ def test_delete_podcast_not_found(client):
     assert 'error' in data
     assert data['error'] == 'Podcast not found'
 
+
 def test_update_podcast(client, mocker, test_podcast_data):
     """
     Test updating an existing podcast.
@@ -300,8 +321,10 @@ def test_update_podcast(client, mocker, test_podcast_data):
     """
     # Create a fresh podcast list for this test
     podcast_list = PodcastList(test_podcast_data.copy())
-    mocker.patch('zpodcast.api.blueprints.podcasts.PodcastList.get_instance', 
-                return_value=podcast_list)
+    mocker.patch(
+        'zpodcast.api.blueprints.podcasts.PodcastList.get_instance',
+        return_value=podcast_list
+    )
     
     # Setup podcast update data
     update_data = {
@@ -310,14 +333,17 @@ def test_update_podcast(client, mocker, test_podcast_data):
     }
     
     # Add a mock for the update_podcast method - we'll need to implement this in the PodcastList class
-    mocker.patch('zpodcast.core.podcasts.PodcastList.update_podcast', 
-                return_value=test_podcast_data[0])
+    mocker.patch(
+        'zpodcast.core.podcasts.PodcastList.update_podcast',
+        return_value=test_podcast_data[0]
+    )
     
     # Call the update endpoint with trailing slash
     response = client.put('/api/podcasts/0/', json=update_data)
     assert response.status_code == 200
     data = response.get_json()
     assert data['title'] == "Test Podcast 1"  # We're using the mock return value
+
 
 def test_update_podcast_no_data(client):
     """
@@ -335,6 +361,7 @@ def test_update_podcast_no_data(client):
     assert 'error' in data
     assert data['error'] == 'No data provided'
 
+
 def test_update_podcast_not_found(client, mocker):
     """
     Test updating a non-existent podcast.
@@ -348,13 +375,16 @@ def test_update_podcast_not_found(client, mocker):
         mocker: The pytest-mock fixture
     """
     # Mock the update_podcast method to raise ValueError
-    mocker.patch('zpodcast.core.podcasts.PodcastList.update_podcast', 
-                side_effect=ValueError("Podcast not found"))
+    mocker.patch(
+        'zpodcast.core.podcasts.PodcastList.update_podcast',
+        side_effect=ValueError("Podcast not found")
+    )
     
     response = client.put('/api/podcasts/999/', json={"title": "Test"})
     assert response.status_code == 400
     data = response.get_json()
     assert 'error' in data
+
 
 def test_update_podcast_non_integer_id(client):
     """
@@ -371,6 +401,7 @@ def test_update_podcast_non_integer_id(client):
     # This tests that the <int:podcast_id> type converter is working correctly
     response = client.put('/api/podcasts/abc/', json={"title": "Updated Title"})
     assert response.status_code == 404  # Not Found, because the route doesn't match
+
 
 # Input validation tests
 def test_add_podcast_missing_title(client):
@@ -396,6 +427,7 @@ def test_add_podcast_missing_title(client):
     assert 'error' in data
     assert data['error'] == 'Title is required'
 
+
 def test_add_podcast_missing_url(client):
     """
     Test creating a podcast with missing URL.
@@ -418,6 +450,7 @@ def test_add_podcast_missing_url(client):
     data = response.get_json()
     assert 'error' in data
     assert data['error'] == 'Podcast URL is required'
+
 
 def test_add_podcast_invalid_url_format(client):
     """
@@ -443,6 +476,7 @@ def test_add_podcast_invalid_url_format(client):
     assert 'error' in data
     assert data['error'] == 'Invalid podcast URL format'
 
+
 def test_add_podcast_invalid_priority(client):
     """
     Test creating a podcast with invalid priority value.
@@ -465,6 +499,7 @@ def test_add_podcast_invalid_priority(client):
     data = response.get_json()
     assert 'error' in data
     assert 'priority must be between' in data['error']
+
 
 def test_add_podcast_non_integer_priority(client):
     """
@@ -489,6 +524,7 @@ def test_add_podcast_non_integer_priority(client):
     assert 'error' in data
     assert data['error'] == 'Podcast priority must be an integer'
 
+
 def test_add_podcast_invalid_image_url(client):
     """
     Test creating a podcast with invalid image URL.
@@ -512,6 +548,7 @@ def test_add_podcast_invalid_image_url(client):
     assert 'error' in data
     assert data['error'] == 'Invalid image URL format'
 
+
 def test_update_podcast_with_valid_data(client, mocker, test_podcast_data):
     """
     Test updating a podcast with valid data.
@@ -526,8 +563,10 @@ def test_update_podcast_with_valid_data(client, mocker, test_podcast_data):
     """
     # Create a fresh podcast list for this test
     podcast_list = PodcastList(test_podcast_data.copy())
-    mocker.patch('zpodcast.api.blueprints.podcasts.PodcastList.get_instance', 
-                return_value=podcast_list)
+    mocker.patch(
+        'zpodcast.api.blueprints.podcasts.PodcastList.get_instance',
+        return_value=podcast_list
+    )
     
     # Valid update data
     update_data = {
@@ -540,13 +579,16 @@ def test_update_podcast_with_valid_data(client, mocker, test_podcast_data):
     def mock_update(podcast_id, data):
         return test_podcast_data[podcast_id]
     
-    mocker.patch('zpodcast.core.podcasts.PodcastList.update_podcast', 
-                side_effect=mock_update)
+    mocker.patch(
+        'zpodcast.core.podcasts.PodcastList.update_podcast',
+        side_effect=mock_update
+    )
     
     response = client.put('/api/podcasts/0/', json=update_data)
     assert response.status_code == 200
     data = response.get_json()
     assert 'title' in data
+
 
 def test_update_podcast_with_invalid_url(client):
     """
@@ -569,6 +611,7 @@ def test_update_podcast_with_invalid_url(client):
     assert 'error' in data
     assert data['error'] == 'Invalid podcast URL format'
 
+
 def test_update_podcast_partially(client, mocker, test_podcast_data):
     """
     Test updating a podcast with partial data.
@@ -583,8 +626,10 @@ def test_update_podcast_partially(client, mocker, test_podcast_data):
     """
     # Create a fresh podcast list for this test
     podcast_list = PodcastList(test_podcast_data.copy())
-    mocker.patch('zpodcast.api.blueprints.podcasts.PodcastList.get_instance', 
-                return_value=podcast_list)
+    mocker.patch(
+        'zpodcast.api.blueprints.podcasts.PodcastList.get_instance',
+        return_value=podcast_list
+    )
     
     # Partial update data (just title)
     update_data = {
@@ -592,8 +637,10 @@ def test_update_podcast_partially(client, mocker, test_podcast_data):
     }
     
     # Mock the update_podcast method
-    mocker.patch('zpodcast.core.podcasts.PodcastList.update_podcast', 
-                return_value=test_podcast_data[0])
+    mocker.patch(
+        'zpodcast.core.podcasts.PodcastList.update_podcast',
+        return_value=test_podcast_data[0]
+    )
     
     response = client.put('/api/podcasts/0/', json=update_data)
     assert response.status_code == 200

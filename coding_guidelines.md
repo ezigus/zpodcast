@@ -60,11 +60,46 @@ This document outlines the coding standards and practices to follow when contrib
 
 ## Code Style
 
-- **Follow PEP 8**: Maintain consistent indentation, line length limits, and naming conventions.
+### PEP 8 Compliance
+
+All Python code should follow [PEP 8 - Style Guide for Python Code](https://peps.python.org/pep-0008/). Developers should refer to the official documentation for detailed guidelines.
+
+Key aspects to emphasize in our codebase:
+
+- **Indentation**: 4 spaces per indentation level, no tabs
+- **Line Length**: Maximum of 79 characters for code, 72 for docstrings/comments 
+- **Imports Organization**: Group imports in the order: standard library, third-party packages, local application imports
+- **Naming Conventions**:
+  - `lowercase_with_underscores` for functions, methods, variables
+  - `CapitalizedWords` (CamelCase) for classes
+  - `CAPITALIZED_WITH_UNDERSCORES` for constants
+
+Consider using tools like `flake8` or `pylint` to verify PEP 8 compliance automatically.
+
+### ZPodcast-specific Style Preferences
+
+- **Blank lines in docstrings**: Unlike standard PEP 8, we allow (and encourage) blank lines in docstrings for better readability. For example:
+
+  ```python
+  def process_podcast(podcast_url):
+      """
+      Process a podcast from its RSS feed URL.
+      
+      This function downloads the podcast RSS feed, parses it,
+      and extracts relevant metadata and episodes.
+      
+      Args:
+          podcast_url: The URL of the podcast RSS feed.
+          
+      Returns:
+          A PodcastData object containing the podcast information.
+          
+      Raises:
+          ValueError: If the podcast URL is invalid.
+      """
+  ```
 
 - **Use dataclasses appropriately**: Build upon the existing dataclass pattern for models.
-
-- **Document with docstrings**: Provide clear docstrings for functions and classes.
 
 - **Handle errors explicitly**: Use specific exceptions with descriptive messages.
   ```python

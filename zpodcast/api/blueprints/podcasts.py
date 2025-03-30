@@ -1,8 +1,9 @@
 """
 Podcast API Blueprint Module
 
-This module provides REST API endpoints for managing podcasts in the ZPodcast application.
-It includes routes for listing, retrieving, creating, updating, and deleting podcasts.
+This module provides REST API endpoints for managing podcasts in the
+ZPodcast application. It includes routes for listing, retrieving, creating,
+updating, and deleting podcasts.
 
 The blueprint follows RESTful design principles with appropriate HTTP methods
 for each operation and consistent URL patterns.
@@ -14,12 +15,13 @@ Routes:
     PUT /<int:podcast_id>/: Update an existing podcast
     DELETE /<int:podcast_id>/: Delete a podcast
 """
-from typing import Dict, List, Tuple, Union, Any, Optional
-import validators
+from typing import Dict, Tuple, Any, Optional
+
 from flask import Blueprint, jsonify, request, Response
 from flasgger import swag_from
+import validators
+
 from zpodcast.core.podcasts import PodcastList
-from zpodcast.parsers.json import PodcastJSON
 from zpodcast.core.podcast import PodcastData
 
 # Define Swagger schemas for podcast objects
@@ -32,11 +34,14 @@ PodcastSchema = {
         'host': {'type': 'string', 'description': 'Podcast host/author'},
         'description': {'type': 'string', 'description': 'Podcast description'},
         'episodelists': {
-            'type': 'array', 
+            'type': 'array',
             'items': {'type': 'object'},
             'description': 'Lists of episodes for this podcast'
         },
-        'podcast_priority': {'type': 'integer', 'description': 'User priority (0-10)'},
+        'podcast_priority': {
+            'type': 'integer',
+            'description': 'User priority (0-10)'
+        },
         'image_url': {'type': 'string', 'description': 'Podcast cover art URL'}
     },
     'required': ['title', 'podcast_url']
@@ -61,7 +66,9 @@ MIN_PRIORITY = 0
 podcasts_bp = Blueprint('podcasts', __name__)
 
 
-def validate_podcast_data(data: Dict[str, Any], required_fields: bool = True) -> Optional[str]:
+def validate_podcast_data(
+    data: Dict[str, Any], required_fields: bool = True
+) -> Optional[str]:
     """
     Validate podcast data against requirements.
     
@@ -72,10 +79,10 @@ def validate_podcast_data(data: Dict[str, Any], required_fields: bool = True) ->
         data (Dict[str, Any]): The podcast data to validate
         required_fields (bool): Whether to enforce required fields validation
                               Set to False for partial updates (PUT requests)
-        
+    
     Returns:
         Optional[str]: Error message if validation fails, None if validation passes
-        
+    
     Example:
         >>> error = validate_podcast_data({"title": "My Podcast"})
         >>> if error:
@@ -107,14 +114,20 @@ def validate_podcast_data(data: Dict[str, Any], required_fields: bool = True) ->
         if not isinstance(data['description'], str):
             return "Description must be a string"
         if len(data['description']) > MAX_DESCRIPTION_LENGTH:
-            return f"Description exceeds maximum length of {MAX_DESCRIPTION_LENGTH} characters"
+            return (
+                f"Description exceeds maximum length of {MAX_DESCRIPTION_LENGTH} "
+                f"characters"
+            )
     
     # Validate podcast priority if present
     if 'podcast_priority' in data and data['podcast_priority'] is not None:
         try:
             priority = int(data['podcast_priority'])
             if priority < MIN_PRIORITY or priority > MAX_PRIORITY:
-                return f"Podcast priority must be between {MIN_PRIORITY} and {MAX_PRIORITY}"
+                return (
+                    f"Podcast priority must be between {MIN_PRIORITY} and "
+                    f"{MAX_PRIORITY}"
+                )
         except (ValueError, TypeError):
             return "Podcast priority must be an integer"
     
@@ -124,7 +137,7 @@ def validate_podcast_data(data: Dict[str, Any], required_fields: bool = True) ->
             return "Image URL must be a string"
         if not validators.url(data['image_url']):
             return "Invalid image URL format"
-            
+    
     return None
 
 
@@ -147,7 +160,7 @@ def get_podcasts() -> Response:
     Retrieve a list of all podcasts.
     
     This endpoint returns all podcasts stored in the system with their
-    metadata. It does not include the full episode lists to keep the 
+    metadata. It does not include the full episode lists to keep the
     response size manageable.
     
     Returns:
@@ -160,6 +173,7 @@ def get_podcasts() -> Response:
     """
     podcast_list = PodcastList.get_instance()
     return jsonify(podcast_list.to_dict())
+
 
 @podcasts_bp.route('/<int:podcast_id>/', methods=['GET'])
 @swag_from({
@@ -214,6 +228,7 @@ def get_podcast(podcast_id: int) -> Tuple[Response, int]:
         return jsonify(podcast.to_dict()), 200
     except ValueError:
         return jsonify({"error": "Podcast not found"}), 404
+
 
 @podcasts_bp.route('/', methods=['POST'])
 @swag_from({
@@ -294,6 +309,7 @@ def add_podcast() -> Tuple[Response, int]:
     except ValueError as e:
         return jsonify({"error": str(e)}), 400
 
+
 @podcasts_bp.route('/<int:podcast_id>/', methods=['PUT'])
 @swag_from({
     'parameters': [
@@ -331,7 +347,7 @@ def update_podcast(podcast_id: int) -> Tuple[Response, int]:
     """
     Update an existing podcast.
     
-    This endpoint updates a podcast identified by its ID with the 
+    This endpoint updates a podcast identified by its ID with the
     provided JSON data. Only the fields included in the request will be updated.
     
     Args:
@@ -370,6 +386,7 @@ def update_podcast(podcast_id: int) -> Tuple[Response, int]:
         return jsonify(podcast.to_dict()), 200
     except ValueError as e:
         return jsonify({"error": str(e)}), 400
+
 
 @podcasts_bp.route('/<int:podcast_id>/', methods=['DELETE'])
 @swag_from({
