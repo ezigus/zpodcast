@@ -217,3 +217,10 @@ def test_update_podcast_not_found(client, mocker):
     assert response.status_code == 400
     data = response.get_json()
     assert 'error' in data
+
+def test_update_podcast_non_integer_id(client):
+    """Test updating a podcast with a non-integer ID to verify the route only accepts integers"""
+    # Flask will return a 404 for routes that don't match the expected pattern
+    # This tests that the <int:podcast_id> type converter is working correctly
+    response = client.put('/api/podcasts/abc/', json={"title": "Updated Title"})
+    assert response.status_code == 404  # Not Found, because the route doesn't match
