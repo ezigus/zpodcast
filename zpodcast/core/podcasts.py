@@ -89,6 +89,9 @@ class PodcastList:
         # Get the podcast to update
         podcast = self._podcasts[index]
         
+        # Check if podcast_url is being updated
+        url_update = 'podcast_url' in data and data['podcast_url'] != podcast.podcast_url
+        
         # Update allowed attributes
         if 'title' in data:
             podcast.title = data['title']
@@ -100,9 +103,12 @@ class PodcastList:
             podcast.podcast_priority = data['podcast_priority']
         if 'image_url' in data:
             podcast.image_url = data['image_url']
-        if 'podcast_url' in data:
+        if url_update:
+            # Only update URL and re-populate if it's actually changed
             podcast.podcast_url = data['podcast_url']
-            # Re-fetch episodes when URL changes
+            # Prevent automatic population by setting name_set_manually
+            podcast.name_set_manually = True
+            # Manually trigger episode refresh
             podcast.populate_episodes_from_feed()
             
         return podcast
