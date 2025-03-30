@@ -2,6 +2,22 @@
 
 This document outlines the coding standards and practices to follow when contributing to the ZPodcast project.
 
+## Table of Contents
+
+- [Testing Guidelines](#testing-guidelines)
+  - [Mocking](#mocking)
+  - [Test Organization](#test-organization)
+- [Code Style](#code-style)
+  - [PEP 8 Compliance](#pep-8-compliance)
+  - [ZPodcast-specific Style Preferences](#zpodcast-specific-style-preferences)
+- [Documentation Requirements](#documentation-requirements)
+- [Validation Practices](#validation-practices)
+- [API Design](#api-design)
+  - [Flask URL Conventions](#flask-url-conventions)
+- [API Documentation Requirements](#api-documentation-requirements)
+- [Project Structure](#project-structure)
+- [Contribution Workflow](#contribution-workflow)
+
 ## Testing Guidelines
 
 ### Mocking
@@ -589,3 +605,119 @@ swagger_template = {
     }
 }
 ```
+
+## Project Structure
+
+The ZPodcast project follows a modular structure with clear separation of concerns. Understanding this structure is essential for proper contribution.
+
+#### Core Module Organization
+
+The core functionality is organized as follows:
+
+```
+zpodcast/
+├── core/           # Core domain models and business logic
+├── parsers/        # Parsing modules for different formats (RSS, JSON, OPML)
+├── api/            # API interfaces and route definitions
+│   └── blueprints/ # Flask blueprints organized by resource
+└── utils/          # Utility and helper functions
+```
+
+#### Module Responsibilities
+
+- **core/**: Contains all domain entities and business logic
+  - Podcast and episode data models
+  - Collection management (playlists, podcast lists)
+  - Core operations on domain entities
+
+- **parsers/**: Handles external data parsing and serialization
+  - RSS feed parsing (`rss.py`)
+  - JSON import/export (`json.py`)
+  - OPML import/export (`opml.py`)
+
+- **api/**: Web API implementation
+  - Flask application setup (`app.py`)
+  - API routes definition (`routes.py`)
+  - Resource-specific blueprints in `blueprints/`
+
+- **utils/**: Shared utilities and helper functions
+  - Common helper functions (`helpers.py`)
+  - Sorting and filtering utilities (`sort.py`)
+
+#### File Naming Conventions
+
+- Use singular names for modules defining a single primary class (`podcast.py`, `episode.py`)
+- Use plural names for modules managing collections (`podcasts.py`, `playlists.py`)
+- Test files should mirror the structure of the main package with a `test_` prefix
+
+#### Add New Functionality in the Right Place
+
+When adding new features:
+
+1. Core business logic belongs in the `core/` package
+2. New data formats should be added as new modules in `parsers/`
+3. New API endpoints should be organized into appropriate blueprints
+4. Cross-cutting utilities should go in `utils/`
+
+## Contribution Workflow
+
+### Getting Started
+
+1. **Fork and Clone**: Fork the ZPodcast repository and clone it locally
+2. **Set Up Environment**: Install dependencies with `pip install -r requirements.txt`
+3. **Create Branch**: Create a feature branch with a descriptive name:
+   ```bash
+   git checkout -b feature/add-search-capability
+   ```
+
+### Development Process
+
+#### 1. Test-Driven Development
+
+Write tests first, then implement the feature to satisfy the tests:
+
+```bash
+# Run specific tests
+pytest tests/core/test_podcast.py -v
+
+# Run all tests
+pytest
+```
+
+#### 2. Code Formatting
+
+Format your code before committing:
+
+```bash
+# Check PEP 8 compliance
+flake8 zpodcast
+
+# Format code with Black
+black zpodcast tests
+```
+
+#### 3. Type Checking
+
+Ensure proper type annotations and run mypy:
+
+```bash
+mypy zpodcast
+```
+
+### Pull Request Process
+
+1. **Update Documentation**: Ensure all new code is documented
+2. **Run Tests**: Make sure all tests pass locally
+3. **Submit PR**: Create a pull request with a clear description of changes
+4. **Code Review**: Address any feedback from code reviews
+5. **Merge**: Once approved, your PR will be merged
+
+### Release Process
+
+Releases follow semantic versioning:
+
+- **MAJOR**: Incompatible API changes
+- **MINOR**: New functionality in a backward-compatible manner
+- **PATCH**: Backward-compatible bug fixes
+
+Version numbers are managed in `setup.cfg` and should be updated as part of the release process.
