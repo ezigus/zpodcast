@@ -146,7 +146,7 @@ class PodcastData:
         Returns:
             str: The host of the podcast.
         """
-        return self._host   
+        return self._host
     
     @host.setter
     def host(self, value: str):
@@ -193,7 +193,7 @@ class PodcastData:
         else:
             value = ""
                 
-        self._description = value    
+        self._description = value
     
     """
     getter setter for priority with a clamping of the priority between -10 and 10
@@ -227,7 +227,7 @@ class PodcastData:
         """
 
         if value is not None:
-            if isinstance(value, int):  
+            if isinstance(value, int):
                 value = max(-10, min(10, value))
             else:
                 value = 0
@@ -319,7 +319,7 @@ class PodcastData:
             "episodelists": [playlist.to_dict() for playlist in self.episodelists],
             "name_set_manually": self.name_set_manually
         }
-        return podcastdata_dict                                  
+        return podcastdata_dict
 
     @classmethod
     def from_dict(cls, data: Dict):
