@@ -16,13 +16,57 @@ Routes:
 """
 from typing import Dict, List, Tuple, Union, Any
 from flask import Blueprint, jsonify, request, Response
+from flasgger import swag_from
 from zpodcast.core.podcasts import PodcastList
 from zpodcast.parsers.json import PodcastJSON
 from zpodcast.core.podcast import PodcastData
 
+# Define Swagger schemas for podcast objects
+PodcastSchema = {
+    'type': 'object',
+    'properties': {
+        'id': {'type': 'integer', 'description': 'Unique podcast identifier'},
+        'title': {'type': 'string', 'description': 'Podcast title'},
+        'podcast_url': {'type': 'string', 'description': 'RSS feed URL'},
+        'host': {'type': 'string', 'description': 'Podcast host/author'},
+        'description': {'type': 'string', 'description': 'Podcast description'},
+        'episodelists': {
+            'type': 'array', 
+            'items': {'type': 'object'},
+            'description': 'Lists of episodes for this podcast'
+        },
+        'podcast_priority': {'type': 'integer', 'description': 'User priority (0-10)'},
+        'image_url': {'type': 'string', 'description': 'Podcast cover art URL'}
+    },
+    'required': ['title', 'podcast_url']
+}
+
+PodcastListSchema = {
+    'type': 'object',
+    'properties': {
+        'podcasts': {
+            'type': 'array',
+            'items': PodcastSchema
+        }
+    }
+}
+
 podcasts_bp = Blueprint('podcasts', __name__)
 
 @podcasts_bp.route('/', methods=['GET'])
+@swag_from({
+    'responses': {
+        200: {
+            'description': 'List of all podcasts',
+            'schema': PodcastListSchema
+        },
+        500: {
+            'description': 'Server error'
+        }
+    },
+    'summary': 'Retrieves all podcasts',
+    'tags': ['podcasts']
+})
 def get_podcasts() -> Response:
     """
     Retrieve a list of all podcasts.
@@ -43,6 +87,28 @@ def get_podcasts() -> Response:
     return jsonify(podcast_list.to_dict())
 
 @podcasts_bp.route('/<int:podcast_id>/', methods=['GET'])
+@swag_from({
+    'parameters': [
+        {
+            'name': 'podcast_id',
+            'in': 'path',
+            'type': 'integer',
+            'required': True,
+            'description': 'Unique identifier of the podcast'
+        }
+    ],
+    'responses': {
+        200: {
+            'description': 'Podcast details',
+            'schema': PodcastSchema
+        },
+        404: {
+            'description': 'Podcast not found'
+        }
+    },
+    'summary': 'Get podcast by ID',
+    'tags': ['podcasts']
+})
 def get_podcast(podcast_id: int) -> Tuple[Response, int]:
     """
     Retrieve a specific podcast by its ID.
@@ -75,6 +141,31 @@ def get_podcast(podcast_id: int) -> Tuple[Response, int]:
         return jsonify({"error": "Podcast not found"}), 404
 
 @podcasts_bp.route('/', methods=['POST'])
+@swag_from({
+    'parameters': [
+        {
+            'name': 'body',
+            'in': 'body',
+            'schema': PodcastSchema,
+            'required': True,
+            'description': 'Podcast data to create'
+        }
+    ],
+    'responses': {
+        201: {
+            'description': 'Podcast created successfully',
+            'schema': PodcastSchema
+        },
+        400: {
+            'description': 'Invalid input data'
+        },
+        500: {
+            'description': 'Server error'
+        }
+    },
+    'summary': 'Create a new podcast',
+    'tags': ['podcasts']
+})
 def add_podcast() -> Tuple[Response, int]:
     """
     Create a new podcast.
@@ -124,6 +215,38 @@ def add_podcast() -> Tuple[Response, int]:
         return jsonify({"error": str(e)}), 400
 
 @podcasts_bp.route('/<int:podcast_id>/', methods=['PUT'])
+@swag_from({
+    'parameters': [
+        {
+            'name': 'podcast_id',
+            'in': 'path',
+            'type': 'integer',
+            'required': True,
+            'description': 'Unique identifier of the podcast to update'
+        },
+        {
+            'name': 'body',
+            'in': 'body',
+            'schema': PodcastSchema,
+            'required': True,
+            'description': 'Updated podcast data'
+        }
+    ],
+    'responses': {
+        200: {
+            'description': 'Podcast updated successfully',
+            'schema': PodcastSchema
+        },
+        400: {
+            'description': 'Invalid input data or podcast not found'
+        },
+        500: {
+            'description': 'Server error'
+        }
+    },
+    'summary': 'Update an existing podcast',
+    'tags': ['podcasts']
+})
 def update_podcast(podcast_id: int) -> Tuple[Response, int]:
     """
     Update an existing podcast.
@@ -164,6 +287,30 @@ def update_podcast(podcast_id: int) -> Tuple[Response, int]:
         return jsonify({"error": str(e)}), 400
 
 @podcasts_bp.route('/<int:podcast_id>/', methods=['DELETE'])
+@swag_from({
+    'parameters': [
+        {
+            'name': 'podcast_id',
+            'in': 'path',
+            'type': 'integer',
+            'required': True,
+            'description': 'Unique identifier of the podcast to delete'
+        }
+    ],
+    'responses': {
+        204: {
+            'description': 'Podcast deleted successfully'
+        },
+        404: {
+            'description': 'Podcast not found'
+        },
+        500: {
+            'description': 'Server error'
+        }
+    },
+    'summary': 'Delete a podcast',
+    'tags': ['podcasts']
+})
 def delete_podcast(podcast_id: int) -> Tuple[str, int]:
     """
     Delete a podcast.

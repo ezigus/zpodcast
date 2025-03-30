@@ -1,9 +1,37 @@
 from flask import Flask, jsonify
+from flasgger import Swagger
 from zpodcast.api.blueprints import podcasts_bp, playlists_bp, episodes_bp
 from zpodcast.parsers.json import PodcastJSON
 from zpodcast.core.podcasts import PodcastList
 from zpodcast.core.playlists import PodcastPlaylist
 import os
+
+# Define Swagger template
+swagger_template = {
+    'info': {
+        'title': 'ZPodcast API',
+        'description': 'API for managing podcasts and playlists',
+        'version': '1.0.0',
+        'contact': {
+            'name': 'ZPodcast Team',
+            'email': 'support@zpodcast.example.com'
+        }
+    },
+    'tags': [
+        {
+            'name': 'podcasts',
+            'description': 'Podcast management operations'
+        },
+        {
+            'name': 'playlists',
+            'description': 'Playlist management operations'
+        },
+        {
+            'name': 'episodes',
+            'description': 'Episode management operations'
+        }
+    ]
+}
 
 class zPodcastApp:
     def __init__(self):
@@ -42,6 +70,9 @@ class zPodcastApp:
         # Load podcast_playlist
         podcast_playlist_path = os.path.join(data_dir, 'podcast_playlist.json')
         self.app.config['podcast_playlist'] = PodcastJSON.import_podcast_playlist(podcast_playlist_path)
+        
+        # Initialize Swagger documentation
+        Swagger(self.app, template=swagger_template)
 
         return self.app
 
@@ -64,7 +95,8 @@ def index():
             "podcasts": "/api/podcasts/",
             "playlists": "/api/playlists/",
             "episodes": "/api/episodes/"
-        }
+        },
+        "documentation": "/apidocs/"  # Swagger UI endpoint
     })
 
 if __name__ == '__main__':
