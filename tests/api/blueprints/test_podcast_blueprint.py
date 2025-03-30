@@ -1,3 +1,14 @@
+"""
+Podcast Blueprint Tests Module
+
+This module contains tests for the podcast API blueprint endpoints.
+It verifies that all podcast-related API endpoints work as expected
+and correctly handle both successful and error scenarios.
+
+The tests use pytest fixtures to set up test data and mock dependencies,
+focusing on validating the HTTP status codes, response formats, and
+proper error handling for each endpoint.
+"""
 import pytest
 from flask import Flask
 from zpodcast.api.blueprints.podcasts import podcasts_bp
@@ -6,7 +17,20 @@ from zpodcast.core.podcast import PodcastData
 
 @pytest.fixture
 def test_podcast_data(mocker):
-    """Create test podcast data for testing with proper mocking"""
+    """
+    Create test podcast data for testing with proper mocking.
+    
+    This fixture sets up mock podcast data and patches RSS-related 
+    functionality to ensure consistent test behavior. It creates
+    two test podcasts with predefined metadata that can be used
+    across multiple tests.
+    
+    Args:
+        mocker: The pytest-mock fixture for creating mock objects
+        
+    Returns:
+        List[PodcastData]: A list containing two test podcast objects
+    """
     # Mock RSSPodcastParser to return consistent data matching our test expectations
     mocker.patch('zpodcast.parsers.rss.RSSPodcastParser.get_episodes', return_value=[])
     
@@ -56,7 +80,20 @@ def test_podcast_data(mocker):
 
 @pytest.fixture
 def app(mocker, test_podcast_data):
-    """Set up a Flask app with the podcast blueprint registered"""
+    """
+    Set up a Flask app with the podcast blueprint registered.
+    
+    This fixture creates a Flask test application, registers the 
+    podcasts blueprint, and sets up mocks to ensure the application
+    uses the test podcast data for all operations.
+    
+    Args:
+        mocker: The pytest-mock fixture for creating mock objects
+        test_podcast_data: The fixture providing test podcast data
+        
+    Returns:
+        Flask: A configured Flask application for testing
+    """
     app = Flask(__name__)
     
     # Create a consistent test PodcastList
@@ -75,11 +112,30 @@ def app(mocker, test_podcast_data):
 
 @pytest.fixture
 def client(app):
-    """Create a test client for the Flask app"""
+    """
+    Create a test client for the Flask app.
+    
+    This fixture provides a test client that can be used to make
+    requests to the Flask application without running an actual server.
+    
+    Args:
+        app: The Flask application fixture
+        
+    Returns:
+        FlaskClient: A test client for the Flask application
+    """
     return app.test_client()
 
 def test_get_podcasts(client):
-    """Test getting all podcasts through the blueprint"""
+    """
+    Test retrieving all podcasts through the blueprint.
+    
+    This test verifies that the GET / endpoint returns a list of all
+    podcasts with the correct data structure and content.
+    
+    Args:
+        client: The Flask test client fixture
+    """
     response = client.get('/api/podcasts/')
     assert response.status_code == 200
     data = response.get_json()
@@ -89,7 +145,15 @@ def test_get_podcasts(client):
     assert data['podcasts'][1]['title'] == "Test Podcast 2"
 
 def test_get_podcast_by_id(client):
-    """Test getting a specific podcast by ID through the blueprint"""
+    """
+    Test retrieving a specific podcast by ID.
+    
+    This test verifies that the GET /<podcast_id>/ endpoint returns
+    the correct podcast when given a valid ID.
+    
+    Args:
+        client: The Flask test client fixture
+    """
     response = client.get('/api/podcasts/0/')  # First podcast
     assert response.status_code == 200
     data = response.get_json()
@@ -97,7 +161,15 @@ def test_get_podcast_by_id(client):
     assert data['host'] == "John Doe"
 
 def test_get_podcast_by_id_not_found(client):
-    """Test getting a non-existent podcast ID through the blueprint"""
+    """
+    Test retrieving a non-existent podcast ID.
+    
+    This test verifies that the GET /<podcast_id>/ endpoint properly
+    returns a 404 error when requesting a podcast that doesn't exist.
+    
+    Args:
+        client: The Flask test client fixture
+    """
     response = client.get('/api/podcasts/999/')
     assert response.status_code == 404
     data = response.get_json()
@@ -105,7 +177,18 @@ def test_get_podcast_by_id_not_found(client):
     assert data['error'] == 'Podcast not found'
 
 def test_add_podcast(client, mocker, test_podcast_data):
-    """Test adding a new podcast"""
+    """
+    Test creating a new podcast.
+    
+    This test verifies that the POST / endpoint successfully creates
+    a new podcast with the provided data and returns the correct
+    response with status code 201.
+    
+    Args:
+        client: The Flask test client fixture
+        mocker: The pytest-mock fixture
+        test_podcast_data: The fixture providing test podcast data
+    """
     # Set up the test PodcastList as a mutable fixture that will be modified
     podcast_list = PodcastList(test_podcast_data.copy())
     mocker.patch('zpodcast.api.blueprints.podcasts.PodcastList.get_instance', 
@@ -126,7 +209,15 @@ def test_add_podcast(client, mocker, test_podcast_data):
     assert data['host'] == "New Host"
 
 def test_add_podcast_no_data(client):
-    """Test adding a podcast with no data"""
+    """
+    Test creating a podcast with no data.
+    
+    This test verifies that the POST / endpoint properly returns
+    a 400 error when no JSON data is provided in the request.
+    
+    Args:
+        client: The Flask test client fixture
+    """
     response = client.post('/api/podcasts/', json={})
     assert response.status_code == 400
     data = response.get_json()
@@ -134,7 +225,18 @@ def test_add_podcast_no_data(client):
     assert data['error'] == 'No data provided'
 
 def test_delete_podcast(client, mocker, test_podcast_data):
-    """Test removing a podcast"""
+    """
+    Test deleting a podcast.
+    
+    This test verifies that the DELETE /<podcast_id>/ endpoint successfully
+    removes a podcast from the system and returns the correct status code.
+    It also verifies that subsequent requests reflect the deletion.
+    
+    Args:
+        client: The Flask test client fixture
+        mocker: The pytest-mock fixture
+        test_podcast_data: The fixture providing test podcast data
+    """
     # Create a fresh podcast list for this test
     podcast_list = PodcastList(test_podcast_data.copy())
     
@@ -169,7 +271,15 @@ def test_delete_podcast(client, mocker, test_podcast_data):
     assert len(data['podcasts']) == 1
 
 def test_delete_podcast_not_found(client):
-    """Test removing a non-existent podcast"""
+    """
+    Test deleting a non-existent podcast.
+    
+    This test verifies that the DELETE /<podcast_id>/ endpoint properly
+    returns a 404 error when attempting to delete a podcast that doesn't exist.
+    
+    Args:
+        client: The Flask test client fixture
+    """
     response = client.delete('/api/podcasts/999/')
     assert response.status_code == 404
     data = response.get_json()
@@ -177,7 +287,17 @@ def test_delete_podcast_not_found(client):
     assert data['error'] == 'Podcast not found'
 
 def test_update_podcast(client, mocker, test_podcast_data):
-    """Test updating an existing podcast"""
+    """
+    Test updating an existing podcast.
+    
+    This test verifies that the PUT /<podcast_id>/ endpoint successfully
+    updates a podcast with the provided data and returns the correct response.
+    
+    Args:
+        client: The Flask test client fixture
+        mocker: The pytest-mock fixture
+        test_podcast_data: The fixture providing test podcast data
+    """
     # Create a fresh podcast list for this test
     podcast_list = PodcastList(test_podcast_data.copy())
     mocker.patch('zpodcast.api.blueprints.podcasts.PodcastList.get_instance', 
@@ -200,7 +320,15 @@ def test_update_podcast(client, mocker, test_podcast_data):
     assert data['title'] == "Test Podcast 1"  # We're using the mock return value
 
 def test_update_podcast_no_data(client):
-    """Test updating a podcast with no data"""
+    """
+    Test updating a podcast with no data.
+    
+    This test verifies that the PUT /<podcast_id>/ endpoint properly
+    returns a 400 error when no JSON data is provided in the request.
+    
+    Args:
+        client: The Flask test client fixture
+    """
     response = client.put('/api/podcasts/0/', json={})
     assert response.status_code == 400
     data = response.get_json()
@@ -208,7 +336,17 @@ def test_update_podcast_no_data(client):
     assert data['error'] == 'No data provided'
 
 def test_update_podcast_not_found(client, mocker):
-    """Test updating a non-existent podcast"""
+    """
+    Test updating a non-existent podcast.
+    
+    This test verifies that the PUT /<podcast_id>/ endpoint properly
+    returns a 400 error with appropriate message when attempting to 
+    update a podcast that doesn't exist.
+    
+    Args:
+        client: The Flask test client fixture
+        mocker: The pytest-mock fixture
+    """
     # Mock the update_podcast method to raise ValueError
     mocker.patch('zpodcast.core.podcasts.PodcastList.update_podcast', 
                 side_effect=ValueError("Podcast not found"))
@@ -219,7 +357,16 @@ def test_update_podcast_not_found(client, mocker):
     assert 'error' in data
 
 def test_update_podcast_non_integer_id(client):
-    """Test updating a podcast with a non-integer ID to verify the route only accepts integers"""
+    """
+    Test updating a podcast with a non-integer ID.
+    
+    This test verifies that the route for updating podcasts correctly enforces
+    the integer type constraint for podcast IDs. It checks that attempting to
+    access a URL with a non-integer ID results in a 404 error.
+    
+    Args:
+        client: The Flask test client fixture
+    """
     # Flask will return a 404 for routes that don't match the expected pattern
     # This tests that the <int:podcast_id> type converter is working correctly
     response = client.put('/api/podcasts/abc/', json={"title": "Updated Title"})
