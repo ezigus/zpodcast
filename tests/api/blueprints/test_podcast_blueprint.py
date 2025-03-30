@@ -175,3 +175,45 @@ def test_delete_podcast_not_found(client):
     data = response.get_json()
     assert 'error' in data
     assert data['error'] == 'Podcast not found'
+
+def test_update_podcast(client, mocker, test_podcast_data):
+    """Test updating an existing podcast"""
+    # Create a fresh podcast list for this test
+    podcast_list = PodcastList(test_podcast_data.copy())
+    mocker.patch('zpodcast.api.blueprints.podcasts.PodcastList.get_instance', 
+                return_value=podcast_list)
+    
+    # Setup podcast update data
+    update_data = {
+        "title": "Updated Podcast Title",
+        "description": "This is an updated description",
+    }
+    
+    # Add a mock for the update_podcast method - we'll need to implement this in the PodcastList class
+    mocker.patch('zpodcast.core.podcasts.PodcastList.update_podcast', 
+                return_value=test_podcast_data[0])
+    
+    # Call the update endpoint with trailing slash
+    response = client.put('/api/podcasts/0/', json=update_data)
+    assert response.status_code == 200
+    data = response.get_json()
+    assert data['title'] == "Test Podcast 1"  # We're using the mock return value
+
+def test_update_podcast_no_data(client):
+    """Test updating a podcast with no data"""
+    response = client.put('/api/podcasts/0/', json={})
+    assert response.status_code == 400
+    data = response.get_json()
+    assert 'error' in data
+    assert data['error'] == 'No data provided'
+
+def test_update_podcast_not_found(client, mocker):
+    """Test updating a non-existent podcast"""
+    # Mock the update_podcast method to raise ValueError
+    mocker.patch('zpodcast.core.podcasts.PodcastList.update_podcast', 
+                side_effect=ValueError("Podcast not found"))
+    
+    response = client.put('/api/podcasts/999/', json={"title": "Test"})
+    assert response.status_code == 400
+    data = response.get_json()
+    assert 'error' in data

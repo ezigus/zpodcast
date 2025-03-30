@@ -36,7 +36,7 @@ def add_podcast():
     except ValueError as e:
         return jsonify({"error": str(e)}), 400
 
-@podcasts_bp.route('/<podcast_id>', methods=['PUT'])
+@podcasts_bp.route('/<podcast_id>/', methods=['PUT'])
 def update_podcast(podcast_id):
     """Update a podcast"""
     data = request.get_json()
