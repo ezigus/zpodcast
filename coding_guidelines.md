@@ -267,6 +267,17 @@ This document outlines the coding standards and practices to follow when contrib
 
 - **Error response format**: Return structured JSON for error responses.
 
+- **Success response format**: 
+  - For most success responses, return structured JSON with appropriate data.
+  - For 204 No Content responses (such as after successful DELETE operations), return an empty string with no content. This is the correct HTTP standard behavior and an exception to the JSON response pattern.
+    ```python
+    # Correct for 204 No Content response
+    return "", 204
+    
+    # Incorrect for 204 No Content response
+    return jsonify({"success": "Resource deleted"}), 204
+    ```
+
 - **Flask URL Conventions**: Follow Flask best practices for URL design:
   
   - **End all endpoints with a trailing slash**: All API endpoints should end with a forward slash.
