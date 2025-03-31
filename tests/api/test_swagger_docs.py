@@ -151,3 +151,69 @@ def test_swagger_implementation_consistency(client):
     assert 'get' in detail_endpoint, "GET method missing for /api/podcasts/{podcast_id}/"
     assert 'put' in detail_endpoint, "PUT method missing for /api/podcasts/{podcast_id}/"
     assert 'delete' in detail_endpoint, "DELETE method missing for /api/podcasts/{podcast_id}/"
+
+
+def test_root_endpoint_in_swagger(client):
+    """Test that the root endpoint is documented in Swagger"""
+    response = client.get('/apispec_1.json')
+    assert response.status_code == 200
+    swagger_json = json.loads(response.data)
+
+    # Check that the root endpoint is documented
+    assert '/' in swagger_json['paths'], "Root endpoint '/' is missing from Swagger documentation"
+
+    # Verify the GET method is documented for the root endpoint
+    root_endpoint = swagger_json['paths']['/']
+    assert 'get' in root_endpoint, "GET method missing for root endpoint '/'"
+
+    # Check the response schema for the root endpoint
+    get_method = root_endpoint['get']
+    assert 'responses' in get_method, "Responses missing for GET method of root endpoint '/'"
+    assert '200' in get_method['responses'], "200 response missing for GET method of root endpoint '/'"
+
+    # Verify the schema properties
+    schema = get_method['responses']['200']['schema']
+    assert 'properties' in schema, "Schema properties missing for root endpoint '/'"
+    properties = schema['properties']
+    assert 'name' in properties, "'name' property missing in root endpoint schema"
+    assert 'version' in properties, "'version' property missing in root endpoint schema"
+    assert 'endpoints' in properties, "'endpoints' property missing in root endpoint schema"
+    assert 'documentation' in properties, "'documentation' property missing in root endpoint schema"
+
+
+def test_playlists_endpoints_in_swagger(client):
+    """Test that all playlist endpoints are documented in Swagger"""
+    response = client.get('/apispec_1.json')
+    assert response.status_code == 200
+    swagger_json = json.loads(response.data)
+
+    # Check that all playlist endpoints are documented
+    assert '/api/playlists/' in swagger_json['paths'], "Playlist endpoint '/api/playlists/' is missing from Swagger documentation"
+    assert 'get' in swagger_json['paths']['/api/playlists/'], "GET method missing for '/api/playlists/'"
+    assert 'post' in swagger_json['paths']['/api/playlists/'], "POST method missing for '/api/playlists/'"
+
+    # Ensure playlist ID parameter endpoint exists
+    playlist_id_path = '/api/playlists/{playlist_id}/'
+    assert playlist_id_path in swagger_json['paths'], f"Path {playlist_id_path} missing from Swagger documentation"
+    assert 'get' in swagger_json['paths'][playlist_id_path], "GET method missing for '/api/playlists/{playlist_id}/'"
+    assert 'put' in swagger_json['paths'][playlist_id_path], "PUT method missing for '/api/playlists/{playlist_id}/'"
+    assert 'delete' in swagger_json['paths'][playlist_id_path], "DELETE method missing for '/api/playlists/{playlist_id}/'"
+
+
+def test_episodes_endpoints_in_swagger(client):
+    """Test that all episode endpoints are documented in Swagger"""
+    response = client.get('/apispec_1.json')
+    assert response.status_code == 200
+    swagger_json = json.loads(response.data)
+
+    # Check that all episode endpoints are documented
+    assert '/api/episodes/' in swagger_json['paths'], "Episode endpoint '/api/episodes/' is missing from Swagger documentation"
+    assert 'get' in swagger_json['paths']['/api/episodes/'], "GET method missing for '/api/episodes/'"
+    assert 'post' in swagger_json['paths']['/api/episodes/'], "POST method missing for '/api/episodes/'"
+
+    # Ensure episode ID parameter endpoint exists
+    episode_id_path = '/api/episodes/{episode_id}/'
+    assert episode_id_path in swagger_json['paths'], f"Path {episode_id_path} missing from Swagger documentation"
+    assert 'get' in swagger_json['paths'][episode_id_path], "GET method missing for '/api/episodes/{episode_id}/'"
+    assert 'put' in swagger_json['paths'][episode_id_path], "PUT method missing for '/api/episodes/{episode_id}/'"
+    assert 'delete' in swagger_json['paths'][episode_id_path], "DELETE method missing for '/api/episodes/{episode_id}/'"
