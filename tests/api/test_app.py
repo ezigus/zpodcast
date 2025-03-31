@@ -5,9 +5,9 @@ from zpodcast.core.podcasts import PodcastList, PodcastData
 from zpodcast.core.playlists import PodcastPlaylist
 from zpodcast.core.playlist import PodcastEpisodeList
 from zpodcast.parsers.json import PodcastJSON
-import os
 import json
 from unittest.mock import patch, Mock, mock_open
+
 
 @pytest.fixture
 def mock_test_data():
@@ -38,6 +38,7 @@ def mock_test_data():
             PodcastEpisodeList(name="Test Playlist 2", episodes=[])
         ])
     }
+
 
 @pytest.fixture
 def mock_app(mock_test_data):
@@ -71,10 +72,12 @@ def mock_app(mock_test_data):
             
         return app
 
+
 @pytest.fixture
 def test_client(mock_app):
     """Create a test client for the Flask app"""
     return mock_app.test_client()
+
 
 @pytest.fixture
 def mock_file_content():
@@ -111,6 +114,7 @@ def mock_file_content():
         "podcast_playlist.json": json.dumps(podcast_playlist_content)
     }
 
+
 def test_app_initialization(mock_app):
     """Test that the app initializes correctly with config values"""
     assert 'DATA_DIR' in mock_app.config
@@ -121,6 +125,7 @@ def test_app_initialization(mock_app):
     assert mock_app.url_map.bind('example.com').match('/api/podcasts/') is not None
     assert mock_app.url_map.bind('example.com').match('/api/playlists/') is not None
     assert mock_app.url_map.bind('example.com').match('/api/episodes/0/') is not None
+
 
 def test_index_route(test_client):
     """Test the index route returns correct API information"""
@@ -135,6 +140,7 @@ def test_index_route(test_client):
     assert 'playlists' in data['endpoints']
     assert 'episodes' in data['endpoints']
 
+
 def test_not_found_error_handler(test_client):
     """Test the 404 error handler"""
     response = test_client.get('/non-existent-route')
@@ -143,11 +149,13 @@ def test_not_found_error_handler(test_client):
     assert 'error' in data
     assert data['error'] == 'Resource not found'
 
+
 def test_method_not_allowed_handler(test_client):
     """Test handling of unsupported HTTP methods"""
     # Try to POST to a GET-only endpoint
     response = test_client.post('/')
     assert response.status_code in [405, 404]  # Either method not allowed or not found is acceptable
+
 
 def test_static_factory_method():
     """Test the create_app_factory static method"""
@@ -170,6 +178,7 @@ def test_static_factory_method():
         assert 'podcast_list' in app.config
         assert 'podcast_playlist' in app.config
 
+
 def test_get_podcasts(test_client):
     """Test the podcasts endpoint"""
     with patch('zpodcast.core.podcasts.PodcastList.to_dict', return_value={"podcasts": []}):
@@ -177,6 +186,7 @@ def test_get_podcasts(test_client):
         assert response.status_code == 200
         data = response.get_json()
         assert 'podcasts' in data
+
 
 def test_get_playlists(test_client):
     """Test the playlists endpoint"""
@@ -186,16 +196,17 @@ def test_get_playlists(test_client):
         data = response.get_json()
         assert 'playlists' in data
 
+
 def test_file_loading():
     """Test that the app correctly loads files"""
     # Create mock file content
     mock_content = {
         "podcast_list.json": json.dumps({
-            "version": PodcastJSON.VERSION, 
+            "version": PodcastJSON.VERSION,
             "podcastlist": {"podcasts": []}
         }),
         "podcast_playlist.json": json.dumps({
-            "version": PodcastJSON.VERSION, 
+            "version": PodcastJSON.VERSION,
             "podcastplaylist": {"playlists": []}
         })
     }

@@ -2,6 +2,7 @@ import pytest
 from zpodcast.core.podcast import PodcastData
 from zpodcast.core.podcasts import PodcastList
 
+
 def test_add_podcast():
     podcast = PodcastData(
         title="Test Podcast",
@@ -15,6 +16,7 @@ def test_add_podcast():
     podcast_list = PodcastList([podcast])
     assert podcast_list.get_podcast(0) == podcast
 
+
 def test_add_podcast_object():
     podcast = PodcastData(
         title="Test Podcast",
@@ -27,21 +29,15 @@ def test_add_podcast_object():
     )
     
     with pytest.raises(ValueError):
-        podcast_list = PodcastList(podcast)
-    
+        # Using _ to indicate unused variable
+        _ = PodcastList(podcast)
+
+
 def test_add_podcast_object_int():
-    podcast = PodcastData(
-        title="Test Podcast",
-        podcast_url="http://example.com/podcast.rss",
-        host="John Doe",
-        description="This is a test podcast",
-        episodelists=[],
-        podcast_priority=5,
-        image_url="http://example.com/image.jpg"
-    )
-    
+    # The unused podcast variable is not needed for this test
     with pytest.raises(ValueError):
-        podcast_list = PodcastList(1)
+        # Using _ to indicate unused variable
+        _ = PodcastList(1)
 
 
 def test_remove_podcast():
@@ -69,6 +65,7 @@ def test_remove_podcast():
     assert len(podcast_list.podcasts) == 1
     assert podcast_list.podcasts[0] == podcast2
 
+
 def test_get_all_podcasts():
     podcast1 = PodcastData(
         title="Test Podcast 1",
@@ -93,6 +90,7 @@ def test_get_all_podcasts():
     assert len(all_podcasts) == 2
     assert all_podcasts[0] == podcast1
     assert all_podcasts[1] == podcast2
+
 
 def test_get_podcast():
     podcast1 = PodcastData(
@@ -119,13 +117,17 @@ def test_get_podcast():
     assert podcast == podcast1
 
     with pytest.raises(ValueError):
-        podcast = podcast_list.get_podcast(-1)
+        # Using _ to indicate unused variable
+        _ = podcast_list.get_podcast(-1)
 
     with pytest.raises(ValueError):
-        podcast = podcast_list.get_podcast(2)
+        # Using _ to indicate unused variable
+        _ = podcast_list.get_podcast(2)
 
     with pytest.raises(ValueError):
-        podcast = podcast_list.get_podcast("invalid")
+        # Using _ to indicate unused variable
+        _ = podcast_list.get_podcast("invalid")
+
 
 def test_podcastlist_to_dict():
     podcast1 = PodcastData(
@@ -175,6 +177,7 @@ def test_podcastlist_to_dict():
     #     ]
     # }
 
+
 def test_podcastlist_from_dict():
     podcast_list_dict = {
         "podcasts": [
@@ -202,6 +205,7 @@ def test_podcastlist_from_dict():
     assert len(podcast_list.podcasts) == 2
     assert podcast_list.podcasts[0].title == "Test Podcast 1"
     assert podcast_list.podcasts[1].title == "Test Podcast 2"
+
 
 def test_delete_podcast():
     """Test deleting a podcast by index"""
@@ -240,16 +244,17 @@ def test_delete_podcast():
     with pytest.raises(ValueError):
         podcast_list.delete_podcast("invalid")
 
+
 def test_update_podcast(mocker):
     """Test updating a podcast with new data"""
-    # Setup mocks to prevent actual RSS fetching
-    mock_get_episodes = mocker.patch('zpodcast.parsers.rss.RSSPodcastParser.get_episodes', return_value=[])
+    # Setup mocks to prevent actual RSS fetching - not directly used but needed for test
+    mocker.patch('zpodcast.parsers.rss.RSSPodcastParser.get_episodes', return_value=[])
     mock_get_metadata = mocker.patch('zpodcast.parsers.rss.RSSPodcastParser.get_rss_metadata')
     # Return proper metadata to maintain field values
     mock_get_metadata.side_effect = [
         {"author": "John Doe", "description": "This is a test podcast 1"},
         {"author": "Jane Doe", "description": "This is a test podcast 2"},
-        {"author": "Jane Doe", "description": "This is a test podcast 2"} # For the second podcast when it gets updated
+        {"author": "Jane Doe", "description": "This is a test podcast 2"}  # For the second podcast when it gets updated
     ]
     
     # Setup test podcast
@@ -304,6 +309,7 @@ def test_update_podcast(mocker):
     assert podcast_list.podcasts[1].host == "Jane Doe"
     assert podcast_list.podcasts[1].description == "This is a test podcast 2"
 
+
 def test_update_podcast_invalid_index():
     """Test updating a podcast with invalid index"""
     podcast = PodcastData(
@@ -329,12 +335,14 @@ def test_update_podcast_invalid_index():
     with pytest.raises(ValueError):
         podcast_list.update_podcast("not-a-number", {"title": "New Title"})
 
+
 def test_update_podcast_with_url_change(mocker):
     """Test updating a podcast's URL which should trigger episode refresh"""
     # Mock both RSS methods to prevent actual network calls
-    mock_get_episodes = mocker.patch('zpodcast.parsers.rss.RSSPodcastParser.get_episodes', return_value=[])
-    mock_get_metadata = mocker.patch('zpodcast.parsers.rss.RSSPodcastParser.get_rss_metadata', 
-                                    return_value={"author": "John Doe", "description": "Test description"})
+    # These mocks are necessary for the test setup but not directly used in assertions
+    mocker.patch('zpodcast.parsers.rss.RSSPodcastParser.get_episodes', return_value=[])
+    mocker.patch('zpodcast.parsers.rss.RSSPodcastParser.get_rss_metadata',
+                 return_value={"author": "John Doe", "description": "Test description"})
     
     # Create a separate mock specifically for testing the populate method call
     mock_populate = mocker.patch('zpodcast.core.podcast.PodcastData.populate_episodes_from_feed')
@@ -344,7 +352,7 @@ def test_update_podcast_with_url_change(mocker):
     podcast = PodcastData.__new__(PodcastData)
     podcast._title = "Test Podcast"
     podcast._podcast_url = "http://example.com/podcast.rss"
-    podcast._host = "John Doe" 
+    podcast._host = "John Doe"
     podcast._description = "This is a test podcast"
     podcast._episodelists = []
     podcast._podcast_priority = 5

@@ -5,6 +5,7 @@ from zpodcast.core.playlists import PodcastPlaylist
 from zpodcast.core.playlist import PodcastEpisodeList
 from zpodcast.core.episode import PodcastEpisode
 
+
 @pytest.fixture
 def test_playlist_data(mocker):
     """Create test playlist data for testing"""
@@ -37,6 +38,7 @@ def test_playlist_data(mocker):
         PodcastEpisodeList(name="Test Playlist 2", episodes=episodes2)
     ]
 
+
 @pytest.fixture
 def app(mocker, test_playlist_data):
     """Set up a Flask app with the playlists blueprint registered"""
@@ -46,20 +48,22 @@ def app(mocker, test_playlist_data):
     podcast_playlist = PodcastPlaylist(test_playlist_data)
     
     # Patch the get_instance method
-    mocker.patch('zpodcast.core.playlists.PodcastPlaylist.get_instance', 
-                return_value=podcast_playlist)
-    mocker.patch('zpodcast.api.blueprints.playlists.PodcastPlaylist.get_instance', 
-                return_value=podcast_playlist)
+    mocker.patch('zpodcast.core.playlists.PodcastPlaylist.get_instance',
+                 return_value=podcast_playlist)
+    mocker.patch('zpodcast.api.blueprints.playlists.PodcastPlaylist.get_instance',
+                 return_value=podcast_playlist)
     
     # Register blueprint
     app.register_blueprint(playlists_bp, url_prefix='/api/playlists')
     
     return app
 
+
 @pytest.fixture
 def client(app):
     """Create a test client for the Flask app"""
     return app.test_client()
+
 
 def test_get_playlists(client):
     """Test getting all playlists through the blueprint"""
@@ -71,6 +75,7 @@ def test_get_playlists(client):
     assert data['playlists'][0]['name'] == "Test Playlist 1"
     assert data['playlists'][1]['name'] == "Test Playlist 2"
 
+
 def test_get_playlist_by_id(client):
     """Test getting a specific playlist by ID through the blueprint"""
     response = client.get('/api/playlists/0/')  # First playlist
@@ -78,6 +83,7 @@ def test_get_playlist_by_id(client):
     data = response.get_json()
     assert data['name'] == "Test Playlist 1"
     assert len(data['episodes']) == 2
+
 
 def test_get_playlist_by_id_not_found(client):
     """Test getting a non-existent playlist ID through the blueprint"""
@@ -87,12 +93,13 @@ def test_get_playlist_by_id_not_found(client):
     assert 'error' in data
     assert data['error'] == "Playlist not found"
 
+
 def test_create_playlist(client, mocker, test_playlist_data):
     """Test creating a new playlist"""
     # Set up the test PodcastPlaylist as a mutable fixture that will be modified
     podcast_playlist = PodcastPlaylist(test_playlist_data.copy())
-    mocker.patch('zpodcast.api.blueprints.playlists.PodcastPlaylist.get_instance', 
-                return_value=podcast_playlist)
+    mocker.patch('zpodcast.api.blueprints.playlists.PodcastPlaylist.get_instance',
+                 return_value=podcast_playlist)
     
     new_playlist_data = {
         "name": "New Playlist"
@@ -103,6 +110,7 @@ def test_create_playlist(client, mocker, test_playlist_data):
     assert data['name'] == "New Playlist"
     assert 'episodes' in data
 
+
 def test_create_playlist_no_data(client):
     """Test creating a playlist with no data"""
     response = client.post('/api/playlists/', json={})
@@ -111,12 +119,13 @@ def test_create_playlist_no_data(client):
     assert 'error' in data
     assert data['error'] == "No data provided"
 
+
 def test_update_playlist(client, mocker, test_playlist_data):
     """Test updating a playlist"""
     # Set up the test PodcastPlaylist as a mutable fixture that will be modified
     podcast_playlist = PodcastPlaylist(test_playlist_data.copy())
-    mocker.patch('zpodcast.api.blueprints.playlists.PodcastPlaylist.get_instance', 
-                return_value=podcast_playlist)
+    mocker.patch('zpodcast.api.blueprints.playlists.PodcastPlaylist.get_instance',
+                 return_value=podcast_playlist)
     
     update_data = {
         "name": "Updated Playlist"
@@ -126,6 +135,7 @@ def test_update_playlist(client, mocker, test_playlist_data):
     data = response.get_json()
     assert data['name'] == "Updated Playlist"
 
+
 def test_update_playlist_no_data(client):
     """Test updating a playlist with no data"""
     response = client.put('/api/playlists/0/', json={})
@@ -134,14 +144,15 @@ def test_update_playlist_no_data(client):
     assert 'error' in data
     assert data['error'] == "No data provided"
 
+
 def test_delete_playlist(client, mocker, test_playlist_data):
     """Test removing a playlist"""
     # Create a fresh playlist for this test
     podcast_playlist = PodcastPlaylist(test_playlist_data.copy())
     
     # Create a consistent mock that will be used throughout the test
-    mock_get_instance = mocker.patch('zpodcast.api.blueprints.playlists.PodcastPlaylist.get_instance',
-                return_value=podcast_playlist)
+    mocker.patch('zpodcast.api.blueprints.playlists.PodcastPlaylist.get_instance',
+                 return_value=podcast_playlist)
     
     # First verify the playlist exists
     response = client.get('/api/playlists/0/')
@@ -165,6 +176,7 @@ def test_delete_playlist(client, mocker, test_playlist_data):
     data = response.get_json()
     assert len(data['playlists']) == 1
 
+
 def test_delete_playlist_not_found(client):
     """Test removing a non-existent playlist"""
     response = client.delete('/api/playlists/999/')
@@ -172,12 +184,13 @@ def test_delete_playlist_not_found(client):
     data = response.get_json()
     assert 'error' in data
 
+
 def test_add_episode_to_playlist(client, mocker, test_playlist_data):
     """Test adding an episode to a playlist"""
     # Set up the test PodcastPlaylist as a mutable fixture that will be modified
     podcast_playlist = PodcastPlaylist(test_playlist_data.copy())
-    mocker.patch('zpodcast.api.blueprints.playlists.PodcastPlaylist.get_instance', 
-                return_value=podcast_playlist)
+    mocker.patch('zpodcast.api.blueprints.playlists.PodcastPlaylist.get_instance',
+                 return_value=podcast_playlist)
     
     # Get the current playlist to compare after adding episode
     response = client.get('/api/playlists/0/')
@@ -197,6 +210,7 @@ def test_add_episode_to_playlist(client, mocker, test_playlist_data):
     assert len(data['episodes']) > original_episode_count
     assert any(episode['title'] == "New Episode" for episode in data['episodes'])
 
+
 def test_add_episode_to_playlist_no_data(client):
     """Test adding an episode to a playlist with no data"""
     response = client.post('/api/playlists/0/episodes/', json={})
@@ -205,12 +219,13 @@ def test_add_episode_to_playlist_no_data(client):
     assert 'error' in data
     assert data['error'] == "No data provided"
 
+
 def test_remove_episode_from_playlist(client, mocker, test_playlist_data):
     """Test removing an episode from a playlist"""
     # Set up the test PodcastPlaylist as a mutable fixture that will be modified
     podcast_playlist = PodcastPlaylist(test_playlist_data.copy())
-    mocker.patch('zpodcast.api.blueprints.playlists.PodcastPlaylist.get_instance', 
-                return_value=podcast_playlist)
+    mocker.patch('zpodcast.api.blueprints.playlists.PodcastPlaylist.get_instance',
+                 return_value=podcast_playlist)
     
     # Get the current playlist to compare after removing episode
     response = client.get('/api/playlists/0/')
@@ -223,6 +238,7 @@ def test_remove_episode_from_playlist(client, mocker, test_playlist_data):
     assert response.status_code == 200
     data = response.get_json()
     assert len(data['episodes']) < original_episode_count
+
 
 def test_remove_episode_from_playlist_not_found(client):
     """Test removing a non-existent episode from a playlist"""

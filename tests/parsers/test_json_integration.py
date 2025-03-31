@@ -10,6 +10,7 @@ from zpodcast.core.episode import PodcastEpisode
 
 # This file contains integration tests that interact with the filesystem
 
+
 @pytest.fixture
 def sample_podcast_list():
     podcastepisodelist = PodcastEpisodeList(name="Test podcast Episode List", episodes=[
@@ -37,6 +38,7 @@ def sample_podcast_list():
     )
     return PodcastList([podcast1, podcast2])
 
+
 @pytest.fixture
 def sample_playlist():
     episodes1 = PodcastEpisodeList(name="Test playList 1", episodes=[
@@ -50,6 +52,7 @@ def sample_playlist():
     ])
     return PodcastPlaylist([episodes1, episodes2])
 
+
 def test_export_podcast_list(sample_podcast_list):
     filename = "tests/data/test_podcast_list.json"
     
@@ -62,12 +65,14 @@ def test_export_podcast_list(sample_podcast_list):
         assert "podcastlist" in data
         os.remove(filename)
 
+
 def test_import_podcast_list(sample_podcast_list):
     filename = "tests/data/test_podcast_list.json"
     PodcastJSON.export_podcast_list(sample_podcast_list, filename)
     imported_podcast_list = PodcastJSON.import_podcast_list(filename)
     assert imported_podcast_list.to_dict() == sample_podcast_list.to_dict()
     os.remove(filename)
+
 
 def test_export_podcast_playlist(sample_playlist):
     filename = "tests/data/test_podcast_playlist.json"
@@ -78,6 +83,7 @@ def test_export_podcast_playlist(sample_playlist):
         assert data["version"] == "0.1"
         assert "podcastplaylist" in data
         os.remove(filename)
+
 
 def test_import_podcast_playlist(sample_playlist):
     filename = "tests/data/test_podcast_playlist.json"

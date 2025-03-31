@@ -7,6 +7,7 @@ from zpodcast.core.episode import PodcastEpisode
 from zpodcast.core.playlist import PodcastEpisodeList
 from datetime import datetime, timedelta
 
+
 @pytest.fixture
 def test_episode_data():
     """Create test episode data for testing"""
@@ -32,15 +33,16 @@ def test_episode_data():
         )
     ]
 
+
 @pytest.fixture
 def test_podcast_data(mocker, test_episode_data):
     """Create test podcast data with episodes for testing"""
     # Mock RSSPodcastParser to prevent actual RSS fetching
     mocker.patch('zpodcast.parsers.rss.RSSPodcastParser.get_episodes', return_value=[])
     mocker.patch('zpodcast.parsers.rss.RSSPodcastParser.get_rss_metadata', return_value={
-        "title": "Test Podcast", 
-        "description": "This is a test podcast", 
-        "author": "Test Author", 
+        "title": "Test Podcast",
+        "description": "This is a test podcast",
+        "author": "Test Author",
         "image": "http://example.com/image.jpg"
     })
     
@@ -66,15 +68,16 @@ def test_podcast_data(mocker, test_episode_data):
         )
     ]
 
+
 @pytest.fixture
 def empty_podcast_data(mocker):
     """Create test podcast data with no episodes for testing"""
     # Mock RSSPodcastParser to prevent actual RSS fetching
     mocker.patch('zpodcast.parsers.rss.RSSPodcastParser.get_episodes', return_value=[])
     mocker.patch('zpodcast.parsers.rss.RSSPodcastParser.get_rss_metadata', return_value={
-        "title": "Empty Podcast", 
-        "description": "This is a podcast with no episodes", 
-        "author": "Test Author", 
+        "title": "Empty Podcast",
+        "description": "This is a podcast with no episodes",
+        "author": "Test Author",
         "image": "http://example.com/image.jpg"
     })
     
@@ -99,6 +102,7 @@ def empty_podcast_data(mocker):
         )
     ]
 
+
 @pytest.fixture
 def app(mocker, test_podcast_data, empty_podcast_data):
     """Set up a Flask app with the episodes blueprint registered"""
@@ -109,20 +113,22 @@ def app(mocker, test_podcast_data, empty_podcast_data):
     podcast_list = PodcastList(combined_podcasts)
     
     # Mock the get_instance method
-    mocker.patch('zpodcast.core.podcasts.PodcastList.get_instance', 
-                return_value=podcast_list)
-    mocker.patch('zpodcast.api.blueprints.episodes.PodcastList.get_instance', 
-                return_value=podcast_list)
+    mocker.patch('zpodcast.core.podcasts.PodcastList.get_instance',
+                 return_value=podcast_list)
+    mocker.patch('zpodcast.api.blueprints.episodes.PodcastList.get_instance',
+                 return_value=podcast_list)
     
     # Register blueprint
     app.register_blueprint(episodes_bp, url_prefix='/api/episodes')
     
     return app
 
+
 @pytest.fixture
 def client(app):
     """Create a test client for the Flask app"""
     return app.test_client()
+
 
 def test_get_episodes(client):
     """Test getting all episodes for a podcast"""
@@ -134,6 +140,7 @@ def test_get_episodes(client):
     assert data['episodes'][0]['title'] == "Test Episode 1"
     assert data['episodes'][1]['title'] == "Test Episode 2"
 
+
 def test_get_episodes_podcast_not_found(client):
     """Test getting episodes for a non-existent podcast"""
     response = client.get('/api/episodes/999/')
@@ -141,6 +148,7 @@ def test_get_episodes_podcast_not_found(client):
     data = response.get_json()
     assert 'error' in data
     assert data['error'] == 'Podcast not found'
+
 
 def test_get_episode(client):
     """Test getting a specific episode"""
@@ -152,6 +160,7 @@ def test_get_episode(client):
     assert data['duration'] == 1800
     assert data['episode_number'] == 1
 
+
 def test_get_episode_podcast_not_found(client):
     """Test getting an episode from a non-existent podcast"""
     response = client.get('/api/episodes/999/0/')
@@ -159,6 +168,7 @@ def test_get_episode_podcast_not_found(client):
     data = response.get_json()
     assert 'error' in data
     assert data['error'] == 'Podcast not found'
+
 
 def test_get_episode_not_found(client):
     """Test getting a non-existent episode"""
@@ -168,6 +178,7 @@ def test_get_episode_not_found(client):
     assert 'error' in data
     assert data['error'] == 'Episode not found'
 
+
 def test_get_episodes_invalid_podcast_id(client):
     """Test error handling when a non-integer podcast ID is provided"""
     response = client.get('/api/episodes/invalid/')
@@ -175,6 +186,7 @@ def test_get_episodes_invalid_podcast_id(client):
     data = response.get_json()
     assert 'error' in data
     assert data['error'] == 'Podcast not found'
+
 
 def test_get_episode_invalid_podcast_id(client):
     """Test error handling when a non-integer podcast ID is provided"""
@@ -184,6 +196,7 @@ def test_get_episode_invalid_podcast_id(client):
     assert 'error' in data
     assert data['error'] == 'Podcast not found'
 
+
 def test_get_episode_invalid_episode_id(client):
     """Test error handling when a non-integer episode ID is provided"""
     response = client.get('/api/episodes/0/invalid/')
@@ -191,6 +204,7 @@ def test_get_episode_invalid_episode_id(client):
     data = response.get_json()
     assert 'error' in data
     assert data['error'] == 'Episode not found'
+
 
 def test_get_empty_podcast_episodes(client):
     """Test getting episodes from a podcast with no episodes"""
@@ -200,6 +214,7 @@ def test_get_empty_podcast_episodes(client):
     assert 'episodes' in data
     assert len(data['episodes']) == 0
 
+
 def test_comprehensive_episode_fields(client):
     """Test that all episode fields are properly returned"""
     response = client.get('/api/episodes/0/0/')
@@ -208,7 +223,7 @@ def test_comprehensive_episode_fields(client):
     
     # Check all expected fields are present
     expected_fields = [
-        'title', 'audio_url', 'description', 'pub_date', 
+        'title', 'audio_url', 'description', 'pub_date',
         'duration', 'episode_number', 'image_url'
     ]
     for field in expected_fields:
