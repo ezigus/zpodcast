@@ -212,7 +212,7 @@ def test_podcastepisode_pub_date_incompletedatetime():
 
 
 """
-testing that the audio URL is properly set and formatted
+Tests to verify the image url is actually valid and set correctly
 """
 
 

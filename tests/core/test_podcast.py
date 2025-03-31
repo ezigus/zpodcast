@@ -1,10 +1,8 @@
 import pytest
-from unittest.mock import patch
 import dataclasses
 from zpodcast.core.podcast import PodcastData
 from zpodcast.core.playlist import PodcastEpisodeList
 from zpodcast.core.episode import PodcastEpisode
-from datetime import date
 
 
 # Use snake_case for constants and variables as per PEP 8
@@ -28,24 +26,28 @@ def mocked_rssepisodemethods(mocker):
     Creates mocks for get_episodes and get_rss_metadata methods.
     """
     mocker.patch('zpodcast.parsers.rss.RSSPodcastParser.get_episodes', return_value=[episode1, episode2])
-    mocker.patch('zpodcast.parsers.rss.RSSPodcastParser.get_rss_metadata', 
-                 return_value={"title": f"{L_TITLE}", 
-                               "description": f"{L_DESCRIPTION}", 
-                               "author": f"{L_HOST}", 
+    mocker.patch('zpodcast.parsers.rss.RSSPodcastParser.get_rss_metadata',
+                 return_value={"title": f"{L_TITLE}",
+                               "description": f"{L_DESCRIPTION}",
+                               "author": f"{L_HOST}",
                                "image": f"{L_IMAGE_URL}"})
 
 
 """
 Tests to validate that the class is a dataclass
 """
+
+
 def test_podcastdata_is_dataclass():
     """Test that PodcastData is a dataclass."""
-    assert dataclasses.is_dataclass(PodcastData) 
+    assert dataclasses.is_dataclass(PodcastData)
 
 
 """
 Testing title attribute
 """
+
+
 def test_title():
     """Test that title is set correctly."""
     podcast_data = PodcastData(
@@ -64,7 +66,8 @@ def test_title():
 def test_notitle():
     """Test that title is required."""
     with pytest.raises(TypeError):
-        podcast_data = PodcastData(
+        # Using _ to indicate unused variable
+        _ = PodcastData(
             podcast_url="http://example.com/podcast.rss",
             host=L_HOST,
             description=L_DESCRIPTION,
@@ -77,7 +80,8 @@ def test_notitle():
 def test_title_int():
     """Test that title must be a string."""
     with pytest.raises(ValueError, match="^Invalid title$"):
-        podcast_data = PodcastData(
+        # Using _ to indicate unused variable
+        _ = PodcastData(
             title=5,
             podcast_url=L_PODCAST_URL,
             host=L_HOST,
@@ -91,6 +95,8 @@ def test_title_int():
 """
 Tests for podcast url
 """
+
+
 def test_podcast_url_valid():
     """Test that podcast_url is set correctly."""
     podcast_data = PodcastData(
@@ -104,12 +110,13 @@ def test_podcast_url_valid():
     )
 
     assert podcast_data.podcast_url == L_PODCAST_URL  # Podcast URL is set correctly
-    
+
 
 def test_podcast_url_invalid_int():
     """Test that podcast_url must be a string, not an integer."""
     with pytest.raises(ValueError, match="^Invalid podcast URL$"):
-        podcast_data = PodcastData(
+        # Using _ to indicate unused variable
+        _ = PodcastData(
             title=L_TITLE,
             podcast_url=5,
             host=L_HOST,
@@ -123,7 +130,8 @@ def test_podcast_url_invalid_int():
 def test_podcast_url_invalid_none():
     """Test that podcast_url cannot be None."""
     with pytest.raises(ValueError, match="^Invalid podcast URL$"):
-        podcast_data = PodcastData(
+        # Using _ to indicate unused variable
+        _ = PodcastData(
             title=L_TITLE,
             podcast_url=None,
             host=L_HOST,
@@ -137,7 +145,8 @@ def test_podcast_url_invalid_none():
 def test_podcast_url_invalid_empty():
     """Test that podcast_url cannot be empty."""
     with pytest.raises(ValueError, match="^Invalid podcast URL$"):
-        podcast_data = PodcastData(
+        # Using _ to indicate unused variable
+        _ = PodcastData(
             title=L_TITLE,
             podcast_url="",
             host=L_HOST,
@@ -151,7 +160,8 @@ def test_podcast_url_invalid_empty():
 def test_podcast_url_invalid_url():
     """Test that podcast_url must be a valid URL."""
     with pytest.raises(ValueError, match="^Invalid podcast URL$"):
-        podcast_data = PodcastData(
+        # Using _ to indicate unused variable
+        _ = PodcastData(
             title=L_TITLE,
             podcast_url="invalid",
             host=L_HOST,
@@ -165,6 +175,8 @@ def test_podcast_url_invalid_url():
 """
 Test host attribute
 """
+
+
 def test_host_valid(mocked_rssepisodemethods):
     """Test that host is set correctly."""
     podcast_data = PodcastData(
@@ -227,6 +239,8 @@ def test_host_invalid_empty():
 """
 Test description attribute
 """
+
+
 def test_description_valid(mocked_rssepisodemethods):
     """Test that description is set correctly."""
     podcast_data = PodcastData(
@@ -253,7 +267,7 @@ def test_description_invalid_int(mocked_rssepisodemethods):
         podcast_priority=5,
         image_url=L_IMAGE_URL
     )
-    assert podcast_data.description == f"{L_DESCRIPTION}"  
+    assert podcast_data.description == f"{L_DESCRIPTION}"
 
 
 def test_description_invalid_none(mocked_rssepisodemethods):
@@ -271,9 +285,11 @@ def test_description_invalid_none(mocked_rssepisodemethods):
     assert podcast_data.description == f"{L_DESCRIPTION}"
 
 
-""" 
-Testing the clamp_priority method 
 """
+Testing the clamp_priority method
+"""
+
+
 def test_priority_valid():
     """Test that a valid priority remains unchanged."""
     podcast_data = PodcastData(
@@ -299,7 +315,6 @@ def test_priority_invalid_high():
         podcast_priority=25,
         image_url=L_IMAGE_URL
     )
-    
     assert podcast_data.podcast_priority == 10  # Priority should be clamped to 10
 
 
@@ -313,7 +328,7 @@ def test_priority_invalid_low():
         episodelists=episodelists,
         podcast_priority=-25,
         image_url=L_IMAGE_URL
-    )    
+    )
     assert podcast_data.podcast_priority == -10  # Priority should be clamped to -10
 
 
@@ -326,13 +341,15 @@ def test_priority_invalid_value():
         description=L_DESCRIPTION,
         podcast_priority="invalid",
         image_url=L_IMAGE_URL
-    )    
+    )
     assert podcast_data.podcast_priority == 0  # Priority should be set to 0
 
 
 """
 Testing episodes attributes are set correctly
 """
+
+
 def test_podcast_episodes_valid(mocked_rssepisodemethods):
     """Test that episodes are set correctly when valid."""
     podcast_data = PodcastData(
@@ -407,8 +424,6 @@ def test_podcast_episodes_invalid_string(mocked_rssepisodemethods):
         podcast_priority=5,
         image_url=L_IMAGE_URL
     )
-    
-    # Episodes should be set to what was found in the rss podcast episode list 
     assert podcast_data.episodelists[0].name == f"{L_TITLE} episode list"
     assert podcast_data.episodelists[0].get_episodes() == episodelists[0].get_episodes()
 
@@ -416,6 +431,8 @@ def test_podcast_episodes_invalid_string(mocked_rssepisodemethods):
 """
 Testing the validate_image_url method
 """
+
+
 def test_image_url():
     """Test that image_url is set correctly."""
     podcast_data = PodcastData(
@@ -447,7 +464,7 @@ def test_to_dict(mocked_rssepisodemethods):
     )
     
     podcast_dict = podcast1.to_dict()
-  
+    
     assert podcast_dict.get("title") == podcast1.title
     assert podcast_dict.get("podcast_url") == podcast1.podcast_url
     assert podcast_dict.get("host") == podcast1.host
@@ -468,10 +485,11 @@ def test_from_dict():
         "podcast_priority": 5,
         "image_url": L_IMAGE_URL
     }
-    podcast_data = PodcastData.from_dict(podcast_dict)
+    # Using _ to indicate variable is used in commented out code
+    _ = PodcastData.from_dict(podcast_dict)
 
 # this is broken and I am commenting out until I get the logic fixed for when the object is created
-# TODO: fix the logic for when podcast_data is created, to not blow away the episode list if there is some episodes already there.    
+# TODO: fix the logic for when podcast_data is created, to not blow away the episode list if there is some episodes already there.
 #    assert podcast_data.to_dict() == podcast_dict
 
 # TODO: determine why these tests are all commented out
@@ -511,7 +529,7 @@ def test_name_set_manually():
         image_url=L_IMAGE_URL,
         name_set_manually=True
     )
-    assert podcast_data.name_set_manually == False
+    assert podcast_data.name_set_manually is False
 
 
 def test_update_podcast_list_name_if_empty():
@@ -528,7 +546,7 @@ def test_update_podcast_list_name_if_empty():
     )
     podcast_data.populate_episodes_from_feed()
     assert podcast_data.episodelists[0].name == f"{L_TITLE} episode list"
-    assert podcast_data.name_set_manually == False
+    assert podcast_data.name_set_manually is False
 
 
 def test_update_podcast_list_name_if_set_manually():
@@ -545,4 +563,4 @@ def test_update_podcast_list_name_if_set_manually():
     )
     podcast_data.populate_episodes_from_feed()
     assert podcast_data.episodelists[0].name == f"{L_TITLE} episode list"
-    assert podcast_data.name_set_manually == False
+    assert podcast_data.name_set_manually is False
