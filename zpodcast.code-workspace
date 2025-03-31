@@ -7,6 +7,11 @@
 	"settings": {
 		"cSpell.words": [
 			"zpodcast"
-		]
+		],
+		"files.exclude": {
+			"**/.pytest_cache": true,
+			"**/.venv": true,
+			"**/node_modules": true
+		}
 	}
 }
