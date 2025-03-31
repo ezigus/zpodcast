@@ -121,8 +121,6 @@ def test_swagger_response_codes(client):
 def test_swagger_implementation_consistency(client):
     """Test that the implementation matches what is documented in Swagger"""
     # This test requires more advanced setup to introspect Flask routes
-    from zpodcast.api.blueprints.podcasts import podcasts_bp
-    from flask import current_app
     
     # First get the Swagger JSON
     response = client.get('/apispec_1.json')

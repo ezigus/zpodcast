@@ -202,11 +202,11 @@ def test_file_loading():
     # Create mock file content
     mock_content = {
         "podcast_list.json": json.dumps({
-            "version": PodcastJSON.VERSION, 
+            "version": PodcastJSON.VERSION,
             "podcastlist": {"podcasts": []}
         }),
         "podcast_playlist.json": json.dumps({
-            "version": PodcastJSON.VERSION, 
+            "version": PodcastJSON.VERSION,
             "podcastplaylist": {"playlists": []}
         })
     }

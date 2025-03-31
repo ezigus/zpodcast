@@ -1,4 +1,3 @@
-import json
 import pytest
 from unittest.mock import patch, mock_open
 from zpodcast.parsers.json import PodcastJSON

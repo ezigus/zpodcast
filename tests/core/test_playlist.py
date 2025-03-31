@@ -2,7 +2,6 @@ import pytest
 from datetime import date
 from zpodcast.core.playlist import PodcastEpisodeList
 from zpodcast.core.episode import PodcastEpisode
-from zpodcast.core.podcast import PodcastData
 
 
 def test_add_podcastepisode():
@@ -160,7 +159,7 @@ def test_get_episodes_invalid_indices():
     episode3 = PodcastEpisode(title="Episode 3", audio_url="https://example.com/episode3.mp3", duration=5400)
     playlist = PodcastEpisodeList(name="Test Playlist", episodes=[episode1, episode2, episode3])
     with pytest.raises(ValueError):
-        episodes = playlist.get_episodes(["a"])
+        playlist.get_episodes(["a"])
 
 
 def test_get_episodes_any_order():
@@ -182,7 +181,7 @@ def test_get_episodes_too_low():
     episode3 = PodcastEpisode(title="Episode 3", audio_url="https://example.com/episode3.mp3", duration=5400)
     playlist = PodcastEpisodeList(name="Test Playlist", episodes=[episode1, episode2, episode3])
     with pytest.raises(ValueError):
-        episodes = playlist.get_episodes([-1, 2, 0])
+        playlist.get_episodes([-1, 2, 0])
 
 
 def test_get_episodes_too_high():
@@ -191,7 +190,7 @@ def test_get_episodes_too_high():
     episode3 = PodcastEpisode(title="Episode 3", audio_url="https://example.com/episode3.mp3", duration=5400)
     playlist = PodcastEpisodeList(name="Test Playlist", episodes=[episode1, episode2, episode3])
     with pytest.raises(ValueError):
-        episodes = playlist.get_episodes([1, 3, 0])
+        playlist.get_episodes([1, 3, 0])
 
 
 def test_from_dict_valid():

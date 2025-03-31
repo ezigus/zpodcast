@@ -367,7 +367,7 @@ def test_update_podcast_not_found(client, mocker):
     Test updating a non-existent podcast.
     
     This test verifies that the PUT /<podcast_id>/ endpoint properly
-    returns a 400 error with appropriate message when attempting to 
+    returns a 400 error with appropriate message when attempting to
     update a podcast that doesn't exist.
     
     Args:
