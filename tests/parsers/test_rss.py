@@ -1,5 +1,5 @@
 import pytest
-from unittest.mock import patch, MagicMock
+from unittest.mock import patch
 from zpodcast.parsers.rss import RSSPodcastParser
 from zpodcast.core.podcast import PodcastData
 from zpodcast.core.episode import PodcastEpisode
@@ -33,9 +33,9 @@ def mock_feedparser():
         yield mock_parse
 
 
-def test_get_episodes_success(mock_feedparser):
+def test_get_episodes_success(mocker, mock_feedparser):
     # Mock feed data
-    mock_feed = MagicMock()
+    mock_feed = mocker.Mock()
     mock_feed.bozo = False
     mock_feed.entries = [
         {
@@ -72,9 +72,9 @@ def test_get_episodes_success(mock_feedparser):
     assert episodes[1].duration == 5400  # 1:30:00 in seconds
 
 
-def test_get_episodes_with_different_duration_formats(mock_feedparser):
+def test_get_episodes_with_different_duration_formats(mocker, mock_feedparser):
     # Mock feed data with different duration formats
-    mock_feed = MagicMock()
+    mock_feed = mocker.Mock()
     mock_feed.bozo = False
     mock_feed.entries = [
         {
@@ -103,9 +103,9 @@ def test_get_episodes_with_different_duration_formats(mock_feedparser):
     assert episodes[1].duration == 3600  # 3600 seconds
 
 
-def test_get_episodes_with_feed_error(mock_feedparser):
+def test_get_episodes_with_feed_error(mocker, mock_feedparser):
     # Mock feed with parsing error
-    mock_feed = MagicMock()
+    mock_feed = mocker.Mock()
     mock_feed.bozo = True
     mock_feed.bozo_exception = "Invalid XML"
     mock_feedparser.return_value = mock_feed
@@ -114,9 +114,9 @@ def test_get_episodes_with_feed_error(mock_feedparser):
     assert len(episodes) == 0
 
 
-def test_get_episodes_with_entry_error(mock_feedparser):
+def test_get_episodes_with_entry_error(mocker, mock_feedparser):
     # Mock feed with invalid entry
-    mock_feed = MagicMock()
+    mock_feed = mocker.Mock()
     mock_feed.bozo = False
     mock_feed.entries = [
         {
@@ -140,9 +140,9 @@ def test_get_episodes_with_entry_error(mock_feedparser):
     assert episodes[0].title == 'Valid Episode'
 
 
-def test_get_rss_metadata_success(mock_feedparser):
+def test_get_rss_metadata_success(mocker, mock_feedparser):
     # Mock feed data
-    mock_feed = MagicMock()
+    mock_feed = mocker.Mock()
     mock_feed.bozo = False
     mock_feed.feed = {
         'title': 'Test Podcast',
@@ -160,9 +160,9 @@ def test_get_rss_metadata_success(mock_feedparser):
     assert metadata['image'] == 'https://example.com/podcast.jpg'
 
 
-def test_get_rss_metadata_with_feed_error(mock_feedparser):
+def test_get_rss_metadata_with_feed_error(mocker, mock_feedparser):
     # Mock feed with parsing error
-    mock_feed = MagicMock()
+    mock_feed = mocker.Mock()
     mock_feed.bozo = True
     mock_feed.bozo_exception = "Invalid XML"
     mock_feedparser.return_value = mock_feed
