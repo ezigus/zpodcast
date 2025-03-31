@@ -1,16 +1,18 @@
 from flask import Blueprint, jsonify, request
 from zpodcast.core.playlists import PodcastPlaylist
-from zpodcast.parsers.json import PodcastJSON
 from zpodcast.core.playlist import PodcastEpisodeList
 from zpodcast.core.episode import PodcastEpisode
 
+
 playlists_bp = Blueprint('playlists', __name__)
+
 
 @playlists_bp.route('/', methods=['GET'])
 def get_playlists():
     """Get all playlists"""
     playlist = PodcastPlaylist.get_instance()
     return jsonify(playlist.to_dict())
+
 
 @playlists_bp.route('/<playlist_id>/', methods=['GET'])
 def get_playlist(playlist_id):
@@ -27,6 +29,7 @@ def get_playlist(playlist_id):
     except (ValueError, IndexError):
         return jsonify({"error": "Playlist not found"}), 404
 
+
 @playlists_bp.route('/', methods=['POST'])
 def create_playlist():
     """Create a new playlist"""
@@ -42,6 +45,7 @@ def create_playlist():
         return jsonify(new_playlist.to_dict()), 201
     except ValueError as e:
         return jsonify({"error": str(e)}), 400
+
 
 @playlists_bp.route('/<playlist_id>/', methods=['PUT'])
 def update_playlist(playlist_id):
@@ -65,6 +69,7 @@ def update_playlist(playlist_id):
     except ValueError as e:
         return jsonify({"error": str(e)}), 400
 
+
 @playlists_bp.route('/<playlist_id>/', methods=['DELETE'])
 def delete_playlist(playlist_id):
     """Delete a playlist"""
@@ -80,6 +85,7 @@ def delete_playlist(playlist_id):
         return "", 204
     except ValueError:
         return jsonify({"error": "Playlist not found"}), 404
+
 
 @playlists_bp.route('/<playlist_id>/episodes/', methods=['POST'])
 def add_episode_to_playlist(playlist_id):
@@ -102,6 +108,7 @@ def add_episode_to_playlist(playlist_id):
         return jsonify(playlist.playlists[index].to_dict())
     except ValueError as e:
         return jsonify({"error": str(e)}), 400
+
 
 @playlists_bp.route('/<playlist_id>/episodes/<episode_id>/', methods=['DELETE'])
 def remove_episode_from_playlist(playlist_id, episode_id):

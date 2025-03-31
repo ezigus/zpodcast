@@ -1,12 +1,8 @@
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from datetime import datetime, date
-from typing import Optional, Union, Dict
+from typing import Optional, Union
 from email.utils import parsedate_to_datetime
 import validators
-import json
-import re
-from urllib.parse import urlparse
-
 
 
 @dataclass
@@ -18,7 +14,7 @@ class PodcastEpisode:
     _duration: Optional[str]
     _image_url: Optional[str]
     _episode_number: Optional[int]
-    #podcast_url: Optional[str] = None
+    # podcast_url: Optional[str] = None
     
     """
     initializes a podcast episode object with the following attributes:
@@ -32,16 +28,15 @@ class PodcastEpisode:
         image_url (Optional[str], optional): The URL of the image for the episode. Defaults to None.
     """
 
-    def __init__(self, title: str, 
-                audio_url: str, 
-                description: Optional[str] = "",
-                pub_date: Optional[Union[datetime,str]] = None,
-                duration: Optional[Union[int,str]] = None,
-                episode_number: Optional[int] = None,
-                image_url: Optional[str] = None,
-                guid: Optional[str] = None):
+    def __init__(self, title: str,
+                 audio_url: str,
+                 description: Optional[str] = "",
+                 pub_date: Optional[Union[datetime, str]] = None,
+                 duration: Optional[Union[int, str]] = None,
+                 episode_number: Optional[int] = None,
+                 image_url: Optional[str] = None,
+                 guid: Optional[str] = None):
         
-    
         self.title = title
         self.description = description
         self.audio_url = audio_url
@@ -50,7 +45,6 @@ class PodcastEpisode:
         self.episode_number = episode_number
         self.image_url = image_url
         self.guid = guid
-
 
     @property
     def audio_url(self) -> Optional[str]:
@@ -95,7 +89,6 @@ class PodcastEpisode:
     """
     @description.setter
     def description(self, value: str) -> None:
-
         if not isinstance(value, str):
             self._description = ""
         else:
@@ -124,24 +117,21 @@ class PodcastEpisode:
         if value is not None:
             if isinstance(value, datetime):
                 # if the value is a date object, set the publication date to the value
-                self._pub_date = value 
+                self._pub_date = value
             elif isinstance(value, date):
                 # if the value is a date object, set the publication date to the value
-                self._pub_date = value 
+                self._pub_date = value
             elif isinstance(value, str):
                 try:
                     # try parsing the string using the email.utils module
                     self._pub_date = parsedate_to_datetime(value)
-                except:
+                except Exception:
                     self._pub_date = date.today()
             else:
                 self._pub_date = date.today()
-        else: # if the value is None, set the publication date to today's date
+        else:  # if the value is None, set the publication date to today's date
             self._pub_date = date.today()
-        
 
-
-    
     """
     Get the duration of the episode in seconds.
 
@@ -192,8 +182,6 @@ class PodcastEpisode:
                 self._duration = None
         else:
             self._duration = None
-            
-            
     
     @property
     def episode_number(self) -> Optional[int]:
@@ -211,9 +199,6 @@ class PodcastEpisode:
                     self._episode_number = None
             else:
                 self._episode_number = None
-        
-       
-
 
     """
     setter and getter for the image_url for the podcast episode.

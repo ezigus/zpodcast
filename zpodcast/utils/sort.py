@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 from typing import List, Optional
 
+
 @dataclass
 class SortParameters:
     _episode_title: Optional[str]
@@ -9,8 +10,6 @@ class SortParameters:
     _episode_rating: Optional[float]
     _podcast_title: Optional[str]
     _podcast_author: Optional[str]
-
-
 
     @property
     def episode_title(self) -> Optional[str]:
@@ -93,7 +92,7 @@ class SortParameters:
     @podcast_category.setter
     def podcast_category(self, value: Optional[str]) -> None:
         self._podcast_category = value
-        
-    
+
+
 
 

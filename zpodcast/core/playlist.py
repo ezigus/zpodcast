@@ -4,15 +4,15 @@ from typing import List, Dict
 from zpodcast.core.episode import PodcastEpisode
 from zpodcast.parsers.rss import RSSPodcastParser
 
+
 @dataclass
 class PodcastEpisodeList:
     _name: str
     _episodes: List[PodcastEpisode]
     
     def __init__(self,
-                 name : str,
-                 episodes : List[PodcastEpisode]
-                 ):
+                 name: str,
+                 episodes: List[PodcastEpisode]):
         self.name = name
         self.episodes = episodes
     
@@ -42,8 +42,7 @@ class PodcastEpisodeList:
     @episodes.setter
     def episodes(self, episodes: List[PodcastEpisode]):
         self._episodes = episodes
-        
-        
+    
     def add_podcastepisode(self, episode: PodcastEpisode) -> None:
         self._episodes.append(episode)
 
@@ -129,29 +128,29 @@ class PodcastEpisodeList:
         episodes = []
         for episode_data in episodes_data:
             try:
-                episode = PodcastEpisode(title = episode_data.get("title"),
-                                         audio_url=episode_data.get("audio_url"),
-                                         description = episode_data.get("description"),
-                                         pub_date = episode_data.get("pub_date"),
-                                         duration = episode_data.get("duration"),
-                                         episode_number = episode_data.get("episode_number"),
-                                         image_url = episode_data.get("image_url"),
-                                         )
+                episode = PodcastEpisode(
+                    title=episode_data.get("title"),
+                    audio_url=episode_data.get("audio_url"),
+                    description=episode_data.get("description"),
+                    pub_date=episode_data.get("pub_date"),
+                    duration=episode_data.get("duration"),
+                    episode_number=episode_data.get("episode_number"),
+                    image_url=episode_data.get("image_url"),
+                )
                 episodes.append(episode)
             except TypeError as e:
                 raise ValueError(f"Invalid episode data: {e}")
             
-        podcastepisodelist = PodcastEpisodeList(name = name, episodes = episodes)
+        podcastepisodelist = PodcastEpisodeList(name=name, episodes=episodes)
         return podcastepisodelist
 
     def to_dict(self) -> Dict:
         podcastepisodelist_dict = {
             "name": self.name,
             "episodes": [episode.to_dict() for episode in self.episodes]
-            }
+        }
         return podcastepisodelist_dict
 
     def retrieve_episodes_from_rss(self, rss_feed_url: str) -> None:
         episodes = RSSPodcastParser.get_episodes(rss_feed_url)
         self.episodes.extend(episodes)
-        
