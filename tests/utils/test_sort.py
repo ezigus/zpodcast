@@ -1,6 +1,7 @@
 import pytest
 from zpodcast.utils.sort import SortParameters
 
+
 def test_sort_parameters_initialization():
     params = SortParameters(
         _episode_title=None,
@@ -16,6 +17,7 @@ def test_sort_parameters_initialization():
     assert params.episode_rating is None
     assert params.podcast_title is None
     assert params.podcast_author is None
+
 
 def test_episode_title_setter():
     params = SortParameters(
@@ -39,6 +41,7 @@ def test_episode_title_setter():
     with pytest.raises(ValueError):
         params.episode_title = "invalid"
 
+
 def test_episode_duration_setter():
     params = SortParameters(
         _episode_title=None,
@@ -60,6 +63,7 @@ def test_episode_duration_setter():
     # Test invalid value
     with pytest.raises(ValueError):
         params.episode_duration = "invalid"
+
 
 def test_episode_date_setter():
     params = SortParameters(
@@ -83,6 +87,7 @@ def test_episode_date_setter():
     with pytest.raises(ValueError):
         params.episode_date = "invalid"
 
+
 def test_episode_rating_setter():
     params = SortParameters(
         _episode_title=None,
@@ -104,6 +109,7 @@ def test_episode_rating_setter():
     # Test invalid value
     with pytest.raises(ValueError):
         params.episode_rating = "invalid"
+
 
 def test_podcast_title_setter():
     params = SortParameters(
@@ -127,6 +133,7 @@ def test_podcast_title_setter():
     with pytest.raises(ValueError):
         params.podcast_title = "invalid"
 
+
 def test_podcast_author_setter():
     params = SortParameters(
         _episode_title=None,
@@ -147,4 +154,4 @@ def test_podcast_author_setter():
     
     # Test invalid value
     with pytest.raises(ValueError):
-        params.podcast_author = "invalid" 
+        params.podcast_author = "invalid"

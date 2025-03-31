@@ -1,8 +1,8 @@
-import pytest
 from zpodcast.core.playlists import PodcastPlaylist
 from zpodcast.core.playlist import PodcastEpisodeList
 from zpodcast.core.episode import PodcastEpisode
 from datetime import date
+
 
 def test_add_playlist():
     playlist = PodcastEpisodeList(name="Test Playlist", episodes=[])
@@ -10,6 +10,7 @@ def test_add_playlist():
     podcast_playlist.add_playlist(playlist)
     assert len(podcast_playlist.playlists) == 1
     assert podcast_playlist.playlists[0] == playlist
+
 
 def test_remove_playlist():
     playlist1 = PodcastEpisodeList(name="Test Playlist 1", episodes=[])
@@ -19,12 +20,14 @@ def test_remove_playlist():
     assert len(podcast_playlist.playlists) == 1
     assert podcast_playlist.playlists[0] == playlist2
 
+
 def test_get_playlist():
     playlist1 = PodcastEpisodeList(name="Test Playlist 1", episodes=[])
     playlist2 = PodcastEpisodeList(name="Test Playlist 2", episodes=[])
     podcast_playlist = PodcastPlaylist(playlists=[playlist1, playlist2])
     playlist = podcast_playlist.get_playlist(1)
     assert playlist == playlist2
+
 
 def test_get_all_playlists():
     playlist1 = PodcastEpisodeList(name="Test Playlist 1", episodes=[])
@@ -34,6 +37,7 @@ def test_get_all_playlists():
     assert len(playlists) == 2
     assert playlists[0] == playlist1
     assert playlists[1] == playlist2
+
 
 def test_to_dict():
     episode1 = PodcastEpisode(title="Episode 1", audio_url="https://example.com/episode1.mp3")
@@ -74,6 +78,7 @@ def test_to_dict():
             }
         ]
     }
+
 
 def test_from_dict():
     podcast_playlist_dict = {

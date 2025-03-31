@@ -1,12 +1,13 @@
 import json
 import pytest
-from unittest.mock import patch, mock_open, MagicMock
+from unittest.mock import patch, mock_open
 from zpodcast.parsers.json import PodcastJSON
 from zpodcast.core.podcasts import PodcastList
 from zpodcast.core.playlists import PodcastPlaylist
 from zpodcast.core.podcast import PodcastData
 from zpodcast.core.playlist import PodcastEpisodeList
 from zpodcast.core.episode import PodcastEpisode
+
 
 @pytest.fixture
 def sample_podcast_list():
@@ -35,6 +36,7 @@ def sample_podcast_list():
     )
     return PodcastList([podcast1, podcast2])
 
+
 @pytest.fixture
 def sample_playlist():
     episodes1 = PodcastEpisodeList(name="Test playList 1", episodes=[
@@ -47,6 +49,7 @@ def sample_playlist():
         PodcastEpisode(title="Episode 4", audio_url="https://example.com/episode4.mp3")
     ])
     return PodcastPlaylist([episodes1, episodes2])
+
 
 @patch('zpodcast.parsers.json.open', new_callable=mock_open)
 @patch('json.dump')
@@ -64,6 +67,7 @@ def test_export_podcast_list_mock(mock_json_dump, mock_file, sample_podcast_list
     assert args[0]["version"] == "0.1"
     assert "podcastlist" in args[0]
     assert args[0]["podcastlist"] == sample_podcast_list.to_dict()
+
 
 @patch('zpodcast.parsers.json.open', new_callable=mock_open)
 @patch('json.load')
@@ -86,6 +90,7 @@ def test_import_podcast_list_mock(mock_json_load, mock_file, sample_podcast_list
     # Verify the result
     assert imported_podcast_list.to_dict() == sample_podcast_list.to_dict()
 
+
 @patch('zpodcast.parsers.json.open', new_callable=mock_open)
 @patch('json.dump')
 def test_export_podcast_playlist_mock(mock_json_dump, mock_file, sample_playlist):
@@ -102,6 +107,7 @@ def test_export_podcast_playlist_mock(mock_json_dump, mock_file, sample_playlist
     assert args[0]["version"] == "0.1"
     assert "podcastplaylist" in args[0]
     assert args[0]["podcastplaylist"] == sample_playlist.to_dict()
+
 
 @patch('zpodcast.parsers.json.open', new_callable=mock_open)
 @patch('json.load')
@@ -124,17 +130,20 @@ def test_import_podcast_playlist_mock(mock_json_load, mock_file, sample_playlist
     # Verify the result
     assert imported_playlist.to_dict() == sample_playlist.to_dict()
 
+
 def test_unsupported_version_podcast_list():
     with patch('zpodcast.parsers.json.open', new_callable=mock_open), \
          patch('json.load', return_value={"version": "0.2", "podcastlist": {}}):
         with pytest.raises(ValueError, match="Unsupported version"):
             PodcastJSON.import_podcast_list("test.json")
 
+
 def test_unsupported_version_podcast_playlist():
     with patch('zpodcast.parsers.json.open', new_callable=mock_open), \
          patch('json.load', return_value={"version": "0.2", "podcastplaylist": {}}):
         with pytest.raises(ValueError, match="Unsupported version"):
             PodcastJSON.import_podcast_playlist("test.json")
+
 
 def test_default_filename_podcast_list(sample_podcast_list):
     with patch('zpodcast.parsers.json.open', new_callable=mock_open) as mock_file, \
@@ -143,6 +152,7 @@ def test_default_filename_podcast_list(sample_podcast_list):
         
         # Check that the default filename was used
         mock_file.assert_called_once_with(f"PodcastList-{PodcastJSON.VERSION}.json", 'w')
+
 
 def test_default_filename_podcast_playlist(sample_playlist):
     with patch('zpodcast.parsers.json.open', new_callable=mock_open) as mock_file, \

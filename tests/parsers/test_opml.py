@@ -1,5 +1,5 @@
-import pytest
 from zpodcast.parsers.opml import parse_opml_file
+
 
 def test_parse_opml_file():
     file_path = "tests/data/unit.opml"
@@ -27,10 +27,9 @@ def test_parse_opml_file():
             "rss_url": "http://feeds.theincomparable.com/tvtm",
             "type": "rss"
         },        
-                {
+        {
             "title": "TV Talk Machine5",
             "rss_url": "http://feeds.theincomparable.com/tvtm",
             "type": "rss"
         },
-        
     ]

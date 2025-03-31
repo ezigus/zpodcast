@@ -2,19 +2,19 @@ import pytest
 import os
 import tempfile
 import shutil
-import json
 from flask import jsonify
 from zpodcast.api.app import zPodcastApp
 from zpodcast.core.podcasts import PodcastList, PodcastData
 from zpodcast.core.playlists import PodcastPlaylist
-from zpodcast.core.playlist import PodcastEpisodeList
 from zpodcast.parsers.json import PodcastJSON
 from unittest.mock import patch
+
 
 @pytest.fixture
 def test_data_dir():
     """Get the path to the test data directory"""
     return os.path.join(os.path.dirname(os.path.dirname(__file__)), 'data')
+
 
 @pytest.fixture
 def temp_data_dir():
@@ -35,6 +35,7 @@ def temp_data_dir():
     # Clean up the temporary directory
     shutil.rmtree(temp_dir)
 
+
 @pytest.fixture
 def mock_rss_calls():
     """Mock the RSS-related calls to prevent external network requests"""
@@ -42,6 +43,7 @@ def mock_rss_calls():
     with patch('zpodcast.parsers.rss.RSSPodcastParser.get_episodes', return_value=[]), \
          patch('zpodcast.parsers.rss.RSSPodcastParser.get_rss_metadata', return_value={}):
         yield
+
 
 @pytest.fixture
 def real_app(test_data_dir, mock_rss_calls):
@@ -65,10 +67,12 @@ def real_app(test_data_dir, mock_rss_calls):
     
     return app
 
+
 @pytest.fixture
 def real_client(real_app):
     """Create a test client for the Flask app with real data"""
     return real_app.test_client()
+
 
 @pytest.fixture
 def modifiable_app(temp_data_dir, mock_rss_calls):
@@ -92,10 +96,12 @@ def modifiable_app(temp_data_dir, mock_rss_calls):
     
     return app
 
+
 @pytest.fixture
 def modifiable_client(modifiable_app):
     """Create a test client for the Flask app with modifiable data"""
     return modifiable_app.test_client()
+
 
 def test_real_app_initialization(real_app, test_data_dir):
     """Test that the app initializes correctly with real files"""
@@ -107,6 +113,7 @@ def test_real_app_initialization(real_app, test_data_dir):
     # Verify the objects were properly loaded from files
     assert isinstance(real_app.config['podcast_list'], PodcastList)
     assert isinstance(real_app.config['podcast_playlist'], PodcastPlaylist)
+
 
 def test_app_loads_correct_podcast_data(real_app):
     """Test that the app loads the correct podcast data from files"""
@@ -121,6 +128,7 @@ def test_app_loads_correct_podcast_data(real_app):
     assert isinstance(first_podcast.title, str)
     assert isinstance(first_podcast.podcast_url, str)
 
+
 def test_app_loads_correct_playlist_data(real_app):
     """Test that the app loads the correct playlist data from files"""
     playlist = real_app.config['podcast_playlist']
@@ -130,6 +138,7 @@ def test_app_loads_correct_playlist_data(real_app):
     assert hasattr(playlist, 'playlists')
     
     # Note: The actual number of playlists might vary depending on test data
+
 
 def test_api_endpoints_with_real_data(real_client):
     """Test the API endpoints with real data"""
@@ -144,6 +153,7 @@ def test_api_endpoints_with_real_data(real_client):
     assert response.status_code == 200
     data = response.get_json()
     assert 'playlists' in data
+
 
 def test_modified_data_persistence(temp_data_dir, mock_rss_calls):
     """Test that modified data can be correctly saved and loaded"""
