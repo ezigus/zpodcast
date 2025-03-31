@@ -17,6 +17,7 @@ This document outlines the coding standards and practices to follow when contrib
 - [API Documentation Requirements](#api-documentation-requirements)
 - [Project Structure](#project-structure)
 - [Contribution Workflow](#contribution-workflow)
+- [Documentation Style Guide](#documentation-style-guide)
 
 ## Testing Guidelines
 
@@ -96,7 +97,8 @@ def test_podcast_data():
 
 ### PEP 8 Compliance
 
-All Python code should follow [PEP 8 - Style Guide for Python Code](https://peps.python.org/pep-0008/). Developers should refer to the official documentation for detailed guidelines.
+All Python code should follow [PEP 8 - Style Guide for Python Code](https://peps.python.org/pep-0008/).
+Developers should refer to the official documentation for detailed guidelines.
 
 Key aspects to emphasize in our codebase:
 
@@ -106,7 +108,7 @@ Key aspects to emphasize in our codebase:
 
 #### Line Length
 
-Maximum of 79 characters for code, 72 for docstrings/comments 
+Maximum of 79 characters for code, 72 for docstrings/comments
 
 #### Imports Organization
 
@@ -160,9 +162,10 @@ if not valid_url:
 
 ## Documentation Requirements
 
-#### Comprehensive Method Docstrings
+### Comprehensive Method Docstrings
 
 Every method must have a detailed docstring that includes:
+
 - A clear description of what the method does and why
 - All input parameters with their types and purpose
 - Return value descriptions with type information
@@ -185,9 +188,9 @@ def get_episodes(podcast_url: str) -> List[PodcastEpisode]:
     
     Returns:
         List[PodcastEpisode]: A list of PodcastEpisode objects representing
-                              each episode in the feed. Returns an empty list
-                              if the feed cannot be parsed or contains no valid
-                              episodes.
+                              each episode in the feed. Returns an empty 
+                              list if the feed cannot be parsed or contains 
+                              no valid episodes.
     
     Raises:
         ValueError: If the podcast_url is not a valid URL string.
@@ -199,9 +202,10 @@ def get_episodes(podcast_url: str) -> List[PodcastEpisode]:
     """
 ```
 
-#### Class Docstrings
+### Class Docstrings
 
 Each class should have a docstring that explains:
+
 - The purpose and responsibility of the class
 - Important attributes
 - Usage patterns
@@ -227,9 +231,10 @@ class PodcastData:
     """
 ```
 
-#### Module-Level Docstrings
+### Module-Level Docstrings
 
 Include a docstring at the top of each module file:
+
 ```python
 """
 Podcast RSS Feed Parser Module
@@ -247,6 +252,7 @@ Functions:
 #### Type Annotations
 
 Use Python type hints for all function parameters and return values:
+
 ```python
 def format_duration(seconds: int) -> str:
     """Formats a duration in seconds to a human-readable string."""
@@ -256,6 +262,7 @@ def format_duration(seconds: int) -> str:
 #### Constants Documentation
 
 Document constants and configuration values:
+
 ```python
 # Maximum priority value for podcasts (0-10 scale)
 MAX_PRIORITY = 10
@@ -264,9 +271,10 @@ MAX_PRIORITY = 10
 DEFAULT_TIMEOUT = 30
 ```
 
-#### Inline Comments for Complex Logic
+### Inline Comments for Complex Logic
 
 Add detailed inline comments to explain complex or non-obvious logic:
+
 ```python
 def parse_duration(duration_str: str) -> int:
     """Converts various duration string formats to seconds."""
@@ -293,6 +301,7 @@ def parse_duration(duration_str: str) -> int:
 ```
 
 Specifically comment on:
+
 - Complex algorithms and their steps
 - Business logic that implements specific requirements
 - Regular expressions and what they match
@@ -349,40 +358,42 @@ def get_episodes(podcast_url: str) -> List[PodcastEpisode]:
 
 ## Validation Practices
 
-#### Validate inputs thoroughly
+### Validate inputs thoroughly
 
 All public methods should validate their inputs.
 
-#### Use appropriate error messages
+### Use appropriate error messages
 
 Error messages should be specific to the validation problem.
 
-#### Prefer validators module
+### Prefer validators module
 
 Use the `validators` package for URL and other validations.
 
-#### Gracefully handle feed parsing errors
+### Gracefully handle feed parsing errors
 
 RSS/OPML parsing should handle malformed feeds gracefully.
 
 ## API Design
 
-#### Consistent blueprint structure
+### Consistent blueprint structure
 
 Follow the established pattern for Flask blueprints.
 
-#### JSON serialization
+### JSON serialization
 
 Use to_dict/from_dict methods for consistent serialization.
 
-#### Error response format
+### Error response format
 
 Return structured JSON for error responses.
 
-#### Success response format
+### Success response format
 
 - For most success responses, return structured JSON with appropriate data.
-- For 204 No Content responses (such as after successful DELETE operations), return an empty string with no content. This is the correct HTTP standard behavior and an exception to the JSON response pattern.
+- For 204 No Content responses (such as after successful DELETE operations), return an empty string with no content.
+  This is the correct HTTP standard behavior and an exception to the JSON response pattern.
+
 ```python
 # Correct for 204 No Content response
 return "", 204
@@ -398,6 +409,7 @@ Follow Flask best practices for URL design:
 #### End all endpoints with a trailing slash
 
 All API endpoints should end with a forward slash.
+
 ```python
 # Correct
 @app.route('/api/podcasts/', methods=['GET'])
@@ -411,6 +423,7 @@ All API endpoints should end with a forward slash.
 #### Use lowercase for URL paths
 
 Keep all URL paths lowercase for consistency.
+
 ```python
 # Correct
 @app.route('/api/podcasts/', methods=['GET'])
@@ -422,6 +435,7 @@ Keep all URL paths lowercase for consistency.
 #### Use hyphens for multi-word resources
 
 Use hyphens (not underscores) for multi-word resource names.
+
 ```python
 # Correct
 @app.route('/api/popular-podcasts/', methods=['GET'])
@@ -433,6 +447,7 @@ Use hyphens (not underscores) for multi-word resource names.
 #### Follow RESTful resource naming
 
 Use plural nouns for collections and appropriate HTTP methods.
+
 ```python
 # Collection (plural noun)
 @app.route('/api/podcasts/', methods=['GET'])  # List all podcasts
@@ -475,9 +490,10 @@ def get_podcasts():
 
 All new API endpoints must include Swagger/OpenAPI documentation.
 
-#### Use Flask-specific decorators
+### Use Flask-specific decorators
 
 Use Flask's route decorators with OpenAPI annotations:
+
 ```python
 @app.route('/api/podcasts/', methods=['GET'])
 @swag_from({
@@ -503,9 +519,10 @@ def get_podcasts():
     # Implementation
 ```
 
-#### Define schemas
+### Define schemas
 
 Create Swagger/OpenAPI schemas for all response and request objects:
+
 ```python
 PodcastSchema = {
     'type': 'object',
@@ -527,9 +544,10 @@ PodcastListSchema = {
 }
 ```
 
-#### Document all parameters
+### Document all parameters
 
 Include documentation for path, query, and body parameters:
+
 ```python
 @app.route('/api/podcasts/<int:podcast_id>', methods=['GET'])
 @swag_from({
@@ -558,9 +576,10 @@ def get_podcast(podcast_id):
     # Implementation
 ```
 
-#### Group endpoints logically
+### Group endpoints logically
 
 Use tags to group related endpoints:
+
 ```python
 # Tags for all podcast-related endpoints
 'tags': ['podcasts']
@@ -569,9 +588,10 @@ Use tags to group related endpoints:
 'tags': ['playlists']
 ```
 
-#### Document error responses
+### Document error responses
 
 Include documentation for all possible error responses:
+
 ```python
 'responses': {
     200: {'description': 'Success'},
@@ -581,21 +601,23 @@ Include documentation for all possible error responses:
 }
 ```
 
-#### Generate Swagger UI
+### Generate Swagger UI
 
 Ensure the API provides a Swagger UI endpoint for interactive documentation:
+
 ```python
 # In app initialization
 swagger = Swagger(app, template=swagger_template)
 ```
 
-#### Update API documentation when changing endpoints
+### Update API documentation when changing endpoints
 
 When modifying existing endpoints, update the Swagger documentation to reflect the changes.
 
-#### Versioning
+### Versioning
 
 Include API version information in the documentation:
+
 ```python
 swagger_template = {
     'info': {
@@ -608,13 +630,14 @@ swagger_template = {
 
 ## Project Structure
 
-The ZPodcast project follows a modular structure with clear separation of concerns. Understanding this structure is essential for proper contribution.
+The ZPodcast project follows a modular structure with clear separation of concerns.
+Understanding this structure is essential for proper contribution.
 
-#### Core Module Organization
+### Core Module Organization
 
 The core functionality is organized as follows:
 
-```
+```text
 zpodcast/
 ├── core/           # Core domain models and business logic
 ├── parsers/        # Parsing modules for different formats (RSS, JSON, OPML)
@@ -666,9 +689,10 @@ When adding new features:
 1. **Fork and Clone**: Fork the ZPodcast repository and clone it locally
 2. **Set Up Environment**: Install dependencies with `pip install -r requirements.txt`
 3. **Create Branch**: Create a feature branch with a descriptive name:
-   ```bash
-   git checkout -b feature/add-search-capability
-   ```
+
+```bash
+git checkout -b feature/add-search-capability
+```
 
 ### Development Process
 
@@ -721,3 +745,128 @@ Releases follow semantic versioning:
 - **PATCH**: Backward-compatible bug fixes
 
 Version numbers are managed in `setup.cfg` and should be updated as part of the release process.
+
+## Documentation Style Guide
+
+The ZPodcast project follows standard markdown formatting rules to ensure consistent documentation.
+All markdown files (`.md`) should adhere to the following guidelines.
+
+### Markdown Linting Standards
+
+#### File Structure
+
+- Use a single `#` (H1) at the top of the document as the title
+- Use sequential header levels without skipping (H1 -> H2 -> H3, not H1 -> H3)
+- Include a blank line before and after headers
+- Include a table of contents for documents longer than 100 lines
+
+#### Text Formatting
+
+- Write one sentence per line for better git diffs
+- Limit line length to 120 characters
+- Use blank lines between paragraphs
+- Use **italics** for emphasis, not underscores
+- Use **bold** for strong emphasis
+- Do not use ALL CAPS for emphasis
+
+#### Lists
+
+- Use `-` for unordered lists (not `*`)
+- Use `1.` for ordered lists
+- Use consistent indentation (2 spaces) for nested lists
+- Include a blank line before and after lists
+- Do not include blank lines between list items
+
+```markdown
+- First item
+- Second item
+  - Nested item
+  - Another nested item
+- Third item
+```
+
+#### Code Blocks
+
+- Always specify the language for syntax highlighting
+- Use triple backticks for code blocks
+- Use single backticks for inline code
+
+Correct example:
+
+```python
+def example():
+    return True
+```
+
+Incorrect example:
+
+```python
+def example():
+    return True
+```
+
+#### Links and References
+
+- Use reference-style links for better readability
+- Use descriptive link texts (avoid "click here" or "this link")
+
+```markdown
+[ZPodcast API Documentation][api-docs]
+
+[api-docs]: https://zpodcast.example.com/docs
+```
+
+#### Images
+
+- Include alt text for all images
+- Use a consistent naming convention for image files
+
+```markdown
+![ZPodcast Logo](images/zpodcast-logo.png)
+```
+
+#### Tables
+
+- Use tables for structured data
+- Include a header row
+- Align columns for better readability
+
+```markdown
+| Podcast Name | Host         | Episodes |
+|-------------|--------------|----------|
+| TechTalk    | John Smith   | 42       |
+| CodeCast    | Jane Doe     | 28       |
+```
+
+### Markdown Linting Tools
+
+Install and use markdown linting tools to automatically check for style consistency:
+
+```bash
+# Install markdownlint CLI
+npm install -g markdownlint-cli
+
+# Check a specific file
+markdownlint coding_guidelines.md
+
+# Check all markdown files
+markdownlint "**/*.md"
+```
+
+We recommend configuring your editor to use markdownlint for real-time validation.
+
+### Documentation File Organization
+
+- Place general project documentation in the root directory
+- Place API documentation in the `docs/api` directory
+- Place user guides in the `docs/guides` directory
+- Name files with lowercase kebab-case (e.g., `api-reference.md`)
+
+### README Standards
+
+Every module should have a README.md file that includes:
+
+1. Module purpose and responsibility
+2. Installation instructions (if applicable)
+3. Usage examples
+4. Links to related documentation
