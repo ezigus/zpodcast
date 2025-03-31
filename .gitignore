@@ -3,6 +3,18 @@ __pycache__/
 *.py[cod]
 *$py.class
 
+# Node.js / npm
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.npm/
+.node_repl_history
+*.tgz
+.yarn-integrity
+.pnp.*
+.pnp/
+.yarn/
 
 # C extensions
 *.so
