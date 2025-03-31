@@ -1,9 +1,7 @@
 import pytest
 from unittest.mock import patch, MagicMock
-from datetime import datetime
 from zpodcast.parsers.rss import RSSPodcastParser
 from zpodcast.core.podcast import PodcastData
-from zpodcast.core.playlist import PodcastEpisodeList
 from zpodcast.core.episode import PodcastEpisode
 
 podcast_data = PodcastData(
@@ -15,23 +13,25 @@ podcast_data = PodcastData(
 )
 
 podcast_episode1_title = 'Episode 1'
-podcast_episode1_description =  'Description 1'
-podcast_episode1_published =  'Mon, 11 Apr 2016 15:00:00 +0100'
-podcast_episode1_duration =  '1800'
+podcast_episode1_description = 'Description 1'
+podcast_episode1_published = 'Mon, 11 Apr 2016 15:00:00 +0100'
+podcast_episode1_duration = '1800'
 podcast_episode1_enclosures = [{'href': 'https://example.com/episode1.mp3'}]
 podcast_episode1_episode = 1
 
 podcast_episode2_title = 'Episode 2'
-podcast_episode2_description =  'Description 2'
-podcast_episode2_published =  'Mon, 12 Apr 2016 15:00:00 +0100'
-podcast_episode2_duration =  '1800'
+podcast_episode2_description = 'Description 2'
+podcast_episode2_published = 'Mon, 12 Apr 2016 15:00:00 +0100'
+podcast_episode2_duration = '1800'
 podcast_episode2_enclosures = [{'href': 'https://example.com/episode1.mp3'}]
 podcast_episode2_episode = 2
+
 
 @pytest.fixture
 def mock_feedparser():
     with patch('feedparser.parse') as mock_parse:
         yield mock_parse
+
 
 def test_get_episodes_success(mock_feedparser):
     # Mock feed data
@@ -71,6 +71,7 @@ def test_get_episodes_success(mock_feedparser):
     assert episodes[0].duration == 1800  # 30 minutes in seconds
     assert episodes[1].duration == 5400  # 1:30:00 in seconds
 
+
 def test_get_episodes_with_different_duration_formats(mock_feedparser):
     # Mock feed data with different duration formats
     mock_feed = MagicMock()
@@ -101,6 +102,7 @@ def test_get_episodes_with_different_duration_formats(mock_feedparser):
     assert episodes[0].duration == 2730  # 45:30 in seconds
     assert episodes[1].duration == 3600  # 3600 seconds
 
+
 def test_get_episodes_with_feed_error(mock_feedparser):
     # Mock feed with parsing error
     mock_feed = MagicMock()
@@ -110,6 +112,7 @@ def test_get_episodes_with_feed_error(mock_feedparser):
 
     episodes = RSSPodcastParser.get_episodes('https://example.com/invalid-feed.rss')
     assert len(episodes) == 0
+
 
 def test_get_episodes_with_entry_error(mock_feedparser):
     # Mock feed with invalid entry
@@ -136,6 +139,7 @@ def test_get_episodes_with_entry_error(mock_feedparser):
     assert len(episodes) == 1
     assert episodes[0].title == 'Valid Episode'
 
+
 def test_get_rss_metadata_success(mock_feedparser):
     # Mock feed data
     mock_feed = MagicMock()
@@ -154,6 +158,7 @@ def test_get_rss_metadata_success(mock_feedparser):
     assert metadata['description'] == 'Test Description'
     assert metadata['author'] == 'Test Author'
     assert metadata['image'] == 'https://example.com/podcast.jpg'
+
 
 def test_get_rss_metadata_with_feed_error(mock_feedparser):
     # Mock feed with parsing error
