@@ -145,8 +145,7 @@ def test_unsupported_version_podcast_playlist():
 
 
 def test_default_filename_podcast_list(sample_podcast_list):
-    with patch('zpodcast.parsers.json.open', new_callable=mock_open) as mock_file, \
-         patch('json.dump') as mock_json_dump:
+    with patch('zpodcast.parsers.json.open', new_callable=mock_open) as mock_file:
         PodcastJSON.export_podcast_list(sample_podcast_list)
         
         # Check that the default filename was used
@@ -154,8 +153,7 @@ def test_default_filename_podcast_list(sample_podcast_list):
 
 
 def test_default_filename_podcast_playlist(sample_playlist):
-    with patch('zpodcast.parsers.json.open', new_callable=mock_open) as mock_file, \
-         patch('json.dump') as mock_json_dump:
+    with patch('zpodcast.parsers.json.open', new_callable=mock_open) as mock_file:
         PodcastJSON.export_podcast_playlist(sample_playlist)
         
         # Check that the default filename was used
