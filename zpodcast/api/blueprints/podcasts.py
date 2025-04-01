@@ -180,12 +180,21 @@ def add_podcast() -> Tuple[Response, int]:
         return jsonify({"error": validation_error}), 400
 
     podcast_list = PodcastList.get_instance()
+    # Use PodcastData's centralized validations
     try:
-        podcast = PodcastData(**data)  # Ensure PodcastData object is created
-        podcast_list.add_podcast(podcast)
-        return jsonify(podcast.to_dict()), 201
+        podcast = PodcastData(
+            title=data.get("title"),
+            podcast_url=data.get("podcast_url"),
+            host=data.get("host"),
+            description=data.get("description"),
+            podcast_priority=data.get("podcast_priority"),
+            image_url=data.get("image_url"),
+        )
     except ValueError as e:
         return jsonify({"error": str(e)}), 400
+
+    podcast_list.add_podcast(podcast)
+    return jsonify(podcast.to_dict()), 201
 
 
 @podcasts_bp.route("/<int:podcast_id>/", methods=["PUT"])

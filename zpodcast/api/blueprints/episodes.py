@@ -77,8 +77,12 @@ def get_episode(podcast_id, episode_id):
         return jsonify({"error": "Episode not found"}), 404
 
     # Get the episode
-    episode = podcast.get_episode(episode_id_int)
-    if not episode:
-        return jsonify({"error": "Episode not found"}), 404
+    # Use PodcastEpisode's centralized validations
+    try:
+        episode = podcast.get_episode(episode_id_int)
+        if not episode:
+            return jsonify({"error": "Episode not found"}), 404
+    except ValueError as e:
+        return jsonify({"error": str(e)}), 400
 
     return jsonify(episode.to_dict())

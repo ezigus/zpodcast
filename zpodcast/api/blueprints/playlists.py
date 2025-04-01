@@ -173,10 +173,17 @@ def add_episode_to_playlist(playlist_id):
         if index < 0 or index >= len(playlist.playlists):
             return jsonify({"error": "Playlist not found"}), 404
 
-        # Add episode to the playlist
-        episode = PodcastEpisode(**data)
+        # Validate and create a new PodcastEpisode using centralized validations
+        episode = PodcastEpisode(
+            title=data.get("title"),
+            audio_url=data.get("audio_url"),
+            description=data.get("description"),
+            pub_date=data.get("pub_date"),
+            duration=data.get("duration"),
+            episode_number=data.get("episode_number"),
+            image_url=data.get("image_url"),
+        )
         playlist.playlists[index].add_podcastepisode(episode)
-
         return jsonify(playlist.playlists[index].to_dict())
     except ValueError as e:
         return jsonify({"error": str(e)}), 400
