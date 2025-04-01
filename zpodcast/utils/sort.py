@@ -1,3 +1,12 @@
+"""
+Sorting Utilities Module
+
+This module provides utility functions for sorting podcast episodes and other data structures.
+
+Functions:
+    sort_episodes_by_date: Sorts a list of podcast episodes by their publication date.
+"""
+
 from dataclasses import dataclass
 from typing import List, Optional
 
