@@ -1,3 +1,9 @@
+"""
+This module defines the PodcastEpisode class, which represents an individual podcast episode.
+It includes attributes such as title, audio URL, publication date, description, duration, and more.
+The class provides methods for serialization, validation, and download-related operations.
+"""
+
 from dataclasses import dataclass
 from datetime import datetime, date
 from typing import Optional, Union
@@ -7,6 +13,19 @@ import validators
 
 @dataclass
 class PodcastEpisode:
+    """
+    Represents a single podcast episode with metadata and utility methods.
+
+    Attributes:
+        title (str): The title of the episode.
+        audio_url (str): The URL of the audio file.
+        description (str): A brief description of the episode.
+        pub_date (datetime): The publication date of the episode.
+        duration (Optional[int]): The duration of the episode in seconds.
+        episode_number (Optional[int]): The episode number.
+        image_url (Optional[str]): The URL of the episode's image.
+    """
+
     title: str
     _audio_url: str
     _pub_date: datetime
@@ -262,10 +281,9 @@ class PodcastEpisode:
     def download(self):
         """
         Start downloading the episode.
-        For now, this is a stub method that would be implemented with actual download logic.
 
         Returns:
-            bool: True if download started successfully
+            bool: True if the download started successfully.
         """
         # In a real implementation, this would initiate a download
         # For testing purposes, we just return True
@@ -274,10 +292,9 @@ class PodcastEpisode:
     def get_download_progress(self):
         """
         Get the current download progress percentage.
-        For now, this is a stub method that would be implemented with actual progress tracking.
 
         Returns:
-            int: Download progress percentage (0-100)
+            int: Download progress percentage (0-100).
         """
         # In a real implementation, this would return the actual download progress
         # For testing purposes, we return a default value
@@ -286,10 +303,9 @@ class PodcastEpisode:
     def get_download_status(self):
         """
         Get the current download status.
-        For now, this is a stub method that would be implemented with actual status tracking.
 
         Returns:
-            str: Download status ('not_started', 'downloading', 'completed', 'error')
+            str: Download status ('not_started', 'downloading', 'completed', 'error').
         """
         # In a real implementation, this would return the actual download status
         # For testing purposes, we return a default value

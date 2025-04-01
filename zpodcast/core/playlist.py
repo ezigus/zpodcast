@@ -1,3 +1,8 @@
+"""
+This module defines the PodcastEpisodeList class, which represents a list of podcast episodes.
+It includes methods for managing episodes, calculating durations, and serializing data.
+"""
+
 from dataclasses import dataclass
 import re
 from typing import List, Dict
@@ -7,6 +12,14 @@ from zpodcast.parsers.rss import RSSPodcastParser
 
 @dataclass
 class PodcastEpisodeList:
+    """
+    Represents a list of podcast episodes with utility methods for management.
+
+    Attributes:
+        name (str): The name of the episode list.
+        episodes (List[PodcastEpisode]): A list of podcast episodes.
+    """
+
     _name: str
     _episodes: List[PodcastEpisode]
 
@@ -48,6 +61,12 @@ class PodcastEpisodeList:
         self._episodes = episodes
 
     def add_podcastepisode(self, episode: PodcastEpisode) -> None:
+        """
+        Add a new podcast episode to the list.
+
+        Args:
+            episode (PodcastEpisode): The episode to add.
+        """
         self._episodes.append(episode)
 
     def remove_podcastepisode(self, index: int) -> None:
@@ -57,6 +76,12 @@ class PodcastEpisodeList:
         return len(self._episodes)
 
     def calculate_duration(self) -> float:
+        """
+        Calculate the total duration of all episodes in the list.
+
+        Returns:
+            float: Total duration in seconds.
+        """
         total_duration_seconds = 0.0
         for episode in self._episodes:
             total_duration_seconds += episode.duration
@@ -98,6 +123,12 @@ class PodcastEpisodeList:
             self._episodes.insert(new_index, episode)
 
     def get_all_episode_details(self) -> List[Dict[str, str]]:
+        """
+        Retrieve details of all episodes in the list.
+
+        Returns:
+            List[Dict[str, str]]: A list of dictionaries containing episode details.
+        """
         episode_details = []
         for episode in self._episodes:
             details = {

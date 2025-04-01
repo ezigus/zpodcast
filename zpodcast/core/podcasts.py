@@ -1,3 +1,8 @@
+"""
+This module defines the PodcastList class, which manages a collection of podcasts.
+It provides methods for adding, removing, updating, and retrieving podcasts, as well as serialization.
+"""
+
 from dataclasses import dataclass
 from typing import List, Dict, Any, Union
 from zpodcast.core.podcast import PodcastData
@@ -8,42 +13,10 @@ class PodcastList:
     """
     Represents a collection of podcasts.
 
-    This class provides functionality to manage a list of podcasts, including adding,
-    removing, updating, and retrieving podcasts. It also supports serialization to
-    and from dictionaries.
-
     Attributes:
-        _podcasts (List[PodcastData]): A list of podcasts.
-        _instance (PodcastList): A singleton instance of the class.
-
-    Methods:
-        get_instance() -> PodcastList:
-            Returns the singleton instance of the PodcastList class.
-
-        add_podcast(podcast: PodcastData) -> PodcastData:
-            Adds a new podcast to the list.
-
-        remove_podcast(podcast: PodcastData) -> None:
-            Removes a podcast from the list.
-
-        get_podcast(index: int) -> PodcastData:
-            Retrieves a specific podcast by its index.
-
-        delete_podcast(index: int) -> None:
-            Deletes a podcast from the list by its index.
-
-        update_podcast(index: Union[int, str], data: Dict[str, Any]) -> PodcastData:
-            Updates a podcast with new data.
-
-        to_dict() -> Dict:
-            Serializes the PodcastList object to a dictionary.
-
-        from_dict(data: Dict) -> PodcastList:
-            Creates a PodcastList object from a dictionary.
-
-    Raises:
-        ValueError: If invalid data is provided for podcasts or indices.
+        podcasts (List[PodcastData]): A list of podcasts.
     """
+
     _podcasts: List[PodcastData]
     _instance = None
 
@@ -72,6 +45,15 @@ class PodcastList:
         self._podcasts = podcasts
 
     def add_podcast(self, podcast: PodcastData) -> PodcastData:
+        """
+        Add a new podcast to the list.
+
+        Args:
+            podcast (PodcastData): The podcast to add.
+
+        Returns:
+            PodcastData: The added podcast.
+        """
         self._podcasts.append(podcast)
         return podcast
 
@@ -104,17 +86,17 @@ class PodcastList:
         self, index: Union[int, str], data: Dict[str, Any]
     ) -> PodcastData:
         """
-        Update a podcast with new data
+        Update a podcast with new data.
 
         Args:
-            index (Union[int, str]): The index of the podcast to update
-            data (Dict[str, Any]): Dictionary containing podcast attributes to update
+            index (Union[int, str]): The index of the podcast to update.
+            data (Dict[str, Any]): Dictionary containing podcast attributes to update.
 
         Returns:
-            PodcastData: The updated podcast
+            PodcastData: The updated podcast.
 
         Raises:
-            ValueError: If index is invalid or podcast is not found
+            ValueError: If index is invalid or podcast is not found.
         """
         # Convert string index to int if needed
         if isinstance(index, str):

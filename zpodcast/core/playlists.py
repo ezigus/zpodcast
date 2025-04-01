@@ -1,3 +1,8 @@
+"""
+This module defines the PodcastPlaylist class, which manages multiple podcast playlists.
+It provides methods for adding, removing, and retrieving playlists, as well as serialization.
+"""
+
 from dataclasses import dataclass
 from typing import List, Dict
 from zpodcast.core.playlist import PodcastEpisodeList
@@ -8,39 +13,10 @@ class PodcastPlaylist:
     """
     Represents a collection of podcast playlists.
 
-    This class provides functionality to manage multiple playlists of podcast episodes,
-    including adding, removing, and retrieving playlists. It also supports serialization
-    to and from dictionaries.
-
     Attributes:
-        _playlists (List[PodcastEpisodeList]): A list of podcast playlists.
-        _instance (PodcastPlaylist): A singleton instance of the class.
-
-    Methods:
-        get_instance() -> PodcastPlaylist:
-            Returns the singleton instance of the PodcastPlaylist class.
-
-        add_playlist(playlist: PodcastEpisodeList) -> None:
-            Adds a new playlist to the collection.
-
-        remove_playlist(index: int) -> None:
-            Removes a playlist from the collection by its index.
-
-        get_playlist(index: int) -> PodcastEpisodeList:
-            Retrieves a specific playlist by its index.
-
-        get_all_playlists() -> List[PodcastEpisodeList]:
-            Returns all playlists in the collection.
-
-        to_dict() -> Dict[str, List[Dict]]:
-            Serializes the PodcastPlaylist object to a dictionary.
-
-        from_dict(data: Dict[str, List[Dict]]) -> PodcastPlaylist:
-            Creates a PodcastPlaylist object from a dictionary.
-
-    Raises:
-        ValueError: If invalid data is provided for playlists.
+        playlists (List[PodcastEpisodeList]): A list of podcast playlists.
     """
+
     _playlists: List[PodcastEpisodeList]
     _instance = None
 
@@ -70,6 +46,12 @@ class PodcastPlaylist:
         self._playlists = playlists
 
     def add_playlist(self, playlist: PodcastEpisodeList) -> None:
+        """
+        Add a new playlist to the collection.
+
+        Args:
+            playlist (PodcastEpisodeList): The playlist to add.
+        """
         self.playlists.append(playlist)
 
     def remove_playlist(self, index: int) -> None:
@@ -82,6 +64,12 @@ class PodcastPlaylist:
         return self.playlists
 
     def to_dict(self) -> Dict[str, List[Dict]]:
+        """
+        Serialize the PodcastPlaylist object to a dictionary.
+
+        Returns:
+            Dict[str, List[Dict]]: A dictionary representation of the playlist collection.
+        """
         return {"playlists": [playlist.to_dict() for playlist in self.playlists]}
 
     @classmethod

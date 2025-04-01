@@ -1,3 +1,8 @@
+"""
+This module defines the PodcastData class, which represents metadata and episodes of a podcast.
+It includes methods for managing episodes, retrieving metadata, and serialization.
+"""
+
 from dataclasses import dataclass
 import validators
 from typing import Optional, List, Dict
@@ -8,7 +13,17 @@ from zpodcast.parsers.rss import RSSPodcastParser
 @dataclass
 class PodcastData:
     """
-    Represents the data of a podcast.
+    Represents the metadata and episodes of a podcast.
+
+    Attributes:
+        title (str): The title of the podcast.
+        podcast_url (str): The URL of the podcast's RSS feed.
+        host (Optional[str]): The host of the podcast.
+        description (Optional[str]): A description of the podcast.
+        podcast_priority (Optional[int]): The priority of the podcast.
+        image_url (Optional[str]): The URL of the podcast's cover image.
+        episodelists (Optional[List[PodcastEpisodeList]]): A list of episode lists.
+        name_set_manually (bool): Indicates if the name was set manually.
     """
 
     _title: str
@@ -315,7 +330,7 @@ class PodcastData:
         Convert podcast data to dictionary format.
 
         Returns:
-            Dict: Dictionary representation of podcast data
+            Dict: Dictionary representation of podcast data.
         """
         podcastdata_dict = {
             "title": self.title,
