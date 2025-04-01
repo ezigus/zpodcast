@@ -20,14 +20,17 @@ class PodcastData:
     _episodelists: Optional[List[PodcastEpisodeList]]
     _name_set_manually: bool
 
-    def __init__(self, title: str,
-                 podcast_url: str,
-                 host: str = None,
-                 description: str = None,
-                 episodelists: List[PodcastEpisodeList] = None,
-                 podcast_priority: int = None,
-                 image_url: str = None,
-                 name_set_manually: bool = False):
+    def __init__(
+        self,
+        title: str,
+        podcast_url: str,
+        host: str = None,
+        description: str = None,
+        episodelists: List[PodcastEpisodeList] = None,
+        podcast_priority: int = None,
+        image_url: str = None,
+        name_set_manually: bool = False,
+    ):
         """
         Initializes a new instance of the PodcastData class.
 
@@ -54,6 +57,7 @@ class PodcastData:
     """
     getter setter for Title variable
     """
+
     @property
     def title(self):
         """
@@ -63,7 +67,7 @@ class PodcastData:
             str: The title of the podcast.
         """
         return self._title
-    
+
     @title.setter
     def title(self, value):
         """
@@ -74,12 +78,13 @@ class PodcastData:
         """
         if value is None or not isinstance(value, str):
             raise ValueError("Invalid title")
-        
+
         self._title = value
 
     """
     podcast url getter setters
     """
+
     @property
     def podcast_url(self):
         """
@@ -106,7 +111,7 @@ class PodcastData:
                 raise ValueError("Invalid podcast URL")
         else:
             raise ValueError("Invalid podcast URL")
-        
+
         self._podcast_url = value
 
     @property
@@ -118,7 +123,7 @@ class PodcastData:
             List[PodcastEpisodeList]: List of episode lists.
         """
         return self._episodelists
-    
+
     @episodelists.setter
     def episodelists(self, value):
         """
@@ -138,6 +143,7 @@ class PodcastData:
     """
     Getter setter for host
     """
+
     @property
     def host(self):
         """
@@ -147,7 +153,7 @@ class PodcastData:
             str: The host of the podcast.
         """
         return self._host
-    
+
     @host.setter
     def host(self, value: str):
         """
@@ -159,16 +165,17 @@ class PodcastData:
         if value is not None:
             if isinstance(value, str):
                 self._host = value
-            
+
             if not isinstance(value, str):
                 self._host = ""
-        
+
         if value is None:
             self._host = ""
 
     """
     getter setter for description
     """
+
     @property
     def description(self):
         """
@@ -178,7 +185,7 @@ class PodcastData:
             str: The description of the podcast.
         """
         return self._description
-    
+
     @description.setter
     def description(self, value):
         """
@@ -192,12 +199,13 @@ class PodcastData:
                 value = ""
         else:
             value = ""
-                
+
         self._description = value
-    
+
     """
     getter setter for priority with a clamping of the priority between -10 and 10
     """
+
     @property
     def podcast_priority(self) -> int:
         """
@@ -207,7 +215,7 @@ class PodcastData:
             int: The priority value.
         """
         return self._podcast_priority
-    
+
     @podcast_priority.setter
     def podcast_priority(self, value: int):
         """
@@ -232,7 +240,7 @@ class PodcastData:
             else:
                 value = 0
         return value
-    
+
     @property
     def image_url(self):
         """
@@ -242,7 +250,7 @@ class PodcastData:
             str: The image URL.
         """
         return self._image_url
-    
+
     @image_url.setter
     def image_url(self, value):
         """
@@ -277,35 +285,35 @@ class PodcastData:
         if not isinstance(value, bool):
             raise ValueError("Invalid value for name_set_manually")
         self._name_set_manually = value
- 
+
     def populate_episodes_from_feed(self) -> None:
         """
         Retrieve episodes from the podcast feed and update podcast metadata.
         """
         # retrieve the list of episodes from the podcast URL
         episodes = RSSPodcastParser.get_episodes(self.podcast_url)
-        
+
         # prepare updating the episode name to match the podcast's title with the suffix "episode list"
         episode_list_name = f"{self.title} episode list"
-        
+
         # create a podcast episode list that can then be used to determine which of the episodes are new.
         new_episode_list = PodcastEpisodeList(name=episode_list_name, episodes=episodes)
-        
+
         # determine which episodes are new and append the new episodes to the existing list of episodes for this podcast.
         self.episodelists = [new_episode_list]
-        
+
         self.name_set_manually = False
-        
+
         # Update podcast metadata
         feed = RSSPodcastParser.get_rss_metadata(self.podcast_url)
-        self.host = feed.get('author')
-        self.description = feed.get('description')
+        self.host = feed.get("author")
+        self.description = feed.get("description")
         # self.image_url = feed.get('image')
- 
+
     def to_dict(self) -> Dict:
         """
         Convert podcast data to dictionary format.
-        
+
         Returns:
             Dict: Dictionary representation of podcast data
         """
@@ -317,7 +325,7 @@ class PodcastData:
             "image_url": self.image_url,
             "description": self.description,
             "episodelists": [playlist.to_dict() for playlist in self.episodelists],
-            "name_set_manually": self.name_set_manually
+            "name_set_manually": self.name_set_manually,
         }
         return podcastdata_dict
 
@@ -325,10 +333,10 @@ class PodcastData:
     def from_dict(cls, data: Dict):
         """
         Create a PodcastData object from a dictionary.
-        
+
         Args:
             data (Dict): Dictionary containing podcast data
-            
+
         Returns:
             PodcastData: A new podcast data object
         """
@@ -340,8 +348,11 @@ class PodcastData:
             description=data.get("description"),
             podcast_priority=data.get("podcast_priority"),
             image_url=data.get("image_url"),
-            episodelists=[PodcastEpisodeList.from_dict(playlist_data) for playlist_data in episodelists],
-            name_set_manually=data.get("name_set_manually", False)
+            episodelists=[
+                PodcastEpisodeList.from_dict(playlist_data)
+                for playlist_data in episodelists
+            ],
+            name_set_manually=data.get("name_set_manually", False),
         )
         return podcastdata
 
@@ -372,7 +383,7 @@ class PodcastData:
         """
         if not self.episodelists:
             return {"episodes": []}
-        
+
         return {
             "episodes": [episode.to_dict() for episode in self.episodelists[0].episodes]
         }

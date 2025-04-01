@@ -40,8 +40,12 @@ def test_get_all_playlists():
 
 
 def test_to_dict():
-    episode1 = PodcastEpisode(title="Episode 1", audio_url="https://example.com/episode1.mp3")
-    episode2 = PodcastEpisode(title="Episode 2", audio_url="https://example.com/episode2.mp3")
+    episode1 = PodcastEpisode(
+        title="Episode 1", audio_url="https://example.com/episode1.mp3"
+    )
+    episode2 = PodcastEpisode(
+        title="Episode 2", audio_url="https://example.com/episode2.mp3"
+    )
     playlist1 = PodcastEpisodeList(name="Test Playlist 1", episodes=[episode1])
     playlist2 = PodcastEpisodeList(name="Test Playlist 2", episodes=[episode2])
     podcast_playlist = PodcastPlaylist(playlists=[playlist1, playlist2])
@@ -58,9 +62,9 @@ def test_to_dict():
                         "pub_date": date.today().isoformat(),
                         "duration": None,
                         "episode_number": None,
-                        "image_url": None
+                        "image_url": None,
                     }
-                ]
+                ],
             },
             {
                 "name": "Test Playlist 2",
@@ -72,10 +76,10 @@ def test_to_dict():
                         "pub_date": date.today().isoformat(),
                         "duration": None,
                         "episode_number": None,
-                        "image_url": None
+                        "image_url": None,
                     }
-                ]
-            }
+                ],
+            },
         ]
     }
 
@@ -93,9 +97,9 @@ def test_from_dict():
                         "pub_date": date.today().isoformat(),
                         "duration": None,
                         "episode_number": None,
-                        "image_url": None
+                        "image_url": None,
                     }
-                ]
+                ],
             },
             {
                 "name": "Test Playlist 2",
@@ -107,10 +111,10 @@ def test_from_dict():
                         "pub_date": date.today().isoformat(),
                         "duration": None,
                         "episode_number": None,
-                        "image_url": None
+                        "image_url": None,
                     }
-                ]
-            }
+                ],
+            },
         ]
     }
     podcast_playlist = PodcastPlaylist.from_dict(podcast_playlist_dict)

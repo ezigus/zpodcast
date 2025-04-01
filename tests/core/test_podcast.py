@@ -9,9 +9,15 @@ from zpodcast.core.episode import PodcastEpisode
 L_TITLE = "My Podcast"
 L_HOST = "John Doe"
 L_DESCRIPTION = "This is a podcast"
-episode1 = PodcastEpisode(title="Episode 1", audio_url="https://example.com/episode1.mp3")
-episode2 = PodcastEpisode(title="Episode 2", audio_url="https://example.com/episode2.mp3")
-episodelist1 = PodcastEpisodeList(name="Podcast Episode List1", episodes=[episode1, episode2])
+episode1 = PodcastEpisode(
+    title="Episode 1", audio_url="https://example.com/episode1.mp3"
+)
+episode2 = PodcastEpisode(
+    title="Episode 2", audio_url="https://example.com/episode2.mp3"
+)
+episodelist1 = PodcastEpisodeList(
+    name="Podcast Episode List1", episodes=[episode1, episode2]
+)
 episodelists = [episodelist1]
 
 L_PODCAST_URL = "http://example.com/podcast.rss"
@@ -22,15 +28,22 @@ L_IMAGE_URL = "http://example.com/image.jpg"
 def mocked_rssepisodemethods(mocker):
     """
     Fixture for mocking RSS episode methods.
-    
+
     Creates mocks for get_episodes and get_rss_metadata methods.
     """
-    mocker.patch('zpodcast.parsers.rss.RSSPodcastParser.get_episodes', return_value=[episode1, episode2])
-    mocker.patch('zpodcast.parsers.rss.RSSPodcastParser.get_rss_metadata',
-                 return_value={"title": f"{L_TITLE}",
-                               "description": f"{L_DESCRIPTION}",
-                               "author": f"{L_HOST}",
-                               "image": f"{L_IMAGE_URL}"})
+    mocker.patch(
+        "zpodcast.parsers.rss.RSSPodcastParser.get_episodes",
+        return_value=[episode1, episode2],
+    )
+    mocker.patch(
+        "zpodcast.parsers.rss.RSSPodcastParser.get_rss_metadata",
+        return_value={
+            "title": f"{L_TITLE}",
+            "description": f"{L_DESCRIPTION}",
+            "author": f"{L_HOST}",
+            "image": f"{L_IMAGE_URL}",
+        },
+    )
 
 
 """
@@ -57,7 +70,7 @@ def test_title():
         description=L_DESCRIPTION,
         episodelists=episodelists,
         podcast_priority=5,
-        image_url=L_IMAGE_URL
+        image_url=L_IMAGE_URL,
     )
 
     assert podcast_data.title == L_TITLE  # Title is set correctly
@@ -73,7 +86,7 @@ def test_notitle():
             description=L_DESCRIPTION,
             episodelists=episodelists,
             podcast_priority=5,
-            image_url=L_IMAGE_URL
+            image_url=L_IMAGE_URL,
         )
 
 
@@ -88,7 +101,7 @@ def test_title_int():
             description=L_DESCRIPTION,
             episodelists=episodelists,
             podcast_priority=5,
-            image_url=L_IMAGE_URL
+            image_url=L_IMAGE_URL,
         )
 
 
@@ -106,7 +119,7 @@ def test_podcast_url_valid():
         description=L_DESCRIPTION,
         episodelists=episodelists,
         podcast_priority=5,
-        image_url=L_IMAGE_URL
+        image_url=L_IMAGE_URL,
     )
 
     assert podcast_data.podcast_url == L_PODCAST_URL  # Podcast URL is set correctly
@@ -123,7 +136,7 @@ def test_podcast_url_invalid_int():
             description=L_DESCRIPTION,
             episodelists=episodelists,
             podcast_priority=5,
-            image_url=L_IMAGE_URL
+            image_url=L_IMAGE_URL,
         )
 
 
@@ -138,7 +151,7 @@ def test_podcast_url_invalid_none():
             description=L_DESCRIPTION,
             episodelists=episodelists,
             podcast_priority=5,
-            image_url=L_IMAGE_URL
+            image_url=L_IMAGE_URL,
         )
 
 
@@ -153,7 +166,7 @@ def test_podcast_url_invalid_empty():
             description=L_DESCRIPTION,
             episodelists=episodelists,
             podcast_priority=5,
-            image_url=L_IMAGE_URL
+            image_url=L_IMAGE_URL,
         )
 
 
@@ -168,7 +181,7 @@ def test_podcast_url_invalid_url():
             description=L_DESCRIPTION,
             episodelists=episodelists,
             podcast_priority=5,
-            image_url=L_IMAGE_URL
+            image_url=L_IMAGE_URL,
         )
 
 
@@ -186,7 +199,7 @@ def test_host_valid(mocked_rssepisodemethods):
         description=L_DESCRIPTION,
         episodelists=episodelists,
         podcast_priority=5,
-        image_url=L_IMAGE_URL
+        image_url=L_IMAGE_URL,
     )
 
     assert podcast_data.host == L_HOST
@@ -201,7 +214,7 @@ def test_host_invalid_int():
         description=L_DESCRIPTION,
         episodelists=episodelists,
         podcast_priority=5,
-        image_url=L_IMAGE_URL
+        image_url=L_IMAGE_URL,
     )
     assert podcast_data.host == ""
 
@@ -215,7 +228,7 @@ def test_host_invalid_none():
         description=L_DESCRIPTION,
         episodelists=episodelists,
         podcast_priority=5,
-        image_url=L_IMAGE_URL
+        image_url=L_IMAGE_URL,
     )
 
     assert podcast_data.host == ""
@@ -230,7 +243,7 @@ def test_host_invalid_empty():
         description=L_DESCRIPTION,
         episodelists=episodelists,
         podcast_priority=5,
-        image_url=L_IMAGE_URL
+        image_url=L_IMAGE_URL,
     )
 
     assert podcast_data.host == ""
@@ -250,7 +263,7 @@ def test_description_valid(mocked_rssepisodemethods):
         description=L_DESCRIPTION,
         episodelists=episodelists,
         podcast_priority=5,
-        image_url=L_IMAGE_URL
+        image_url=L_IMAGE_URL,
     )
 
     assert podcast_data.description == L_DESCRIPTION  # Description is set correctly
@@ -265,7 +278,7 @@ def test_description_invalid_int(mocked_rssepisodemethods):
         description=5,
         episodelists=episodelists,
         podcast_priority=5,
-        image_url=L_IMAGE_URL
+        image_url=L_IMAGE_URL,
     )
     assert podcast_data.description == f"{L_DESCRIPTION}"
 
@@ -279,7 +292,7 @@ def test_description_invalid_none(mocked_rssepisodemethods):
         description=None,
         episodelists=episodelists,
         podcast_priority=5,
-        image_url=L_IMAGE_URL
+        image_url=L_IMAGE_URL,
     )
 
     assert podcast_data.description == f"{L_DESCRIPTION}"
@@ -299,7 +312,7 @@ def test_priority_valid():
         description=L_DESCRIPTION,
         episodelists=episodelists,
         podcast_priority=5,
-        image_url=L_IMAGE_URL
+        image_url=L_IMAGE_URL,
     )
     assert podcast_data.podcast_priority == 5  # Priority should remain unchanged
 
@@ -313,7 +326,7 @@ def test_priority_invalid_high():
         description=L_DESCRIPTION,
         episodelists=episodelists,
         podcast_priority=25,
-        image_url=L_IMAGE_URL
+        image_url=L_IMAGE_URL,
     )
     assert podcast_data.podcast_priority == 10  # Priority should be clamped to 10
 
@@ -327,7 +340,7 @@ def test_priority_invalid_low():
         description=L_DESCRIPTION,
         episodelists=episodelists,
         podcast_priority=-25,
-        image_url=L_IMAGE_URL
+        image_url=L_IMAGE_URL,
     )
     assert podcast_data.podcast_priority == -10  # Priority should be clamped to -10
 
@@ -340,7 +353,7 @@ def test_priority_invalid_value():
         host=L_HOST,
         description=L_DESCRIPTION,
         podcast_priority="invalid",
-        image_url=L_IMAGE_URL
+        image_url=L_IMAGE_URL,
     )
     assert podcast_data.podcast_priority == 0  # Priority should be set to 0
 
@@ -359,7 +372,7 @@ def test_podcast_episodes_valid(mocked_rssepisodemethods):
         episodelists=episodelists,
         description=L_DESCRIPTION,
         podcast_priority=5,
-        image_url=L_IMAGE_URL
+        image_url=L_IMAGE_URL,
     )
 
     assert podcast_data.episodelists[0].name == f"{L_TITLE} episode list"
@@ -375,7 +388,7 @@ def test_podcast_episodes_invalid_int(mocked_rssepisodemethods):
         episodelists=5,
         description=L_DESCRIPTION,
         podcast_priority=5,
-        image_url=L_IMAGE_URL
+        image_url=L_IMAGE_URL,
     )
 
     assert podcast_data.episodelists[0].name == f"{L_TITLE} episode list"
@@ -391,7 +404,7 @@ def test_podcast_episodes_invalid_none(mocked_rssepisodemethods):
         episodelists=None,
         description=L_DESCRIPTION,
         podcast_priority=5,
-        image_url=L_IMAGE_URL
+        image_url=L_IMAGE_URL,
     )
 
     assert podcast_data.episodelists[0].name == f"{L_TITLE} episode list"
@@ -407,7 +420,7 @@ def test_podcast_episodes_invalid_empty(mocked_rssepisodemethods):
         episodelists=[],
         description=L_DESCRIPTION,
         podcast_priority=5,
-        image_url=L_IMAGE_URL
+        image_url=L_IMAGE_URL,
     )
     assert podcast_data.episodelists[0].name == f"{L_TITLE} episode list"
     assert podcast_data.episodelists[0].get_episodes() == episodelists[0].get_episodes()
@@ -422,7 +435,7 @@ def test_podcast_episodes_invalid_string(mocked_rssepisodemethods):
         episodelists="invalid",
         description=L_DESCRIPTION,
         podcast_priority=5,
-        image_url=L_IMAGE_URL
+        image_url=L_IMAGE_URL,
     )
     assert podcast_data.episodelists[0].name == f"{L_TITLE} episode list"
     assert podcast_data.episodelists[0].get_episodes() == episodelists[0].get_episodes()
@@ -441,18 +454,25 @@ def test_image_url():
         host=L_HOST,
         description=L_DESCRIPTION,
         podcast_priority=5,
-        image_url=L_IMAGE_URL
+        image_url=L_IMAGE_URL,
     )
     assert podcast_data.image_url == L_IMAGE_URL  # Image URL is set correctly
 
 
 def test_to_dict(mocked_rssepisodemethods):
     """Test the to_dict method returns correct dictionary representation."""
-    podcastepisodelist = PodcastEpisodeList(name="Test Podcast 1 episode list", episodes=[
-        PodcastEpisode(title="Episode 1", audio_url="https://example.com/episode1.mp3"),
-        PodcastEpisode(title="Episode 2", audio_url="https://example.com/episode2.mp3")
-    ])
-    
+    podcastepisodelist = PodcastEpisodeList(
+        name="Test Podcast 1 episode list",
+        episodes=[
+            PodcastEpisode(
+                title="Episode 1", audio_url="https://example.com/episode1.mp3"
+            ),
+            PodcastEpisode(
+                title="Episode 2", audio_url="https://example.com/episode2.mp3"
+            ),
+        ],
+    )
+
     podcast1 = PodcastData(
         title="Test Podcast 1",
         podcast_url="http://example.com/podcast1.rss",
@@ -460,11 +480,11 @@ def test_to_dict(mocked_rssepisodemethods):
         description="This is a test podcast 1",
         episodelists=[podcastepisodelist],
         podcast_priority=5,
-        image_url="http://example.com/image1.jpg"
+        image_url="http://example.com/image1.jpg",
     )
-    
+
     podcast_dict = podcast1.to_dict()
-    
+
     assert podcast_dict.get("title") == podcast1.title
     assert podcast_dict.get("podcast_url") == podcast1.podcast_url
     assert podcast_dict.get("host") == podcast1.host
@@ -483,23 +503,24 @@ def test_from_dict():
         "description": L_DESCRIPTION,
         "episodelists": [episodelist1.to_dict()],
         "podcast_priority": 5,
-        "image_url": L_IMAGE_URL
+        "image_url": L_IMAGE_URL,
     }
     # Using _ to indicate variable is used in commented out code
     _ = PodcastData.from_dict(podcast_dict)
+
 
 # this is broken and I am commenting out until I get the logic fixed for when the object is created
 # TODO: fix the logic for when podcast_data is created, to not blow away the episode list if there is some episodes already there.
 #    assert podcast_data.to_dict() == podcast_dict
 
 # TODO: determine why these tests are all commented out
-    # assert podcast_data.title == L_TITLE
-    # assert podcast_data.podcast_url == L_PODCAST_URL
-    # assert podcast_data.host == L_HOST
-    # assert podcast_data.description == L_DESCRIPTION
-    # assert podcast_data.episodelists == episodelist1.to_dict()
-    # assert podcast_data.podcast_priority == 5
-    # assert podcast_data.image_url == L_IMAGE_URL
+# assert podcast_data.title == L_TITLE
+# assert podcast_data.podcast_url == L_PODCAST_URL
+# assert podcast_data.host == L_HOST
+# assert podcast_data.description == L_DESCRIPTION
+# assert podcast_data.episodelists == episodelist1.to_dict()
+# assert podcast_data.podcast_priority == 5
+# assert podcast_data.image_url == L_IMAGE_URL
 
 
 def test_populate_episodelists_from_rss(mocked_rssepisodemethods):
@@ -511,7 +532,7 @@ def test_populate_episodelists_from_rss(mocked_rssepisodemethods):
         description=L_DESCRIPTION,
         episodelists=episodelists,
         podcast_priority=5,
-        image_url=L_IMAGE_URL
+        image_url=L_IMAGE_URL,
     )
     assert podcast_data.episodelists[0].name == f"{L_TITLE} episode list"
     assert podcast_data.episodelists[0].episodes == [episode1, episode2]
@@ -527,7 +548,7 @@ def test_name_set_manually():
         episodelists=episodelists,
         podcast_priority=5,
         image_url=L_IMAGE_URL,
-        name_set_manually=True
+        name_set_manually=True,
     )
     assert podcast_data.name_set_manually is False
 
@@ -542,7 +563,7 @@ def test_update_podcast_list_name_if_empty():
         episodelists=[PodcastEpisodeList(name="temp", episodes=[])],
         podcast_priority=5,
         image_url=L_IMAGE_URL,
-        name_set_manually=False
+        name_set_manually=False,
     )
     podcast_data.populate_episodes_from_feed()
     assert podcast_data.episodelists[0].name == f"{L_TITLE} episode list"
@@ -559,7 +580,7 @@ def test_update_podcast_list_name_if_set_manually():
         episodelists=[PodcastEpisodeList(name="Custom Name", episodes=[])],
         podcast_priority=5,
         image_url=L_IMAGE_URL,
-        name_set_manually=True
+        name_set_manually=True,
     )
     podcast_data.populate_episodes_from_feed()
     assert podcast_data.episodelists[0].name == f"{L_TITLE} episode list"

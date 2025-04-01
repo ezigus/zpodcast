@@ -14,10 +14,10 @@ Returns:
 def parse_opml_file(file_path: str) -> List[Dict[str, str]]:
     """
     Parse an OPML file to extract podcast RSS feeds.
-    
+
     Args:
         file_path (str): Path to the OPML file
-        
+
     Returns:
         List[Dict[str, str]]: List of dictionaries containing podcast feed information
     """
@@ -38,11 +38,9 @@ def parse_opml_file(file_path: str) -> List[Dict[str, str]]:
             RSSUrl = outline.attrib.get("xmlUrl")
             feed_type = outline.attrib.get("type")
             if RSSTitle and RSSUrl and feed_type:
-                variables.append({
-                    "title": RSSTitle,
-                    "rss_url": RSSUrl,
-                    "type": feed_type
-                })
+                variables.append(
+                    {"title": RSSTitle, "rss_url": RSSUrl, "type": feed_type}
+                )
             # else:
             #     print("type=",outline.attrib.get("type"))
 
@@ -50,5 +48,3 @@ def parse_opml_file(file_path: str) -> List[Dict[str, str]]:
         print(f"Error parsing OPML file: {e}")
 
     return variables
-
-

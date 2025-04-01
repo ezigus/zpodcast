@@ -92,7 +92,3 @@ class SortParameters:
     @podcast_category.setter
     def podcast_category(self, value: Optional[str]) -> None:
         self._podcast_category = value
-
-
-
-

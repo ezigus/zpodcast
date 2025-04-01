@@ -15,7 +15,7 @@ class PodcastEpisode:
     _image_url: Optional[str]
     _episode_number: Optional[int]
     # podcast_url: Optional[str] = None
-    
+
     """
     initializes a podcast episode object with the following attributes:
     Args:
@@ -28,15 +28,18 @@ class PodcastEpisode:
         image_url (Optional[str], optional): The URL of the image for the episode. Defaults to None.
     """
 
-    def __init__(self, title: str,
-                 audio_url: str,
-                 description: Optional[str] = "",
-                 pub_date: Optional[Union[datetime, str]] = None,
-                 duration: Optional[Union[int, str]] = None,
-                 episode_number: Optional[int] = None,
-                 image_url: Optional[str] = None,
-                 guid: Optional[str] = None):
-        
+    def __init__(
+        self,
+        title: str,
+        audio_url: str,
+        description: Optional[str] = "",
+        pub_date: Optional[Union[datetime, str]] = None,
+        duration: Optional[Union[int, str]] = None,
+        episode_number: Optional[int] = None,
+        image_url: Optional[str] = None,
+        guid: Optional[str] = None,
+    ):
+
         self.title = title
         self.description = description
         self.audio_url = audio_url
@@ -63,7 +66,7 @@ class PodcastEpisode:
     @property
     def guid(self) -> Optional[str]:
         return self._guid
-    
+
     @guid.setter
     def guid(self, value: Optional[str]) -> None:
         if value is not None:
@@ -77,33 +80,36 @@ class PodcastEpisode:
     Returns:
         str: The description of the episode.
     """
+
     @property
     def description(self) -> str:
         return self._description
-    
+
     """
     Set the description of the episode.
 
     Args:
         value (str): The description of the episode.
     """
+
     @description.setter
     def description(self, value: str) -> None:
         if not isinstance(value, str):
             self._description = ""
         else:
             self._description = value
-        
+
     """
     Get the publication date of the episode.
 
     Returns:
         Optional[date]: The publication date of the episode.
     """
+
     @property
     def pub_date(self) -> datetime:
         return self._pub_date
-    
+
     """
     Set the publication date of the episode.
     Defaults to today's date if a pubdate is not set or not set correctly - swallows all errors
@@ -111,6 +117,7 @@ class PodcastEpisode:
     Args:
         value (Optional datetime or str): The publication date of the episode.
     """
+
     @pub_date.setter
     def pub_date(self, value: Union[datetime, str]) -> None:
         # Validate that the value is a date object or string
@@ -138,16 +145,18 @@ class PodcastEpisode:
     Returns:
         Optional[str]: The duration of the episode in seconds.
     """
+
     @property
     def duration(self) -> Optional[int]:
         return self._duration
-    
+
     """
     Set the duration of the episode in seconds from a string
 
     Args:
         value (Optional[str]): The duration of the episode in seconds.
     """
+
     @duration.setter
     def duration(self, value: Optional[Union[int, str]]) -> None:
         if value is not None:
@@ -159,8 +168,8 @@ class PodcastEpisode:
                         self._duration = None
                 elif isinstance(value, str):
                     # Try to parse duration in HH:MM:SS format
-                    if ':' in value:
-                        parts = value.split(':')
+                    if ":" in value:
+                        parts = value.split(":")
                         if len(parts) == 3:  # HH:MM:SS
                             hours, minutes, seconds = map(int, parts)
                             self._duration = hours * 3600 + minutes * 60 + seconds
@@ -182,7 +191,7 @@ class PodcastEpisode:
                 self._duration = None
         else:
             self._duration = None
-    
+
     @property
     def episode_number(self) -> Optional[int]:
         return self._episode_number
@@ -208,6 +217,7 @@ class PodcastEpisode:
     Returns:
         _type_: _description_
     """
+
     @property
     def image_url(self) -> Optional[str]:
         return self._image_url
@@ -230,7 +240,7 @@ class PodcastEpisode:
             "pub_date": self.pub_date.isoformat() if self.pub_date else None,
             "duration": self.duration,
             "episode_number": self.episode_number,
-            "image_url": self.image_url
+            "image_url": self.image_url,
         }
 
     @classmethod
@@ -238,7 +248,7 @@ class PodcastEpisode:
         pub_date = data.get("pub_date")
         if pub_date:
             pub_date = datetime.fromisoformat(pub_date)
-            
+
         return cls(
             title=data.get("title"),
             audio_url=data.get("audio_url"),
@@ -246,38 +256,38 @@ class PodcastEpisode:
             pub_date=pub_date,
             duration=data.get("duration"),
             episode_number=data.get("episode_number"),
-            image_url=data.get("image_url")
+            image_url=data.get("image_url"),
         )
-    
+
     def download(self):
         """
         Start downloading the episode.
         For now, this is a stub method that would be implemented with actual download logic.
-        
+
         Returns:
             bool: True if download started successfully
         """
         # In a real implementation, this would initiate a download
         # For testing purposes, we just return True
         return True
-    
+
     def get_download_progress(self):
         """
         Get the current download progress percentage.
         For now, this is a stub method that would be implemented with actual progress tracking.
-        
+
         Returns:
             int: Download progress percentage (0-100)
         """
         # In a real implementation, this would return the actual download progress
         # For testing purposes, we return a default value
         return 0
-    
+
     def get_download_status(self):
         """
         Get the current download status.
         For now, this is a stub method that would be implemented with actual status tracking.
-        
+
         Returns:
             str: Download status ('not_started', 'downloading', 'completed', 'error')
         """

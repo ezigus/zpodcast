@@ -11,9 +11,11 @@ class RSSPodcastParser:
         try:
             # Parse the RSS feed using feedparser library
             feed = feedparser.parse(rss_feed_url)
-            
+
             if feed.bozo:  # feedparser error
-                logging.error(f"Feed parsing error for {rss_feed_url}: {feed.bozo_exception}")
+                logging.error(
+                    f"Feed parsing error for {rss_feed_url}: {feed.bozo_exception}"
+                )
                 return []
 
             episodes = []
@@ -21,14 +23,20 @@ class RSSPodcastParser:
                 try:
                     # Extract relevant information for each episode
                     episode = PodcastEpisode(
-                        title=entry['title'],  # Episode title
-                        audio_url=entry['enclosures'][0]['href'] if entry.get('enclosures') else None,  # Episode audio URL
-                        description=entry['description'],  # Episode description
-                        pub_date=entry['published'],  # Episode published date
-                        duration=entry.get('itunes_duration'),  # Episode duration
-                        episode_number=entry.get('itunes_episode'),  # Episode number
-                        image_url=entry.get('image', {}).get('href'),  # Episode image URL
-                        guid=entry.get('guid')  # Episode GUID
+                        title=entry["title"],  # Episode title
+                        audio_url=(
+                            entry["enclosures"][0]["href"]
+                            if entry.get("enclosures")
+                            else None
+                        ),  # Episode audio URL
+                        description=entry["description"],  # Episode description
+                        pub_date=entry["published"],  # Episode published date
+                        duration=entry.get("itunes_duration"),  # Episode duration
+                        episode_number=entry.get("itunes_episode"),  # Episode number
+                        image_url=entry.get("image", {}).get(
+                            "href"
+                        ),  # Episode image URL
+                        guid=entry.get("guid"),  # Episode GUID
                     )
                     episodes.append(episode)
                 except Exception as e:
@@ -46,18 +54,20 @@ class RSSPodcastParser:
         try:
             # Parse the RSS feed using feedparser library
             feed = feedparser.parse(rss_feed_url)
-            
+
             if feed.bozo:  # feedparser error
-                logging.error(f"Feed parsing error for {rss_feed_url}: {feed.bozo_exception}")
+                logging.error(
+                    f"Feed parsing error for {rss_feed_url}: {feed.bozo_exception}"
+                )
                 return {}
 
             # Get feed metadata
             feed_data = feed.feed
             podcast_meta = {
-                'title': feed_data.get('title'),
-                'description': feed_data.get('description'),
-                'author': feed_data.get('author'),
-                'image': feed_data.get('image', {}).get('href')
+                "title": feed_data.get("title"),
+                "description": feed_data.get("description"),
+                "author": feed_data.get("author"),
+                "image": feed_data.get("image", {}).get("href"),
             }
             return podcast_meta
         except Exception as e:
@@ -69,11 +79,11 @@ class RSSPodcastParser:
         if duration is None:
             return None
 
-        if ':' not in duration:
+        if ":" not in duration:
             return int(duration)
 
         # Split the duration string into hours, minutes, and seconds
-        parts = duration.split(':')
+        parts = duration.split(":")
         hours = int(parts[0]) if len(parts) > 0 else 0
         minutes = int(parts[1]) if len(parts) > 1 else 0
         seconds = int(parts[2]) if len(parts) > 2 else 0
@@ -85,7 +95,7 @@ class RSSPodcastParser:
 
 def main():
     # Specify the path to the OPML file
-    opml_file_path = 'test.opml'
+    opml_file_path = "test.opml"
 
     # Retrieve the list of RSS feeds from the OPML file
     rss_feeds = parse_opml_file(opml_file_path)
@@ -93,14 +103,14 @@ def main():
     # Print all RSS feeds returned
     print("RSS feeds:")
     for rss_feed in rss_feeds:
-        print("Title:", rss_feed['title'])
-        print("URL:", rss_feed['url'])
-        print("Type:", rss_feed['type'])
+        print("Title:", rss_feed["title"])
+        print("URL:", rss_feed["url"])
+        print("Type:", rss_feed["type"])
         print()
 
     if rss_feeds:
         # Use the first RSS feed from the parsed OPML file
-        rss_feed_url = rss_feeds[0]['url']
+        rss_feed_url = rss_feeds[0]["url"]
 
         # Retrieve the list of episodes from the RSS feed
         episodes = RSSPodcastParser.get_episodes(rss_feed_url)
@@ -119,5 +129,5 @@ def main():
         print("No RSS feeds found in the OPML file.")
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

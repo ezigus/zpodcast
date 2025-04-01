@@ -1,5 +1,2 @@
-feedparser
-validators
-flask
-pytest-mock
-flasgger
+flake8
+black

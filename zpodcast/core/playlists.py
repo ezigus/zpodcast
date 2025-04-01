@@ -12,7 +12,7 @@ class PodcastPlaylist:
         self.playlists = playlists
 
     @classmethod
-    def get_instance(cls) -> 'PodcastPlaylist':
+    def get_instance(cls) -> "PodcastPlaylist":
         if cls._instance is None:
             cls._instance = cls(playlists=[])
         return cls._instance
@@ -27,8 +27,10 @@ class PodcastPlaylist:
             return ValueError("Only settable if this is a list of PodcastEpisodeLists")
 
         if not playlists == [] and not isinstance(playlists[0], PodcastEpisodeList):
-            return ValueError("Only settable if the values in the list are PodcastEpisodeList")
-            
+            return ValueError(
+                "Only settable if the values in the list are PodcastEpisodeList"
+            )
+
         self._playlists = playlists
 
     def add_playlist(self, playlist: PodcastEpisodeList) -> None:
@@ -44,12 +46,13 @@ class PodcastPlaylist:
         return self.playlists
 
     def to_dict(self) -> Dict[str, List[Dict]]:
-        return {
-            "playlists": [playlist.to_dict() for playlist in self.playlists]
-        }
+        return {"playlists": [playlist.to_dict() for playlist in self.playlists]}
 
     @classmethod
-    def from_dict(cls, data: Dict[str, List[Dict]]) -> 'PodcastPlaylist':
+    def from_dict(cls, data: Dict[str, List[Dict]]) -> "PodcastPlaylist":
         playlists_data = data.get("playlists", [])
-        playlists = [PodcastEpisodeList.from_dict(playlist_data) for playlist_data in playlists_data]
+        playlists = [
+            PodcastEpisodeList.from_dict(playlist_data)
+            for playlist_data in playlists_data
+        ]
         return cls(playlists=playlists)
