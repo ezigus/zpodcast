@@ -211,23 +211,22 @@ def test_file_loading():
     """Test that the app correctly loads files"""
     # Create mock file content
     mock_content = {
-        "podcast_list.json": json.dumps(
+        "mock/data/dir/podcast_list.json": json.dumps(
             {"version": PodcastJSON.VERSION, "podcastlist": {"podcasts": []}}
         ),
-        "podcast_playlist.json": json.dumps(
+        "mock/data/dir/podcast_playlist.json": json.dumps(
             {"version": PodcastJSON.VERSION, "podcastplaylist": {"playlists": []}}
         ),
     }
 
-    # Mock the open function
+    # Mock the open function with side_effect
     def mock_open_func(file, mode="r", *args, **kwargs):
-        for filename, content in mock_content.items():
-            if filename in file:
-                return mock_open(read_data=content)()
+        if file in mock_content:
+            return mock_open(read_data=mock_content[file])()
         raise FileNotFoundError(f"Mocked file not found: {file}")
 
     # Apply the mocks
-    with patch("builtins.open", mock_open_func), patch(
+    with patch("builtins.open", side_effect=mock_open_func), patch(
         "os.path.exists", return_value=True
     ), patch("zpodcast.core.podcasts.PodcastList.from_dict"), patch(
         "zpodcast.core.playlists.PodcastPlaylist.from_dict"

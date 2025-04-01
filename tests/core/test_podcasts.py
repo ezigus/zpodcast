@@ -3,6 +3,36 @@ from zpodcast.core.podcast import PodcastData
 from zpodcast.core.podcasts import PodcastList
 
 
+@pytest.fixture
+def sample_podcasts():
+    """Create sample podcasts for testing."""
+    podcast1 = PodcastData(
+        title="Test Podcast 1",
+        podcast_url="http://example.com/podcast1.rss",
+        host="John Doe",
+        description="This is a test podcast 1",
+        episodelists=[],
+        podcast_priority=5,
+        image_url="http://example.com/image1.jpg",
+    )
+    podcast2 = PodcastData(
+        title="Test Podcast 2",
+        podcast_url="http://example.com/podcast2.rss",
+        host="Jane Doe",
+        description="This is a test podcast 2",
+        episodelists=[],
+        podcast_priority=5,
+        image_url="http://example.com/image2.jpg",
+    )
+    return [podcast1, podcast2]
+
+
+@pytest.fixture
+def sample_podcast_list(sample_podcasts):
+    """Create a PodcastList with sample podcasts."""
+    return PodcastList(sample_podcasts)
+
+
 def test_add_podcast():
     podcast = PodcastData(
         title="Test Podcast",
@@ -40,7 +70,7 @@ def test_add_podcast_object_int():
         _ = PodcastList(1)
 
 
-def test_remove_podcast():
+def test_remove_podcast(sample_podcast_list):
     podcast1 = PodcastData(
         title="Test Podcast 1",
         podcast_url="http://example.com/podcast1.rss",
@@ -66,93 +96,37 @@ def test_remove_podcast():
     assert podcast_list.podcasts[0] == podcast2
 
 
-def test_get_all_podcasts():
-    podcast1 = PodcastData(
-        title="Test Podcast 1",
-        podcast_url="http://example.com/podcast1.rss",
-        host="John Doe",
-        description="This is a test podcast 1",
-        episodelists=[],
-        podcast_priority=5,
-        image_url="http://example.com/image1.jpg",
-    )
-    podcast2 = PodcastData(
-        title="Test Podcast 2",
-        podcast_url="http://example.com/podcast2.rss",
-        host="Jane Doe",
-        description="This is a test podcast 2",
-        episodelists=[],
-        podcast_priority=5,
-        image_url="http://example.com/image2.jpg",
-    )
-    podcast_list = PodcastList([podcast1, podcast2])
-    all_podcasts = podcast_list.podcasts
+def test_get_all_podcasts(sample_podcast_list):
+    all_podcasts = sample_podcast_list.podcasts
     assert len(all_podcasts) == 2
-    assert all_podcasts[0] == podcast1
-    assert all_podcasts[1] == podcast2
+    assert all_podcasts[0] == sample_podcast_list.podcasts[0]
+    assert all_podcasts[1] == sample_podcast_list.podcasts[1]
 
 
-def test_get_podcast():
-    podcast1 = PodcastData(
-        title="Test Podcast 1",
-        podcast_url="http://example.com/podcast1.rss",
-        host="John Doe",
-        description="This is a test podcast 1",
-        episodelists=[],
-        podcast_priority=5,
-        image_url="http://example.com/image1.jpg",
-    )
-    podcast2 = PodcastData(
-        title="Test Podcast 2",
-        podcast_url="http://example.com/podcast2.rss",
-        host="Jane Doe",
-        description="This is a test podcast 2",
-        episodelists=[],
-        podcast_priority=5,
-        image_url="http://example.com/image2.jpg",
-    )
-    podcast_list = PodcastList([podcast1, podcast2])
+def test_get_podcast(sample_podcast_list):
+    podcast1 = sample_podcast_list.podcasts[0]
+    podcast2 = sample_podcast_list.podcasts[1]
 
-    podcast = podcast_list.get_podcast(0)
+    podcast = sample_podcast_list.get_podcast(0)
     assert podcast == podcast1
 
     with pytest.raises(ValueError):
         # Using _ to indicate unused variable
-        _ = podcast_list.get_podcast(-1)
+        _ = sample_podcast_list.get_podcast(-1)
 
     with pytest.raises(ValueError):
         # Using _ to indicate unused variable
-        _ = podcast_list.get_podcast(2)
+        _ = sample_podcast_list.get_podcast(2)
 
     with pytest.raises(ValueError):
         # Using _ to indicate unused variable
-        _ = podcast_list.get_podcast("invalid")
+        _ = sample_podcast_list.get_podcast("invalid")
 
 
-def test_podcastlist_to_dict():
-    podcast1 = PodcastData(
-        title="Test Podcast 1",
-        podcast_url="http://example.com/podcast1.rss",
-        host="John Doe",
-        description="This is a test podcast 1",
-        episodelists=[],
-        podcast_priority=5,
-        image_url="http://example.com/image1.jpg",
-    )
+def test_podcastlist_to_dict(sample_podcast_list):
+    podcast_list_dict = sample_podcast_list.to_dict()
 
-    podcast2 = PodcastData(
-        title="Test Podcast 2",
-        podcast_url="http://example.com/podcast2.rss",
-        host="Jane Doe",
-        description="This is a test podcast 2",
-        episodelists=[],
-        podcast_priority=5,
-        image_url="http://example.com/image2.jpg",
-    )
-    podcast_list = PodcastList([podcast1, podcast2])
-    podcast_list_dict = podcast_list.to_dict()
-
-    assert podcast_list_dict == podcast_list.to_dict()
+    assert podcast_list_dict == sample_podcast_list.to_dict()
 
     # assert podcast_list_dict == {
     #     "podcasts": [

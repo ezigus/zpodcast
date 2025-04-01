@@ -61,7 +61,7 @@ Testing title attribute
 """
 
 
-def test_title():
+def test_podcast_title_set_correctly():
     """Test that title is set correctly."""
     podcast_data = PodcastData(
         title=L_TITLE,
@@ -76,7 +76,7 @@ def test_title():
     assert podcast_data.title == L_TITLE  # Title is set correctly
 
 
-def test_notitle():
+def test_podcast_title_is_required():
     """Test that title is required."""
     with pytest.raises(TypeError):
         # Using _ to indicate unused variable

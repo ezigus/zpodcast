@@ -146,16 +146,16 @@ def test_import_podcast_playlist_mock(mock_json_load, mock_file, sample_playlist
 
 
 def test_unsupported_version_podcast_list():
-    with patch("zpodcast.parsers.json.open", new_callable=mock_open), patch(
-        "json.load", return_value={"version": "0.2", "podcastlist": {}}
+    with patch("zpodcast.parsers.json.open", new_callable=mock_open) as mock_file, patch(
+        "json.load", side_effect=[{"version": "0.2", "podcastlist": {}}]
     ):
         with pytest.raises(ValueError, match="Unsupported version"):
             PodcastJSON.import_podcast_list("test.json")
 
 
 def test_unsupported_version_podcast_playlist():
-    with patch("zpodcast.parsers.json.open", new_callable=mock_open), patch(
-        "json.load", return_value={"version": "0.2", "podcastplaylist": {}}
+    with patch("zpodcast.parsers.json.open", new_callable=mock_open) as mock_file, patch(
+        "json.load", side_effect=[{"version": "0.2", "podcastplaylist": {}}]
     ):
         with pytest.raises(ValueError, match="Unsupported version"):
             PodcastJSON.import_podcast_playlist("test.json")
