@@ -1,3 +1,15 @@
+"""
+Episodes API Blueprint Module
+
+This module provides REST API endpoints for managing podcast episodes in the
+ZPodcast application. It includes routes for listing and retrieving episodes
+for specific podcasts.
+
+Routes:
+    GET /<podcast_id>/: List all episodes for a specific podcast
+    GET /<podcast_id>/<episode_id>/: Retrieve a specific episode by ID
+"""
+
 from flask import Blueprint, jsonify
 from zpodcast.core.podcasts import PodcastList
 
@@ -7,7 +19,17 @@ episodes_bp = Blueprint("episodes", __name__)
 
 @episodes_bp.route("/<podcast_id>/", methods=["GET"])
 def get_episodes(podcast_id):
-    """Get all episodes for a podcast"""
+    """
+    Retrieve all episodes for a specific podcast.
+
+    Args:
+        podcast_id (str): The unique identifier of the podcast.
+
+    Returns:
+        Response: A Flask response object containing:
+            - A list of episodes if the podcast is found.
+            - An error message if the podcast is not found.
+    """
     podcast_list = PodcastList.get_instance()
     try:
         podcast = podcast_list.get_podcast(int(podcast_id))
@@ -20,7 +42,18 @@ def get_episodes(podcast_id):
 
 @episodes_bp.route("/<podcast_id>/<episode_id>/", methods=["GET"])
 def get_episode(podcast_id, episode_id):
-    """Get a specific episode"""
+    """
+    Retrieve a specific episode by its ID.
+
+    Args:
+        podcast_id (str): The unique identifier of the podcast.
+        episode_id (str): The unique identifier of the episode.
+
+    Returns:
+        Response: A Flask response object containing:
+            - The episode details if found.
+            - An error message if the episode or podcast is not found.
+    """
     podcast_list = PodcastList.get_instance()
 
     # First try to parse the podcast_id

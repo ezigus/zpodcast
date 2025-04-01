@@ -105,7 +105,6 @@ def test_get_all_podcasts(sample_podcast_list):
 
 def test_get_podcast(sample_podcast_list):
     podcast1 = sample_podcast_list.podcasts[0]
-    podcast2 = sample_podcast_list.podcasts[1]
 
     podcast = sample_podcast_list.get_podcast(0)
     assert podcast == podcast1

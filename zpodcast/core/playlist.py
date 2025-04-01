@@ -113,12 +113,11 @@ class PodcastEpisodeList:
             )
 
     def move_episode_to_position(self, current_index: int, new_index: int) -> None:
-        if (
-            current_index >= 0
-            and current_index < len(self._episodes)
-            and new_index >= 0
-            and new_index < len(self._episodes)
-        ):
+        if current_index >= 0 and \
+           current_index < len(self._episodes) and \
+           new_index >= 0 and \
+           new_index < len(self._episodes):
+            
             episode = self._episodes.pop(current_index)
             self._episodes.insert(new_index, episode)
 

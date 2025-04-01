@@ -248,8 +248,121 @@ swagger_template["paths"]["/api/episodes/{episode_id}/"] = {
     },
 }
 
+swagger_template["paths"]["/api/podcasts/"] = {
+    "get": {
+        "summary": "Retrieve all podcasts",
+        "description": "Fetches a list of all podcasts.",
+        "responses": {
+            "200": {"description": "List of podcasts"},
+            "500": {"description": "Server error"},
+        },
+        "tags": ["podcasts"],
+    },
+    "post": {
+        "summary": "Create a new podcast",
+        "description": "Adds a new podcast to the system.",
+        "parameters": [
+            {
+                "name": "body",
+                "in": "body",
+                "required": True,
+                "schema": {
+                    "type": "object",
+                    "properties": {
+                        "title": {"type": "string", "description": "Podcast title"},
+                        "podcast_url": {"type": "string", "description": "RSS feed URL"},
+                        "host": {"type": "string", "description": "Podcast host/author"},
+                        "description": {"type": "string", "description": "Podcast description"},
+                        "podcast_priority": {"type": "integer", "description": "User priority (0-10)"},
+                        "image_url": {"type": "string", "description": "Podcast cover art URL"}
+                    },
+                    "required": ["title", "podcast_url"]
+                },
+                "description": "Podcast data to create"
+            }
+        ],
+        "responses": {
+            "201": {"description": "Podcast created"},
+            "400": {"description": "Invalid input"},
+            "500": {"description": "Server error"},
+        },
+        "tags": ["podcasts"],
+    },
+}
+
+swagger_template["paths"]["/api/podcasts/{podcast_id}/"] = {
+    "get": {
+        "summary": "Retrieve a specific podcast",
+        "description": "Fetches details of a specific podcast by its ID.",
+        "parameters": [
+            {
+                "name": "podcast_id",
+                "in": "path",
+                "required": True,
+                "type": "integer",
+                "description": "Unique identifier of the podcast",
+            }
+        ],
+        "responses": {
+            "200": {"description": "Podcast details"},
+            "404": {"description": "Podcast not found"},
+            "500": {"description": "Server error"},
+        },
+        "tags": ["podcasts"],
+    },
+    "put": {
+        "summary": "Update a specific podcast",
+        "description": "Updates details of a specific podcast by its ID.",
+        "parameters": [
+            {
+                "name": "podcast_id",
+                "in": "path",
+                "required": True,
+                "type": "integer",
+                "description": "Unique identifier of the podcast",
+            }
+        ],
+        "responses": {
+            "200": {"description": "Podcast updated"},
+            "400": {"description": "Invalid input"},
+            "404": {"description": "Podcast not found"},
+            "500": {"description": "Server error"},
+        },
+        "tags": ["podcasts"],
+    },
+    "delete": {
+        "summary": "Delete a specific podcast",
+        "description": "Deletes a specific podcast by its ID.",
+        "parameters": [
+            {
+                "name": "podcast_id",
+                "in": "path",
+                "required": True,
+                "type": "integer",
+                "description": "Unique identifier of the podcast",
+            }
+        ],
+        "responses": {
+            "204": {"description": "Podcast deleted"},
+            "404": {"description": "Podcast not found"},
+            "500": {"description": "Server error"},
+        },
+        "tags": ["podcasts"],
+    },
+}
+
 
 class zPodcastApp:
+    """
+    Encapsulates the Flask application setup and configuration.
+
+    Methods:
+        _register_blueprints(): Registers all blueprints with their respective URL prefixes.
+        _setup_error_handlers(): Sets up error handlers for common HTTP errors.
+        create_app(data_dir: str): Creates and configures the Flask application.
+        create_app_factory(data_dir: str): Factory function to create the application.
+    """
+
     def __init__(self):
         self.app: Flask = Flask(__name__)
         self._register_blueprints()
