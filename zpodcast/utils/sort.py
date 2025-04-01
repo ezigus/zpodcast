@@ -42,12 +42,28 @@ class SortParameters:
     def episode_title(self) -> Optional[str]:
         return self._episode_title
 
+    def validate_sort_option(self, value: Optional[str], valid_options: List[str], field_name: str) -> Optional[str]:
+        """
+        Validates a sorting option against a list of valid options.
+
+        Args:
+            value (Optional[str]): The sorting option to validate.
+            valid_options (List[str]): A list of valid sorting options.
+            field_name (str): The name of the field being validated.
+
+        Returns:
+            Optional[str]: The validated sorting option or None if not provided.
+
+        Raises:
+            ValueError: If the sorting option is invalid.
+        """
+        if value is None or value in valid_options:
+            return value
+        raise ValueError(f"Invalid sort option for {field_name}: '{value}'. Valid options are: {', '.join(valid_options)}")
+
     @episode_title.setter
     def episode_title(self, value: Optional[str]) -> None:
-        if value is None or value == "A-Z" or value == "Z-A":
-            self._episode_title = value
-        else:
-            raise ValueError("Invalid sort option for title")
+        self._episode_title = self.validate_sort_option(value, ["A-Z", "Z-A"], "episode title")
 
     @property
     def episode_duration(self) -> Optional[int]:
@@ -55,10 +71,7 @@ class SortParameters:
 
     @episode_duration.setter
     def episode_duration(self, value: Optional[str]) -> None:
-        if value is None or value == "ShortToLong" or value == "LongToShort":
-            self._episode_duration = value
-        else:
-            raise ValueError("Invalid sort option for duration")
+        self._episode_duration = self.validate_sort_option(value, ["ShortToLong", "LongToShort"], "episode duration")
 
     @property
     def episode_date(self) -> Optional[str]:
@@ -66,10 +79,7 @@ class SortParameters:
 
     @episode_date.setter
     def episode_date(self, value: Optional[str]) -> None:
-        if value is None or value == "Earliest" or value == "Latest":
-            self._episode_date = value
-        else:
-            raise ValueError("Invalid sort option for date")
+        self._episode_date = self.validate_sort_option(value, ["Earliest", "Latest"], "episode date")
 
     @property
     def episode_rating(self) -> Optional[float]:
@@ -77,10 +87,10 @@ class SortParameters:
 
     @episode_rating.setter
     def episode_rating(self, value: Optional[float]) -> None:
-        if value is None or value == "highest" or value == "lowest":
+        if value is None or value in ["highest", "lowest"]:
             self._episode_rating = value
         else:
-            raise ValueError("Invalid sort option for rating")
+            raise ValueError(f"Invalid sort option for episode rating: {value}")
 
     @property
     def episode_tags(self) -> Optional[List[str]]:
@@ -96,10 +106,7 @@ class SortParameters:
 
     @podcast_title.setter
     def podcast_title(self, value: Optional[str]) -> None:
-        if value is None or value == "A-Z" or value == "Z-A":
-            self._podcast_title = value
-        else:
-            raise ValueError("Invalid sort option for podcast title")
+        self._podcast_title = self.validate_sort_option(value, ["A-Z", "Z-A"], "podcast title")
 
     @property
     def podcast_author(self) -> Optional[str]:
@@ -107,10 +114,7 @@ class SortParameters:
 
     @podcast_author.setter
     def podcast_author(self, value: Optional[str]) -> None:
-        if value is None or value == "A-Z" or value == "Z-A":
-            self._podcast_author = value
-        else:
-            raise ValueError("Invalid sort option for podcast author")
+        self._podcast_author = self.validate_sort_option(value, ["A-Z", "Z-A"], "podcast author")
 
     @property
     def podcast_category(self) -> Optional[str]:

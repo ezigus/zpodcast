@@ -16,10 +16,10 @@ Routes:
 from typing import Dict, Tuple, Any, Optional
 
 from flask import Blueprint, jsonify, request, Response
-import validators
 
 from zpodcast.core.podcasts import PodcastList
 from zpodcast.core.podcast import PodcastData
+from zpodcast.utils import is_valid_url
 
 # Define Swagger schemas for podcast objects
 PodcastSchema = {
@@ -93,9 +93,7 @@ def validate_podcast_data(
 
     # Validate podcast URL if present
     if "podcast_url" in data and data["podcast_url"]:
-        if not isinstance(data["podcast_url"], str):
-            return "Podcast URL must be a string"
-        if not validators.url(data["podcast_url"]):
+        if not is_valid_url(data["podcast_url"]):
             return "Invalid podcast URL format"
 
     # Validate description if present
@@ -122,9 +120,7 @@ def validate_podcast_data(
 
     # Validate image URL if present
     if "image_url" in data and data["image_url"]:
-        if not isinstance(data["image_url"], str):
-            return "Image URL must be a string"
-        if not validators.url(data["image_url"]):
+        if not is_valid_url(data["image_url"]):
             return "Invalid image URL format"
 
     return None
