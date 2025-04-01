@@ -1,3 +1,17 @@
+"""
+RSS Feed Parser Module
+
+This module provides functionality for retrieving and parsing podcast RSS feeds.
+It converts feed entries into structured PodcastEpisode objects and extracts podcast metadata.
+
+Classes:
+    RSSPodcastParser: A parser for retrieving and processing podcast data from RSS feeds.
+
+Functions:
+    get_episodes: Retrieves and parses episodes from an RSS feed.
+    get_rss_metadata: Extracts podcast metadata from an RSS feed.
+"""
+
 import feedparser
 from zpodcast.parsers.opml import parse_opml_file
 from zpodcast.core.episode import PodcastEpisode
@@ -7,28 +21,45 @@ import logging
 
 class RSSPodcastParser:
     """
-    Parses RSS feeds to retrieve podcast episodes and metadata.
+    A parser for retrieving and processing podcast data from RSS feeds.
 
-    This class provides static methods to parse RSS feeds and extract information
-    about podcast episodes and metadata. It uses the `feedparser` library to handle
-    RSS feed parsing and includes error handling for malformed feeds.
+    This class provides methods to extract episodes and metadata from RSS feeds.
+    It handles parsing errors gracefully and logs issues for debugging purposes.
 
     Methods:
         get_episodes(rss_feed_url: str) -> List[PodcastEpisode]:
-            Retrieves a list of podcast episodes from an RSS feed URL.
+            Retrieves and parses episodes from an RSS feed.
 
         get_rss_metadata(rss_feed_url: str) -> dict:
-            Retrieves metadata for a podcast from an RSS feed URL.
+            Extracts metadata from an RSS feed.
 
         _convert_duration_to_seconds(duration: str) -> int:
-            Converts a duration string (e.g., "01:23:45") to total seconds.
-
-    Raises:
-        Exception: If an error occurs during RSS feed parsing or metadata retrieval.
+            Converts a duration string into total seconds.
     """
 
     @staticmethod
     def get_episodes(rss_feed_url: str) -> List[PodcastEpisode]:
+        """
+        Retrieve and parse episodes from an RSS feed.
+
+        This method uses the feedparser library to parse the RSS feed and extract
+        relevant information for each episode, such as title, audio URL, description,
+        publication date, duration, episode number, and image URL.
+
+        Args:
+            rss_feed_url (str): The URL of the RSS feed.
+
+        Returns:
+            List[PodcastEpisode]: A list of parsed podcast episodes.
+
+        Raises:
+            ValueError: If the RSS feed URL is invalid or parsing fails.
+
+        Example:
+            >>> episodes = RSSPodcastParser.get_episodes("https://example.com/feed.rss")
+            >>> for episode in episodes:
+            >>>     print(episode.title)
+        """
         try:
             # Parse the RSS feed using feedparser library
             feed = feedparser.parse(rss_feed_url)
@@ -72,6 +103,25 @@ class RSSPodcastParser:
     # return the meta data for an RSS feed
     @staticmethod
     def get_rss_metadata(rss_feed_url: str) -> dict:
+        """
+        Extract metadata from an RSS feed.
+
+        This method retrieves metadata such as the podcast title, description,
+        author, and image URL from the RSS feed.
+
+        Args:
+            rss_feed_url (str): The URL of the RSS feed.
+
+        Returns:
+            dict: A dictionary containing metadata such as title, description, author, and image URL.
+
+        Raises:
+            ValueError: If the RSS feed URL is invalid or parsing fails.
+
+        Example:
+            >>> metadata = RSSPodcastParser.get_rss_metadata("https://example.com/feed.rss")
+            >>> print(metadata["title"])
+        """
         try:
             # Parse the RSS feed using feedparser library
             feed = feedparser.parse(rss_feed_url)
@@ -96,7 +146,23 @@ class RSSPodcastParser:
             return {}
 
     @staticmethod
-    def _convert_duration_to_seconds(duration):
+    def _convert_duration_to_seconds(duration: str) -> int:
+        """
+        Convert a duration string into total seconds.
+
+        This method supports various duration formats, including plain seconds,
+        MM:SS, and HH:MM:SS.
+
+        Args:
+            duration (str): The duration string to convert.
+
+        Returns:
+            int: The total duration in seconds.
+
+        Example:
+            >>> RSSPodcastParser._convert_duration_to_seconds("01:30:00")
+            5400
+        """
         if duration is None:
             return None
 
@@ -115,6 +181,15 @@ class RSSPodcastParser:
 
 
 def main():
+    """
+    Demonstrate the usage of the RSSPodcastParser class.
+
+    This function parses an OPML file to retrieve a list of RSS feeds, extracts
+    episodes from the first feed, and prints the details of each episode.
+
+    Example:
+        >>> main()
+    """
     # Specify the path to the OPML file
     opml_file_path = "test.opml"
 

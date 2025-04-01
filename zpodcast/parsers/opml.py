@@ -1,25 +1,29 @@
+"""
+OPML Parser Module
+
+This module provides functionality for parsing OPML files to extract podcast feed information.
+
+Functions:
+    parse_opml_file: Parses an OPML file and extracts podcast feed information.
+"""
+
 import os
 from typing import List, Dict
 import xml.etree.ElementTree as ET
 
 
-"""
-Parse an OPML file
-
-Returns:
-    returns a parsed OPML file with 3 variables - title, rss_url and type
-"""
-
-
 def parse_opml_file(file_path: str) -> List[Dict[str, str]]:
     """
-    Parse an OPML file to extract podcast RSS feeds.
+    Parse an OPML file to extract podcast feed information.
 
     Args:
-        file_path (str): Path to the OPML file
+        file_path (str): The path to the OPML file.
 
     Returns:
-        List[Dict[str, str]]: List of dictionaries containing podcast feed information
+        List[Dict[str, str]]: A list of dictionaries containing feed information (title, RSS URL, and type).
+
+    Raises:
+        ET.ParseError: If the OPML file cannot be parsed.
     """
     variables = []  # List to store the parsed variables
 
