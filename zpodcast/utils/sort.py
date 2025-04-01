@@ -4,6 +4,24 @@ from typing import List, Optional
 
 @dataclass
 class SortParameters:
+    """
+    Represents sorting parameters for podcasts and episodes.
+
+    This class encapsulates various sorting options for podcasts and episodes,
+    including title, duration, date, rating, and author. It validates the input
+    values for each sorting parameter to ensure they conform to the allowed options.
+
+    Attributes:
+        _episode_title (Optional[str]): Sorting option for episode titles (e.g., "A-Z", "Z-A").
+        _episode_duration (Optional[int]): Sorting option for episode duration (e.g., "ShortToLong", "LongToShort").
+        _episode_date (Optional[str]): Sorting option for episode dates (e.g., "Earliest", "Latest").
+        _episode_rating (Optional[float]): Sorting option for episode ratings (e.g., "highest", "lowest").
+        _podcast_title (Optional[str]): Sorting option for podcast titles (e.g., "A-Z", "Z-A").
+        _podcast_author (Optional[str]): Sorting option for podcast authors (e.g., "A-Z", "Z-A").
+
+    Raises:
+        ValueError: If an invalid sorting option is provided for any attribute.
+    """
     _episode_title: Optional[str]
     _episode_duration: Optional[int]
     _episode_date: Optional[str]

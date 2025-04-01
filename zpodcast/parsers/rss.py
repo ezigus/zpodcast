@@ -6,6 +6,27 @@ import logging
 
 
 class RSSPodcastParser:
+    """
+    Parses RSS feeds to retrieve podcast episodes and metadata.
+
+    This class provides static methods to parse RSS feeds and extract information
+    about podcast episodes and metadata. It uses the `feedparser` library to handle
+    RSS feed parsing and includes error handling for malformed feeds.
+
+    Methods:
+        get_episodes(rss_feed_url: str) -> List[PodcastEpisode]:
+            Retrieves a list of podcast episodes from an RSS feed URL.
+
+        get_rss_metadata(rss_feed_url: str) -> dict:
+            Retrieves metadata for a podcast from an RSS feed URL.
+
+        _convert_duration_to_seconds(duration: str) -> int:
+            Converts a duration string (e.g., "01:23:45") to total seconds.
+
+    Raises:
+        Exception: If an error occurs during RSS feed parsing or metadata retrieval.
+    """
+
     @staticmethod
     def get_episodes(rss_feed_url: str) -> List[PodcastEpisode]:
         try:
