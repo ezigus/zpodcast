@@ -16,6 +16,7 @@ Routes:
 from typing import Dict, Tuple, Any, Optional
 
 from flask import Blueprint, jsonify, request, Response
+from flasgger import swag_from
 
 from zpodcast.core.podcasts import PodcastList
 from zpodcast.core.podcast import PodcastData
@@ -127,6 +128,19 @@ def validate_podcast_data(
 
 
 @podcasts_bp.route("/", methods=["GET"])
+@swag_from({
+    'responses': {
+        200: {
+            'description': 'List of all podcasts',
+            'schema': {
+                'type': 'array',
+                'items': {'type': 'object'}
+            }
+        }
+    },
+    'summary': 'Retrieve a list of all podcasts',
+    'tags': ['podcasts']
+})
 def get_podcasts() -> Response:
     """
     Retrieve a list of all podcasts.

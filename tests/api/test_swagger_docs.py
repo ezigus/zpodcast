@@ -259,3 +259,27 @@ def test_episodes_endpoints_in_swagger(client):
     assert (
         "delete" in swagger_json["paths"][episode_id_path]
     ), "DELETE method missing for '/api/episodes/{episode_id}/'"
+
+
+def test_nested_playlist_episodes_endpoints_in_swagger(client):
+    """Test that nested playlist episodes endpoints are documented in Swagger"""
+    response = client.get("/apispec_1.json")
+    assert response.status_code == 200
+    swagger_json = json.loads(response.data)
+
+    # Check that nested playlist episodes endpoints are documented
+    playlist_episodes_path = "/api/playlists/{playlist_id}/episodes/"
+    assert (
+        playlist_episodes_path in swagger_json["paths"]
+    ), f"Path {playlist_episodes_path} missing from Swagger documentation"
+    assert (
+        "post" in swagger_json["paths"][playlist_episodes_path]
+    ), "POST method missing for '/api/playlists/{playlist_id}/episodes/'"
+
+    playlist_episode_path = "/api/playlists/{playlist_id}/episodes/{episode_id}/"
+    assert (
+        playlist_episode_path in swagger_json["paths"]
+    ), f"Path {playlist_episode_path} missing from Swagger documentation"
+    assert (
+        "delete" in swagger_json["paths"][playlist_episode_path]
+    ), "DELETE method missing for '/api/playlists/{playlist_id}/episodes/{episode_id}/'"

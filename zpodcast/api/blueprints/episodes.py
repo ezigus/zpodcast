@@ -12,12 +12,27 @@ Routes:
 
 from flask import Blueprint, jsonify
 from zpodcast.core.podcasts import PodcastList
+from flasgger import swag_from
 
 
 episodes_bp = Blueprint("episodes", __name__)
 
 
 @episodes_bp.route("/<podcast_id>/", methods=["GET"])
+@swag_from({
+    'responses': {
+        200: {
+            'description': 'List of all episodes for a specific podcast',
+            'schema': {
+                'type': 'array',
+                'items': {'type': 'object'}
+            }
+        },
+        404: {'description': 'Podcast not found'}
+    },
+    'summary': 'Retrieve all episodes for a specific podcast',
+    'tags': ['episodes']
+})
 def get_episodes(podcast_id):
     """
     Retrieve all episodes for a specific podcast.
@@ -41,6 +56,17 @@ def get_episodes(podcast_id):
 
 
 @episodes_bp.route("/<podcast_id>/<episode_id>/", methods=["GET"])
+@swag_from({
+    'responses': {
+        200: {
+            'description': 'Details of a specific episode',
+            'schema': {'type': 'object'}
+        },
+        404: {'description': 'Episode or podcast not found'}
+    },
+    'summary': 'Retrieve a specific episode by its ID',
+    'tags': ['episodes']
+})
 def get_episode(podcast_id, episode_id):
     """
     Retrieve a specific episode by its ID.
