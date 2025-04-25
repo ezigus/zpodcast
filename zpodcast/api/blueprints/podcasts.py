@@ -13,7 +13,7 @@ Routes:
     DELETE /<int:podcast_id>/: Delete a podcast
 """
 
-from typing import Dict, Tuple, Any, Optional
+from typing import Dict, Tuple, Any, Optional, Union
 
 from flask import Blueprint, jsonify, request, Response
 from flasgger import swag_from
@@ -154,7 +154,18 @@ def get_podcasts() -> Response:
 
 
 @podcasts_bp.route("/<int:podcast_id>/", methods=["GET"])
-def get_podcast(podcast_id: int) -> Tuple[Response, int]:
+@swag_from({
+    'responses': {
+        200: {
+            'description': 'Details of a specific podcast',
+            'schema': {'type': 'object'}
+        },
+        404: {'description': 'Podcast not found'}
+    },
+    'summary': 'Retrieve a specific podcast by its ID',
+    'tags': ['podcasts']
+})
+def get_podcast(podcast_id: int):
     """
     Retrieve a specific podcast by its ID.
 
@@ -175,7 +186,27 @@ def get_podcast(podcast_id: int) -> Tuple[Response, int]:
 
 
 @podcasts_bp.route("/", methods=["POST"])
-def add_podcast() -> Tuple[Response, int]:
+@swag_from({
+    'responses': {
+        201: {
+            'description': 'Podcast successfully created',
+            'schema': {'type': 'object'}
+        },
+        400: {'description': 'Invalid input data'}
+    },
+    'summary': 'Create a new podcast',
+    'parameters': [
+        {
+            'name': 'body',
+            'in': 'body',
+            'schema': PodcastSchema,
+            'required': True,
+            'description': 'Podcast data'
+        }
+    ],
+    'tags': ['podcasts']
+})
+def add_podcast():
     """
     Create a new podcast.
 
@@ -212,7 +243,35 @@ def add_podcast() -> Tuple[Response, int]:
 
 
 @podcasts_bp.route("/<int:podcast_id>/", methods=["PUT"])
-def update_podcast(podcast_id: int) -> Tuple[Response, int]:
+@swag_from({
+    'responses': {
+        200: {
+            'description': 'Podcast successfully updated',
+            'schema': {'type': 'object'}
+        },
+        400: {'description': 'Invalid input data'},
+        404: {'description': 'Podcast not found'}
+    },
+    'summary': 'Update an existing podcast',
+    'parameters': [
+        {
+            'name': 'podcast_id',
+            'in': 'path',
+            'type': 'integer',
+            'required': True,
+            'description': 'Unique identifier of the podcast'
+        },
+        {
+            'name': 'body',
+            'in': 'body',
+            'schema': PodcastSchema,
+            'required': True,
+            'description': 'Updated podcast data'
+        }
+    ],
+    'tags': ['podcasts']
+})
+def update_podcast(podcast_id: int):
     """
     Update an existing podcast.
 
@@ -242,7 +301,26 @@ def update_podcast(podcast_id: int) -> Tuple[Response, int]:
 
 
 @podcasts_bp.route("/<int:podcast_id>/", methods=["DELETE"])
-def delete_podcast(podcast_id: int) -> Tuple[str, int]:
+@swag_from({
+    'responses': {
+        204: {
+            'description': 'Podcast successfully deleted'
+        },
+        404: {'description': 'Podcast not found'}
+    },
+    'summary': 'Delete a podcast',
+    'parameters': [
+        {
+            'name': 'podcast_id',
+            'in': 'path',
+            'type': 'integer',
+            'required': True,
+            'description': 'Unique identifier of the podcast to delete'
+        }
+    ],
+    'tags': ['podcasts']
+})
+def delete_podcast(podcast_id: int) -> Tuple[Union[str, Response], int]:
     """
     Delete a podcast by its ID.
 
@@ -250,7 +328,7 @@ def delete_podcast(podcast_id: int) -> Tuple[str, int]:
         podcast_id (int): The unique identifier of the podcast.
 
     Returns:
-        Tuple[str, int]: A tuple containing:
+        Tuple[Union[str, Response], int]: A tuple containing:
             - An empty response with a 204 status code if successful.
             - An error message if the podcast is not found.
     """

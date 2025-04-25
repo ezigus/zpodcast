@@ -52,6 +52,17 @@ def get_playlists():
 
 
 @playlists_bp.route("/<playlist_id>/", methods=["GET"])
+@swag_from({
+    'responses': {
+        200: {
+            'description': 'Details of a specific playlist',
+            'schema': {'type': 'object'}
+        },
+        404: {'description': 'Playlist not found'}
+    },
+    'summary': 'Retrieve a specific playlist by its ID',
+    'tags': ['playlists']
+})
 def get_playlist(playlist_id):
     """
     Retrieve a specific playlist by its ID.
@@ -78,6 +89,17 @@ def get_playlist(playlist_id):
 
 
 @playlists_bp.route("/", methods=["POST"])
+@swag_from({
+    'responses': {
+        201: {
+            'description': 'Playlist successfully created',
+            'schema': {'type': 'object'}
+        },
+        400: {'description': 'Invalid input data'}
+    },
+    'summary': 'Create a new playlist',
+    'tags': ['playlists']
+})
 def create_playlist():
     """
     Create a new playlist.
@@ -104,6 +126,18 @@ def create_playlist():
 
 
 @playlists_bp.route("/<playlist_id>/", methods=["PUT"])
+@swag_from({
+    'responses': {
+        200: {
+            'description': 'Playlist successfully updated',
+            'schema': {'type': 'object'}
+        },
+        400: {'description': 'Invalid input data'},
+        404: {'description': 'Playlist not found'}
+    },
+    'summary': 'Update an existing playlist',
+    'tags': ['playlists']
+})
 def update_playlist(playlist_id):
     """
     Update an existing playlist.
@@ -137,6 +171,16 @@ def update_playlist(playlist_id):
 
 
 @playlists_bp.route("/<playlist_id>/", methods=["DELETE"])
+@swag_from({
+    'responses': {
+        204: {
+            'description': 'Playlist successfully deleted'
+        },
+        404: {'description': 'Playlist not found'}
+    },
+    'summary': 'Delete a playlist',
+    'tags': ['playlists']
+})
 def delete_playlist(playlist_id):
     """
     Delete a playlist by its ID.
